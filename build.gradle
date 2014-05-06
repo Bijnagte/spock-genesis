@@ -1,0 +1,12 @@
+repositories {
+  mavenCentral()
+}
+
+
+apply plugin: 'groovy'
+
+dependencies {
+  compile('org.codehaus.groovy:groovy:2.2.2')
+  
+  testCompile('org.spockframework:spock-core:0.7-groovy-2.0')
+}
