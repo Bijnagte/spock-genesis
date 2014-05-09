@@ -1,4 +1,4 @@
-package spock.genesis
+package spock.genesis.generators.values
 
 import spock.lang.Specification
 
@@ -22,20 +22,25 @@ class IntegerGeneratorSpec extends Specification {
 	
 	def 'test limited range generation'() {
 		setup:
-			def generator = new IntegerGenerator(range).take(range * 2)
+			def range = max - min
+			def generator = new IntegerGenerator(min, max).take(range * 2)
 		when:
 			def results = generator.realized
 		then:
 			results.size() == range * 2
 			
 			results.every {
-				Math.abs(it) < range
+				it < max &&
+				it >= min
 			}
 		and: 'there are negative results in moderate samples'
 			results.size() > 10 ? results.any { it < 0 } : true
 		
 		where:
-			range << [0, 20, 500, 20000]
+			min		| max
+			0		| 1
+			-1		| 1
+			-76080 	| 8000
 	}
 	
 	def 'test filter'() {
@@ -60,8 +65,8 @@ class IntegerGeneratorSpec extends Specification {
 			results.size() == qty
 		and:
 			int nulls = results.count(null)
-			(nulls / qty) < (1.05 * targetNullRate)
-			(nulls / qty) > (0.95 * targetNullRate)
+			(nulls / qty) < (1.1 * targetNullRate)
+			(nulls / qty) > (0.9 * targetNullRate)
 		where:
 			perNull << [5, 10]
 		

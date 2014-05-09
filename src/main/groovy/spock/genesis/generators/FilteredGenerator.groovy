@@ -1,5 +1,4 @@
-package spock.genesis
-
+package spock.genesis.generators
 
 class FilteredGenerator<E> extends GeneratorDecorator<E> {
 
@@ -29,6 +28,6 @@ class FilteredGenerator<E> extends GeneratorDecorator<E> {
 	}
 
 	E findNext() {
-		iterator.find(predicate)
+		generator.find(predicate)
 	}
 }

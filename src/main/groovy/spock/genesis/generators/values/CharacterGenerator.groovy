@@ -1,5 +1,4 @@
-package spock.genesis
-
+package spock.genesis.generators.values
 
 class CharacterGenerator extends RandomElementGenerator<Character> {
 	static final String DEFAULT_CHARACTERS = (' '..'~').join()

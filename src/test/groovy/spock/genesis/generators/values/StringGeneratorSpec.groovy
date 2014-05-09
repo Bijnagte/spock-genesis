@@ -1,4 +1,4 @@
-package spock.genesis
+package spock.genesis.generators.values
 
 import spock.lang.Specification
 

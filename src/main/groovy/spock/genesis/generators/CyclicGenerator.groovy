@@ -1,4 +1,4 @@
-package spock.genesis
+package spock.genesis.generators
 
 class CyclicGenerator<E> extends GeneratorDecorator<E> {
 	private final List repeatSource = []
@@ -11,21 +11,21 @@ class CyclicGenerator<E> extends GeneratorDecorator<E> {
 
 	@Override
 	boolean hasNext() {
-		if (!started) {
-			iterator.hasNext()
-		} else {
+		if (started) {
 			true
+		} else {
+			generator.hasNext()
 		}
 	}
 
 	@Override
 	E next() {
 		started = true
-		if (!iterator.hasNext()) {
+		if (!generator.hasNext()) {
 			hasRepeated = true
-			super.iterator = repeatSource.iterator()
+			super.generator = repeatSource.iterator()
 		}
-		def val = iterator.next()
+		def val = generator.next()
 		if (!hasRepeated) {
 			repeatSource << val
 		}

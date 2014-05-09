@@ -1,4 +1,4 @@
-package spock.genesis
+package spock.genesis.generators
 
 class TransformingGenerator<E, T> extends GeneratorDecorator<E> {
 	private final Closure<T> transform
@@ -9,6 +9,6 @@ class TransformingGenerator<E, T> extends GeneratorDecorator<E> {
 	}
 
 	T next() {
-		transform(iterator.next())
+		transform(generator.next())
 	}
 }

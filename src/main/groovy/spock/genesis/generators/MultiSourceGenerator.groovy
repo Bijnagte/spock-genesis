@@ -1,16 +1,15 @@
-package spock.genesis
+package spock.genesis.generators
 
-class MultiSourceGenerator<E> extends RandomGenerator {
+class MultiSourceGenerator<E> extends Generator<E> implements Closeable {
 
-	private final List<Iterator<E>> iterators
-
+	final List<Iterator<E>> iterators
+	final Random random = new Random()
+	
 	MultiSourceGenerator(Collection<Iterator<E>> iterators) {
-		super()
 		this.iterators = iterators.toList()
 	}
 	
 	MultiSourceGenerator(Map<Iterator<E>,Integer> weightedIterators) {
-		super()
 		def i = []
 		weightedIterators.each { iterator, qty ->
 			qty.times {  i << iterator }
@@ -32,9 +31,6 @@ class MultiSourceGenerator<E> extends RandomGenerator {
 			def generator = iterators[i]
 			if (generator.hasNext()) {
 				return generator.next()
-			} else {
-				close(generator)
-				iterators.remove(i)
 			}
 		}
 	}

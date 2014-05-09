@@ -1,12 +1,25 @@
-repositories {
-  mavenCentral()
-}
-
 
 apply plugin: 'groovy'
+apply plugin: 'maven'
+apply plugin: 'codenarc'
+
+group = 'com.nagternal'
+version = '0.1.0-SNAPSHOT'
+
+repositories {
+	mavenCentral()
+}
 
 dependencies {
   compile('org.codehaus.groovy:groovy:2.2.2')
   
   testCompile('org.spockframework:spock-core:0.7-groovy-2.0')
+}
+
+codenarc {
+	configFile = file "${project.projectDir}/config/codenarc/codenarc.groovy"
+}
+
+codenarcTest {
+	ignoreFailures = true
 }

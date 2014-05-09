@@ -1,4 +1,6 @@
-package spock.genesis
+package spock.genesis.generators
+
+import spock.genesis.generators.values.NullGenerator
 
 abstract class Generator<E> implements Iterator<E> {
 
@@ -21,7 +23,7 @@ abstract class Generator<E> implements Iterator<E> {
 	CyclicGenerator<E> getRepeat() {
 		repeat()
 	}
-	
+
 	MultiSourceGenerator<E> getWithNulls() {
 		withNulls(100)
 	}
@@ -31,13 +33,13 @@ abstract class Generator<E> implements Iterator<E> {
 		new MultiSourceGenerator<E>(weightedGenerators)
 	}
 
-	
-	void close() {
-	}
+	abstract boolean hasNext()
+
+	abstract E next()
 
 	@Override
 	void remove() {
-		throw new Exception()
+		throw new UnsupportedOperationException()
 	}
 
 	List<E> getRealized() {
