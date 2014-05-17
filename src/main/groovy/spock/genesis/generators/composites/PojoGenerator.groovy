@@ -2,8 +2,6 @@ package spock.genesis.generators.composites
 
 import java.lang.reflect.Constructor
 
-import org.codehaus.groovy.runtime.NullObject
-
 import spock.genesis.generators.Generator
 
 class PojoGenerator<E> extends Generator<E> {

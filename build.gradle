@@ -14,7 +14,7 @@ apply plugin: 'cobertura'
 apply plugin: 'groovy'
 apply plugin: 'maven'
 apply plugin: 'codenarc'
-apply plugin: 'console'
+//apply plugin: 'console' //console does not play nice with spock
 
 group = 'com.nagternal'
 version = '0.1.0-SNAPSHOT'
