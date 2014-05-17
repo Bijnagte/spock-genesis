@@ -5,15 +5,16 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'net.saliman:gradle-cobertura-plugin:2.2.2'
+		classpath 'net.saliman:gradle-cobertura-plugin:2.2.2',
+			'net.carlosgsouza:gradle-console:1.0'
 	}
 }
-
 
 apply plugin: 'cobertura'
 apply plugin: 'groovy'
 apply plugin: 'maven'
 apply plugin: 'codenarc'
+apply plugin: 'console'
 
 group = 'com.nagternal'
 version = '0.1.0-SNAPSHOT'

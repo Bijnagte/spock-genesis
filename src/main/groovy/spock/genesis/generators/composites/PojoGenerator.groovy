@@ -16,7 +16,6 @@ class PojoGenerator<E> extends Generator<E> {
 		this.generator = generator
 	}
 	
-	
 	@Override
 	boolean hasNext() {
 		generator.hasNext()
@@ -31,55 +30,16 @@ class PojoGenerator<E> extends Generator<E> {
 		if (constructor) {
 			constructor.newInstance(params)
 		} else if (List.isAssignableFrom(params.getClass())) {
-			constructor = findTupleConstructor(params)
-			assert constructor
-			constructor.newInstance(*params)
+			params.asType(target)
 		} else if (Map.isAssignableFrom(params.getClass())) {
-			constructor = findNoArgConstructor()
-			assert constructor
-			def result = constructor.newInstance()
-			params.each { key, value ->
-				result[key] = value
-			}
-			result
+			params.asType(target)
 		}
 	}
-	
-	Constructor findTupleConstructor(def params) {
-		List<Class> paramTypes = params*.getClass()
-		target.constructors.find {
-			signatureMatches(it.parameterTypes, paramTypes)
-		}
-	}
-	
+		
 	Constructor findSingleArgConstructor(def param) {
 		target.constructors.find {
-			signatureMatches(it.parameterTypes, [param.getClass()])
+			it.parameterTypes.length == 1 &&
+			it.parameterTypes[0] == param.getClass()
 		}
-	}
-	
-	Constructor findNoArgConstructor() {
-		target.constructors.find {
-			it.parameterTypes.length == 0
-		}
-	}
-	
-	boolean signatureMatches(Class[] targetParams, List<Class> params) {
-		if (targetParams.length != params.size()) {
-			false
-		} else {
-			def result = true
-			targetParams.eachWithIndex { Class target, i ->
-				if (!targetMatchesParam(target, params[i])) {
-					result = false
-				}
-			}
-			result
-		}
-	}
-	
-	boolean targetMatchesParam(Class target, Class param) {
-		def isNullClass = param == NullObject || param == null
-		isNullClass || target.isAssignableFrom(param)
 	}
 }

@@ -40,7 +40,6 @@ class PojoGeneratorSpec extends Specification {
 
 	}
 
-	
 	def 'make default constructor object'() {
 		setup:
 			def map = [string: string, integer: integer]
@@ -56,9 +55,7 @@ class PojoGeneratorSpec extends Specification {
 			'A'		| 0
 			null	| 0
 			'B'		| null
-
 	}
-	
 	
 	def 'make single arg constructor object'() {
 		setup:
@@ -88,7 +85,18 @@ class PojoGeneratorSpec extends Specification {
 			thrown(IllegalArgumentException)
 	}
 	
-
+	def 'make var args constructor object succeeds if array wrapped in a list'() {
+		setup:
+			Integer[] args = [10, 1, 77, 200]
+			def argList = [args]
+			def generator = new PojoGenerator(VarArgsConstructorObj, [argList].iterator())
+		when:
+			def result = generator.next()
+		then:
+			result instanceof VarArgsConstructorObj
+			result.args == args
+	}
+	
 	static class TupleConstructorObj {
 		String string
 		Integer integer
