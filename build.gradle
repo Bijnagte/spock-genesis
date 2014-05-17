@@ -1,4 +1,16 @@
 
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		classpath 'net.saliman:gradle-cobertura-plugin:2.2.2'
+	}
+}
+
+
+apply plugin: 'cobertura'
 apply plugin: 'groovy'
 apply plugin: 'maven'
 apply plugin: 'codenarc'
@@ -22,4 +34,19 @@ codenarc {
 
 codenarcTest {
 	ignoreFailures = true
+}
+
+cobertura {
+	coverageFormats = ['xml','html']
+}
+
+task sourceJar(type: Jar) {
+	group 'Build'
+	description 'An archive of the source code'
+	classifier 'sources'
+	from sourceSets.main.allSource
+}
+
+artifacts {
+	sourceJar
 }
