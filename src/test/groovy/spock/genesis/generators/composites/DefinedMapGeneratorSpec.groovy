@@ -24,4 +24,16 @@ class DefinedMapGeneratorSpec extends Specification {
 			result['string'] instanceof String
 			result[date] == null
 	}
+	
+	def 'has next is false if one field generator does not have next'() {
+		setup:
+			def generators = [
+				1: new IntegerGenerator(),
+				string: new StringGenerator(20),
+				empty: [].iterator()
+				]
+			def generator = new DefinedMapGenerator(generators)
+		expect:
+			generator.hasNext() == false
+	}
 }

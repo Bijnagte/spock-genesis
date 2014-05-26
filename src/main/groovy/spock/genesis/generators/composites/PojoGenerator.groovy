@@ -22,22 +22,22 @@ class PojoGenerator<E> extends Generator<E> {
 	@Override
 	E next() {
 		def params = generator.next()
-		
-		def constructor = findSingleArgConstructor(params)
+		def clazz = params.getClass()
+		def constructor = findSingleArgConstructor(clazz)
 		
 		if (constructor) {
 			constructor.newInstance(params)
-		} else if (List.isAssignableFrom(params.getClass())) {
+		} else if (List.isAssignableFrom(clazz)) {
 			params.asType(target)
-		} else if (Map.isAssignableFrom(params.getClass())) {
+		} else if (Map.isAssignableFrom(clazz)) {
 			params.asType(target)
 		}
 	}
 		
-	Constructor findSingleArgConstructor(def param) {
+	Constructor findSingleArgConstructor(Class clazz) {
 		target.constructors.find {
 			it.parameterTypes.length == 1 &&
-			it.parameterTypes[0] == param.getClass()
+			it.parameterTypes[0] == clazz
 		}
 	}
 }

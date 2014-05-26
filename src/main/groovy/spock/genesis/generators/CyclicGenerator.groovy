@@ -27,7 +27,7 @@ class CyclicGenerator<E> extends GeneratorDecorator<E> {
 		}
 		def val = generator.next()
 		if (!hasRepeated) {
-			repeatSource << val
+			repeatSource.add(val)
 		}
 		val
 	}

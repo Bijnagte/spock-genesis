@@ -45,6 +45,7 @@ class RandomMapGenerator<K,V> extends Generator<Map<K,V>> implements Closeable {
 		def result = [:]
 		while (i < targetSize && hasNext()) {
 			result[keyGenerator.next()] = valueGenerator.next()
+			i++
 		}
 		result
 	}

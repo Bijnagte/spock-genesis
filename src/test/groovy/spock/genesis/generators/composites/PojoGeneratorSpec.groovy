@@ -4,6 +4,26 @@ import spock.lang.Specification
 
 class PojoGeneratorSpec extends Specification {
 
+	def 'has next true if param generator has next'() {
+		setup:
+			def iterator = iterable.iterator()
+			def generator = new PojoGenerator(null, iterator)
+		expect:
+			iterator.hasNext() == generator.hasNext()
+		where:
+			iterable << [[1],[]]
+	}
+	
+	def 'has next false if param generator does not hav'() {
+		setup:
+			def iterator = [1].iterator()
+			def generator = new PojoGenerator(null, iterator)
+		expect:
+			generator.hasNext()
+	}
+	
+	
+	
 	def 'make tuple constructor object'() {
 		setup:
 			def tuple = [string, integer]

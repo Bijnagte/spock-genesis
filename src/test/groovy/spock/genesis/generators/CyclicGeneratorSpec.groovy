@@ -21,4 +21,12 @@ class CyclicGeneratorSpec extends Specification {
 			10		| 'hi!'		|| ['h','i','!','h','i','!','h','i','!','h']
 	}
 	
+	def 'has next is false if the iterator has no entries'() {
+		setup:
+			def iterator = [].iterator()
+			def generator = new CyclicGenerator(iterator)
+		expect:
+			generator.hasNext() == false
+	}
+	
 }

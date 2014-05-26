@@ -30,7 +30,7 @@ class IntegerGeneratorSpec extends Specification {
 			results.size() == range * 2
 			
 			results.every {
-				it < max &&
+				it <= max &&
 				it >= min
 			}
 		and: 'there are negative results in moderate samples'

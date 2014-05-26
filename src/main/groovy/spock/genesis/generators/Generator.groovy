@@ -24,10 +24,15 @@ abstract class Generator<E> implements Iterator<E> {
 		repeat()
 	}
 
+	
 	MultiSourceGenerator<E> getWithNulls() {
 		withNulls(100)
 	}
 
+	/**Wraps this generator in a {@link MultiSourceGenerator} that randomly returns nulls
+	 * @param resultsPerNull the average number of results from this generator per null result
+	 * @return
+	 */
 	MultiSourceGenerator<E> withNulls(int resultsPerNull) {
 		Map weightedGenerators = [(this): resultsPerNull, (new NullGenerator<E>()): 1]
 		new MultiSourceGenerator<E>(weightedGenerators)

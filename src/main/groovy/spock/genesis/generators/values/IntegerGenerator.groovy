@@ -26,7 +26,7 @@ class IntegerGenerator extends InfiniteGenerator<Integer> {
 
 	@Override
 	Integer next() {
-		long magnitude = max - min
+		long magnitude = max - min + 1
 		if (magnitude <= Integer.MAX_VALUE) {
 			int val = random.nextInt(magnitude as int)
 			val + min

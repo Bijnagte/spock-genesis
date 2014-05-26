@@ -4,6 +4,7 @@ import spock.genesis.generators.values.ByteArrayGenerator
 import spock.genesis.generators.values.CharacterGenerator
 import spock.genesis.generators.values.IntegerGenerator
 import spock.genesis.generators.values.StringGenerator
+import spock.genesis.generators.values.ValueGenerator
 
 class Gen {
 
@@ -21,5 +22,9 @@ class Gen {
 	
 	static CharacterGenerator getChar() {
 		new CharacterGenerator()
+	}
+	
+	static ValueGenerator value(def value) {
+		new ValueGenerator(value)
 	}
 }

@@ -14,6 +14,7 @@ apply plugin: 'cobertura'
 apply plugin: 'groovy'
 apply plugin: 'maven'
 apply plugin: 'codenarc'
+apply plugin: 'project-report'
 //apply plugin: 'console' //console does not play nice with spock
 
 group = 'com.nagternal'
@@ -41,13 +42,32 @@ cobertura {
 	coverageFormats = ['xml','html']
 }
 
+codenarcMain {
+	dependsOn 'cobertura'
+	dependsOn 'generateCoberturaReport'
+}
+
+
+jar {
+	from "${projectDir}/LICENSE.txt"
+}
+
 task sourceJar(type: Jar) {
 	group 'Build'
 	description 'An archive of the source code'
 	classifier 'sources'
 	from sourceSets.main.allSource
+	from "${projectDir}/LICENSE.txt"
 }
 
 artifacts {
 	sourceJar
+}
+
+check {
+	//dependsOn coberturaCheck
+}
+
+build {
+	dependsOn sourceJar
 }
