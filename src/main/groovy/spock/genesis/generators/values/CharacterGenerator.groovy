@@ -4,15 +4,18 @@ class CharacterGenerator extends RandomElementGenerator<Character> {
 	static final String DEFAULT_CHARACTERS = (' '..'~').join()
 
 	CharacterGenerator() {
-		super(DEFAULT_CHARACTERS.toList())
+		super(convertToCharacters(DEFAULT_CHARACTERS))
 	}
 	
 	CharacterGenerator(List<Character> potentialCharacters) {
-		super(potentialCharacters)
+		super(convertToCharacters(potentialCharacters))
 	}
 	
 	CharacterGenerator(String potentialCharacters) {
-		super(potentialCharacters.toList())
+		super(convertToCharacters(potentialCharacters))
 	}
-
+	
+	static List<Character> convertToCharacters(chars) {
+		chars.collect { it as char }
+	}
 }

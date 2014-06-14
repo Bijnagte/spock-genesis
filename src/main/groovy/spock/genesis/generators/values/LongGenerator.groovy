@@ -22,10 +22,10 @@ class LongGenerator extends InfiniteGenerator<Long> {
 		this.candidateProvider = chooseProvider(min, max)
 	}
 
-	Generator chooseProvider(long min, long max) {
+	Generator chooseProvider(BigInteger min, BigInteger max) {
 		def magnitude = max - min
 		if (magnitude <= Integer.MAX_VALUE) {
-			new ShiftedIntegerGenerator(magnitude as int, min)
+			new ShiftedIntegerGenerator(magnitude as int, min as long)
 		} else {
 			new RandomLongGenerator()
 		}

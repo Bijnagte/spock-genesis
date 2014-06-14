@@ -4,7 +4,7 @@ import spock.genesis.generators.InfiniteGenerator
 
 class StringGenerator extends InfiniteGenerator<String> {
 
-	static final int DEFAULT_LENGTH_LIMIT = 1024 * 10
+	static final int DEFAULT_LENGTH_LIMIT = 1024
 	
 	final CharacterGenerator charGenerator
 	final WholeNumberGenerator lengthSource

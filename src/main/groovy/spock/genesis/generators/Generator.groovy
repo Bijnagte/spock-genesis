@@ -11,6 +11,15 @@ abstract class Generator<E> implements Iterator<E> {
 	TransformingGenerator<E, ?> map(Closure<?> transform) {
 		new TransformingGenerator<E, ?>(this, transform)
 	}
+	
+	TransformingGenerator<E, E> with(Closure<?> transform) {
+		def withClosure = { generatedValue ->
+			generatedValue.with(transform)
+			generatedValue
+		}
+		new TransformingGenerator<E, E>(this, withClosure)
+	}
+
 
 	LimitedGenerator<E> take(int qty) {
 		new LimitedGenerator<E>(this, qty)
@@ -19,11 +28,14 @@ abstract class Generator<E> implements Iterator<E> {
 	CyclicGenerator<E> repeat() {
 		new CyclicGenerator<E>(this)
 	}
+	
+	LimitedGenerator<E> multiply(int qty) {
+		take(qty)
+	}
 
 	CyclicGenerator<E> getRepeat() {
 		repeat()
 	}
-
 	
 	MultiSourceGenerator<E> getWithNulls() {
 		withNulls(100)
@@ -36,6 +48,15 @@ abstract class Generator<E> implements Iterator<E> {
 	MultiSourceGenerator<E> withNulls(int resultsPerNull) {
 		Map weightedGenerators = [(this): resultsPerNull, (new NullGenerator<E>()): 1]
 		new MultiSourceGenerator<E>(weightedGenerators)
+	}
+	
+	MultiSourceGenerator and(Iterator iterator) {
+		if (MultiSourceGenerator.isAssignableFrom(this.getClass())) {
+			MultiSourceGenerator gen = this
+			new MultiSourceGenerator(gen.iterators + iterator)
+		} else {
+			new MultiSourceGenerator([this, iterator])
+		}
 	}
 
 	abstract boolean hasNext()

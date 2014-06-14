@@ -1,6 +1,6 @@
 Spock Genesis
 ===============
-Mostly lazy data generators for property based testing using the [Spock][http://spockframework.org] test framework
+Mostly lazy data generators for property based testing using the [Spock](http://spockframework.org) test framework
 
 Building Spock Genesis
 --------------

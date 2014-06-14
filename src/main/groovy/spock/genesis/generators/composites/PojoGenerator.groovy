@@ -5,11 +5,11 @@ import java.lang.reflect.Constructor
 import spock.genesis.generators.Generator
 
 class PojoGenerator<E> extends Generator<E> {
-	Class target
+	Class<E> target
 	
 	Iterator generator
 	
-	PojoGenerator(Class target, Iterator generator) {
+	PojoGenerator(Class<E> target, Iterator generator) {
 		this.target = target
 		this.generator = generator
 	}

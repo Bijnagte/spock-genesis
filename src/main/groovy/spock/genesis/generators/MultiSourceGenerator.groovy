@@ -34,6 +34,16 @@ class MultiSourceGenerator<E> extends Generator<E> implements Closeable {
 			}
 		}
 	}
+	
+	@SuppressWarnings('ExplicitCallToPlusMethod')
+	MultiSourceGenerator plus(Iterator additional) {
+		plus([additional])
+	}
+	
+	MultiSourceGenerator plus(Collection<Iterator> additional) {
+		new MultiSourceGenerator(additional + iterators)
+	}
+	
 
 	void close() {
 		iterators.each { close(it) }

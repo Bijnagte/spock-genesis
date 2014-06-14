@@ -13,7 +13,6 @@ class RandomMapGeneratorSpec extends Specification {
 		when:
 			Map result = generator.next()
 		then:
-			result.size() > 0
  			result.each { key, value ->
 				key instanceof String
 				value instanceof Integer

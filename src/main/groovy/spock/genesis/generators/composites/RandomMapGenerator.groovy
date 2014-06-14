@@ -16,19 +16,19 @@ class RandomMapGenerator<K,V> extends Generator<Map<K,V>> implements Closeable {
 		this.valueGenerator = valueGenerator
 	}
 
-	RandomMapGenerator(int maxSize, Iterator<K> keyGenerator, Iterator valueGenerator) {
+	RandomMapGenerator(Iterator<K> keyGenerator, Iterator valueGenerator, int maxSize) {
 		this.sizeSource = new WholeNumberGenerator(maxSize)
 		this.keyGenerator = keyGenerator
 		this.valueGenerator = valueGenerator
 	}
 
-	RandomMapGenerator(int maxSize, int minSize, Iterator<K> keyGenerator, Iterator valueGenerator) {
+	RandomMapGenerator(Iterator<K> keyGenerator, Iterator valueGenerator, int maxSize, int minSize) {
 		this.sizeSource = new WholeNumberGenerator(minSize, maxSize)
 		this.keyGenerator = keyGenerator
 		this.valueGenerator = valueGenerator
 	}
 
-	RandomMapGenerator(IntRange sizeRange, Iterator<K> keyGenerator, Iterator valueGenerator) {
+	RandomMapGenerator(Iterator<K> keyGenerator, Iterator valueGenerator, IntRange sizeRange) {
 		this.sizeSource = new WholeNumberGenerator(sizeRange)
 		this.keyGenerator = keyGenerator
 		this.valueGenerator = valueGenerator
