@@ -20,11 +20,18 @@ abstract class Generator<E> implements Iterator<E> {
 		new TransformingGenerator<E, E>(this, withClosure)
 	}
 
-
 	LimitedGenerator<E> take(int qty) {
 		new LimitedGenerator<E>(this, qty)
 	}
+	
+	SequentialMultisourceGenerator<E> then(Iterator<E>... iterators) {
+		new SequentialMultisourceGenerator<E>(this, *iterators)
+	}
 
+	SequentialMultisourceGenerator<E> then(Iterable<E>... iterators) {
+		new SequentialMultisourceGenerator<E>(this, *iterators*.iterator())
+	}
+	
 	CyclicGenerator<E> repeat() {
 		new CyclicGenerator<E>(this)
 	}

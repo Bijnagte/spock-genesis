@@ -1,0 +1,4 @@
+moduleName=spock-genesis-module
+moduleVersion=0.1.0
+extensionClasses=spock.genesis.extension.ExtensionMethods
+#staticExtensionClasses=

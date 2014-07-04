@@ -54,7 +54,6 @@ class StringGenerator extends InfiniteGenerator<String> {
 		this.charGenerator = new CharacterGenerator(potentialCharacters)
 	}
 
-
 	@Override
 	String next() {
 		makeString(lengthSource.next())

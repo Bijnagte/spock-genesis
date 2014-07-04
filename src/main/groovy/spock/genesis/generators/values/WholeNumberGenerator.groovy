@@ -8,15 +8,8 @@ class WholeNumberGenerator extends InfiniteGenerator<Integer> {
 	final int min
 	final int magnitude
 
-	WholeNumberGenerator() {
-		this.min = 0
-		this.magnitude = Integer.MAX_VALUE
-	}
-
-	WholeNumberGenerator(int max) {
-		assert max >= 0
-		this.min = 0
-		this.magnitude = max + 1
+	WholeNumberGenerator(int max = Integer.MAX_VALUE) {
+		this(0, max)
 	}
 
 	WholeNumberGenerator(int min, int max) {
@@ -27,11 +20,7 @@ class WholeNumberGenerator extends InfiniteGenerator<Integer> {
 	}
 
 	WholeNumberGenerator(IntRange range) {
-		assert range
-		assert range.from >= 0
-		assert range.to > range.from
-		this.min = range.from
-		this.range = range.to - min
+		this(range.from, range.to)
 	}
 
 	@Override

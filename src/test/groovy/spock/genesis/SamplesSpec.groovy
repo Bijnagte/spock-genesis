@@ -1,10 +1,16 @@
 package spock.genesis
 
+import spock.genesis.extension.ExtensionMethods
 import spock.genesis.generators.MultiSourceGenerator
 import spock.lang.Specification
 
 class SamplesSpec extends Specification {
-
+	/*
+	 * It is not necessary to "use" extension methods in your own code.
+	 * They will be registered with the runtime automatically 
+	 */
+	
+	
 	def 'using static factory methods'() {
 		expect:
 			Gen.string.next() instanceof String
@@ -15,7 +21,7 @@ class SamplesSpec extends Specification {
 			Gen.char.next() instanceof Character
 	}
 	
-	def 'multi source with & operator'() {
+	def 'create multi source generator with & operator'() {
 		setup:
 			def gen = Gen.string & Gen.int
 		expect:
@@ -32,6 +38,18 @@ class SamplesSpec extends Specification {
 			def results = gen.collect()
 		then:
 			results.size() == 3
+	}
+	
+	def 'multiply int by generator limits the quantity generated'() {
+		use (ExtensionMethods) {
+			
+		setup:
+			def gen = 3 * Gen.string
+		when:
+			def results = gen.collect()
+		then:
+			results.size() == 3
+		}
 	}
 	
 	static class Data {
@@ -98,5 +116,26 @@ class SamplesSpec extends Specification {
 			
 		expect:
 			gen.next().getTime() == 1400
+	}
+	
+	def 'generate from multiple iterators in sequence'() {
+		setup:
+			def gen = Gen.these(1, 2, 3).then([4, 5])
+		expect:
+			gen.collect() == [1, 2, 3, 4, 5]
+	}
+	
+	def 'generate a random value from specified values'() {
+		setup:
+			def range = 1..100
+			def gen = Gen.any(range)
+		when: 'generate a list for each value until it is generated'
+			def results = range.collect { num ->
+				gen.takeWhile { it != num }.collect()
+			}
+		then: 'at least one should have gotten multiple results before finding the value'
+			results.any { it.size() > 1 }
+		and: 'all results should be from the supplied values'
+			results.flatten().every { it in range }
 	}
 }

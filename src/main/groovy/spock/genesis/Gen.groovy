@@ -2,6 +2,7 @@ package spock.genesis
 
 import spock.genesis.generators.CyclicGenerator
 import spock.genesis.generators.FactoryGenerator
+import spock.genesis.generators.GeneratorDecorator
 import spock.genesis.generators.composites.DefinedMapGenerator
 import spock.genesis.generators.composites.PojoGenerator
 import spock.genesis.generators.composites.RandomMapGenerator
@@ -46,8 +47,12 @@ class Gen {
 		new ValueGenerator(value)
 	}
 
-	static RandomElementGenerator<?> random(Collection<?> source) {
+	static RandomElementGenerator<?> any(Collection<?> source) {
 		new RandomElementGenerator<?>(source)
+	}
+	
+	static RandomElementGenerator any(Object... source) {
+		new RandomElementGenerator(source.toList())
 	}
 
 	static CyclicGenerator cycle(Iterator source) {
@@ -85,4 +90,17 @@ class Gen {
 	static FactoryGenerator using(Closure factory) {
 		new FactoryGenerator(factory)
 	}
+	
+	static GeneratorDecorator these(Iterator iterator) {
+		new GeneratorDecorator(iterator)
+	}
+	
+	static GeneratorDecorator these(Iterable iterable) {
+		these(iterable.iterator())
+	}
+	
+	static GeneratorDecorator these(Object... values) {
+		these(values.iterator())
+	}
+	
 }
