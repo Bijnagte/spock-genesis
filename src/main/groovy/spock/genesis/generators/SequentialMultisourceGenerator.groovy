@@ -16,7 +16,7 @@ class SequentialMultisourceGenerator<E> extends Generator<E> implements Closeabl
 	}
 	
 	private void setupIterator() {
-		while(!current?.hasNext() && iterators.hasNext()) {
+		while (!current?.hasNext() && iterators.hasNext()) {
 			current = iterators.next()
 		}
 	} 

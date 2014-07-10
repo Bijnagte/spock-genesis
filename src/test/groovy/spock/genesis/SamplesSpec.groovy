@@ -1,6 +1,7 @@
 package spock.genesis
 
 import spock.genesis.extension.ExtensionMethods
+import spock.genesis.generators.Generator
 import spock.genesis.generators.MultiSourceGenerator
 import spock.lang.Specification
 
@@ -41,15 +42,28 @@ class SamplesSpec extends Specification {
 	}
 	
 	def 'multiply int by generator limits the quantity generated'() {
-		use (ExtensionMethods) {
 			
 		setup:
-			def gen = 3 * Gen.string
+			def gen
+			use (ExtensionMethods) { gen = 3 * Gen.string }
 		when:
 			def results = gen.collect()
 		then:
 			results.size() == 3
-		}
+	}
+	
+	def 'convert collection to generator'() {
+			
+		setup:
+			def source = [1, 2, 3]
+			def gen 
+			use (ExtensionMethods) { gen = source.toGenerator() }
+		expect:
+			Generator.isAssignableFrom(gen.class)
+		when:
+			def results = gen.collect()
+		then:
+			results == source
 	}
 	
 	static class Data {
