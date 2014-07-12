@@ -2,6 +2,23 @@ Spock Genesis
 ===============
 Mostly lazy data generators for property based testing using the [Spock](http://spockframework.org) test framework
 
+Usage
+-----
+From gradle
+
+```groovy
+repositories {
+    jcenter()
+}
+
+dependencies {
+    testCompile 'com.nagternal:spock-genesis:0.1.0'
+}
+```
+Examples
+-----
+See [SamplesSpec](./src/test/groovy/SamplesSpec.groovy) for examples
+
 Building Spock Genesis
 --------------
 The only prerequisite is that you have JDK 5 or higher installed.

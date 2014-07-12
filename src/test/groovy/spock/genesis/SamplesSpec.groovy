@@ -4,13 +4,9 @@ import spock.genesis.extension.ExtensionMethods
 import spock.genesis.generators.Generator
 import spock.genesis.generators.MultiSourceGenerator
 import spock.lang.Specification
+import spock.util.mop.Use
 
 class SamplesSpec extends Specification {
-	/*
-	 * It is not necessary to "use" extension methods in your own code.
-	 * They will be registered with the runtime automatically 
-	 */
-	
 	
 	def 'using static factory methods'() {
 		expect:
@@ -41,23 +37,21 @@ class SamplesSpec extends Specification {
 			results.size() == 3
 	}
 	
+	@Use(ExtensionMethods)
 	def 'multiply int by generator limits the quantity generated'() {
-			
 		setup:
-			def gen
-			use (ExtensionMethods) { gen = 3 * Gen.string }
+			def gen = 3 * Gen.string
 		when:
 			def results = gen.collect()
 		then:
 			results.size() == 3
 	}
 	
+	@Use(ExtensionMethods)
 	def 'convert collection to generator'() {
-			
 		setup:
 			def source = [1, 2, 3]
-			def gen 
-			use (ExtensionMethods) { gen = source.toGenerator() }
+			def gen = source.toGenerator()
 		expect:
 			Generator.isAssignableFrom(gen.class)
 		when:
