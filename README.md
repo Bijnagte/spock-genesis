@@ -17,7 +17,7 @@ dependencies {
 ```
 Examples
 -----
-See [SamplesSpec](./src/test/groovy/SamplesSpec.groovy) for examples
+See [SamplesSpec](./src/test/groovy/spock/genesis/SamplesSpec.groovy) for examples
 
 Building Spock Genesis
 --------------
