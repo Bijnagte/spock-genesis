@@ -54,4 +54,4 @@ including [Gradle](http://www.gradle.org) itself, will be downloaded automatical
 Resources
 ---------
 * Spock Homepage -- http://spockframework.org
-* GitHub -- http://github.Bijnagte/spock-genesis
+* GitHub -- https://github.com/Bijnagte/spock-genesis
