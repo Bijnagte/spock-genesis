@@ -1,5 +1,9 @@
 package spock.genesis.generators
 
+/**
+ * A generator that wraps an iterator to provide {@link Generator} methods.
+ * @param <E> the generated type
+ */
 class GeneratorDecorator<E> extends Generator<E> implements Closeable {
 	protected Iterator<E> generator
 

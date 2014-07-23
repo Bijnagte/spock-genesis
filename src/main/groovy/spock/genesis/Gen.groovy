@@ -2,8 +2,10 @@ package spock.genesis
 
 import spock.genesis.generators.CyclicGenerator
 import spock.genesis.generators.FactoryGenerator
+import spock.genesis.generators.Generator
 import spock.genesis.generators.GeneratorDecorator
 import spock.genesis.generators.composites.DefinedMapGenerator
+import spock.genesis.generators.composites.ListGenerator
 import spock.genesis.generators.composites.PojoGenerator
 import spock.genesis.generators.composites.RandomMapGenerator
 import spock.genesis.generators.composites.TupleGenerator
@@ -19,22 +21,49 @@ import spock.genesis.generators.values.ValueGenerator
 
 class Gen {
 
+	/**
+	 * @return an infinite lazy String Generator
+	 */
 	static StringGenerator getString() {
 		new StringGenerator()
+	}
+	/**
+	 * 
+	 * @param maxLength
+	 * @return an infinite lazy String Generator
+	 */
+	static StringGenerator string(int maxLength) {
+		new StringGenerator(maxLength)
+	}
+	
+	static StringGenerator string(String potentialCharacters) {
+		new StringGenerator(potentialCharacters)
+	}
+	
+	static StringGenerator string(int minLength, int maxLength) {
+		new StringGenerator(minLength, maxLength)
 	}
 
 	static ByteArrayGenerator getBytes() {
 		new ByteArrayGenerator()
 	}
 
-	static IntegerGenerator getInt() {
+	static IntegerGenerator getInteger() {
 		new IntegerGenerator()
 	}
+	
+	static IntegerGenerator integer(int min, int max) {
+		new IntegerGenerator(min, max)
+	}
 
+	static IntegerGenerator integer(IntRange range) {
+		new IntegerGenerator(range.from, range.to)
+	}
+	
 	static LongGenerator getLong() {
 		new LongGenerator()
 	}
-
+	
 	static CharacterGenerator getChar() {
 		new CharacterGenerator()
 	}
@@ -47,10 +76,18 @@ class Gen {
 		new ValueGenerator(value)
 	}
 
-	static RandomElementGenerator<?> any(Collection<?> source) {
-		new RandomElementGenerator<?>(source)
+	/**
+	 * @param source {@link Collection} of {@link Object} to pick from at random
+	 * @return a {@link RandomElementGenerator}
+	 */
+	static RandomElementGenerator any(Collection source) {
+		new RandomElementGenerator(source)
 	}
 	
+	/**
+	 * @param source Array of {@link Object} to pick from at random 
+	 * @return a {@link RandomElementGenerator}
+	 */
 	static RandomElementGenerator any(Object... source) {
 		new RandomElementGenerator(source.toList())
 	}
@@ -78,6 +115,18 @@ class Gen {
 	static RandomMapGenerator map(Iterator keyGenerator, Iterator valueGenerator) {
 		new RandomMapGenerator(keyGenerator, valueGenerator)
 	}
+	
+	static ListGenerator list(Generator valueGenerator) {
+		new ListGenerator(valueGenerator)
+	}
+	
+	static ListGenerator list(Generator valueGenerator, int maxLength) {
+		new ListGenerator(valueGenerator, maxLength)
+	}
+	
+	static ListGenerator list(Generator valueGenerator, int minLength, int maxLength) {
+		new ListGenerator(valueGenerator, minLength, maxLength)
+	}
 
 	static TupleGenerator tuple(Iterator... generators) {
 		new TupleGenerator(generators)
@@ -85,6 +134,10 @@ class Gen {
 
 	static DateGenerator getDate() {
 		new DateGenerator()
+	}
+	
+	static DateGenerator date(Date minDate, Date maxDate) {
+		new DateGenerator(minDate, maxDate)
 	}
 
 	static FactoryGenerator using(Closure factory) {
@@ -102,5 +155,4 @@ class Gen {
 	static GeneratorDecorator these(Object... values) {
 		these(values.iterator())
 	}
-	
 }

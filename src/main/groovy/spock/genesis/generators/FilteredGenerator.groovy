@@ -1,5 +1,9 @@
 package spock.genesis.generators
 
+/**
+ * A lazy generator that returns the next value from the wrapped iterator that satisfies a predicate Closure.
+ * @param <E> the generated type
+ */
 class FilteredGenerator<E> extends GeneratorDecorator<E> {
 
 	private final Closure predicate

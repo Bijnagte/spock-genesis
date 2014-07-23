@@ -1,5 +1,10 @@
 package spock.genesis.generators
 
+/**
+ * A lazy infinite generator that repeats an iterator.
+ * This generator keeps track of 1 iterator worth of data so infinite sources could lead to exesive memory usage.
+ * @param <E> the generated type
+ */
 class CyclicGenerator<E> extends GeneratorDecorator<E> {
 	private final List repeatSource = []
 	private boolean hasRepeated = false

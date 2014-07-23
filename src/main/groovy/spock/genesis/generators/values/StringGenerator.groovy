@@ -2,6 +2,9 @@ package spock.genesis.generators.values
 
 import spock.genesis.generators.InfiniteGenerator
 
+/**
+ * lazy infinite {@link java.lang.String} generator
+ */
 class StringGenerator extends InfiniteGenerator<String> {
 
 	static final int DEFAULT_LENGTH_LIMIT = 1024

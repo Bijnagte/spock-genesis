@@ -13,14 +13,15 @@ class SamplesSpec extends Specification {
 			Gen.string.next() instanceof String
 			Gen.bytes.next() instanceof byte[]
 			Gen.double.next() instanceof Double
-			Gen.int.next() instanceof Integer
+			Gen.integer.next() instanceof Integer
 			Gen.long.next() instanceof Long
 			Gen.char.next() instanceof Character
+			Gen.date.next() instanceof Date
 	}
 	
 	def 'create multi source generator with & operator'() {
 		setup:
-			def gen = Gen.string & Gen.int
+			def gen = Gen.string(100) & Gen.integer
 		expect:
 			gen instanceof MultiSourceGenerator
 			gen.any { it instanceof Integer }
@@ -68,7 +69,7 @@ class SamplesSpec extends Specification {
 	
 	def 'generate type with map'() {
 		setup:
-			def gen = Gen.type(Data, s: Gen.string, i: Gen.int, d: Gen.date)
+			def gen = Gen.type(Data, s: Gen.string, i: Gen.integer, d: Gen.date)
 		when:
 			Data result = gen.next()
 		then:
@@ -79,7 +80,7 @@ class SamplesSpec extends Specification {
 	
 	def 'generate type then call method on instance'() {
 		setup:
-			def gen = Gen.type(Data, i: Gen.int, d: Gen.date).map { it.s = it.toString(); it }
+			def gen = Gen.type(Data, i: Gen.integer, d: Gen.date).map { it.s = it.toString(); it }
 		when:
 			Data result = gen.next()
 		then:

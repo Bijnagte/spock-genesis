@@ -2,8 +2,17 @@ package spock.genesis.generators
 
 import spock.genesis.generators.values.NullGenerator
 
+/**
+ * An Iterator that generates a type (usually lazily)
+ * @param <E> the generated type
+ */
 abstract class Generator<E> implements Iterator<E> {
 
+	/**
+	 * Wraps this generator in a generator that returns values that matches the supplied predicate
+	 * @param predicate
+	 * @return a FilteredGenerator
+	 */
 	FilteredGenerator<E> filter(Closure predicate) {
 		new FilteredGenerator<E>(this, predicate)
 	}
@@ -48,9 +57,9 @@ abstract class Generator<E> implements Iterator<E> {
 		withNulls(100)
 	}
 
-	/**Wraps this generator in a {@link MultiSourceGenerator} that randomly returns nulls
+	/**Wraps this generator in a {@link spock.genesis.generators.MultiSourceGenerator} that randomly returns nulls
 	 * @param resultsPerNull the average number of results from this generator per null result
-	 * @return
+	 * @return {@link spock.genesis.generators.MultiSourceGenerator}
 	 */
 	MultiSourceGenerator<E> withNulls(int resultsPerNull) {
 		Map weightedGenerators = [(this): resultsPerNull, (new NullGenerator<E>()): 1]

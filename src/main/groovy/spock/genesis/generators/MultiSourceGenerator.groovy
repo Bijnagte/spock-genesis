@@ -1,5 +1,9 @@
 package spock.genesis.generators
 
+/**
+ * A generator that returns the next value from one of its source generators at random.
+ * @param <E> the generated type
+ */
 class MultiSourceGenerator<E> extends Generator<E> implements Closeable {
 
 	final List<Iterator<E>> iterators
@@ -17,11 +21,17 @@ class MultiSourceGenerator<E> extends Generator<E> implements Closeable {
 		this.iterators = i
 	}
 
+	/**
+	 * @return true if any of the source generators has next
+	 */
 	@Override
 	boolean hasNext() {
 		iterators.any { it.hasNext() }
 	}
 
+	/** generates a value from one of the source generators
+	 * @return the generated value
+	 */
 	@Override
 	E next() {
 		boolean search = hasNext()
@@ -40,6 +50,12 @@ class MultiSourceGenerator<E> extends Generator<E> implements Closeable {
 		plus([additional])
 	}
 	
+	/**
+	 * Adds additional source generators to this generators source generators.
+	 * This method does not mutate but does reuse the source generators.
+	 * @param additional
+	 * @return a new MultiSourceGenerator
+	 */
 	MultiSourceGenerator plus(Collection<Iterator> additional) {
 		new MultiSourceGenerator(additional + iterators)
 	}
