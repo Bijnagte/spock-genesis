@@ -11,7 +11,7 @@ class DateGenerator extends InfiniteGenerator<Date> {
 	}
 	
 	DateGenerator(Date minDate, Date maxDate) {
-		this.millisProvider = new LongGenerator(minDate.millis(), maxDate.millis())
+		this.millisProvider = new LongGenerator(minDate.time, maxDate.time)
 	}
 	
 	@Override
