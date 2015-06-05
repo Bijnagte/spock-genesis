@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    testCompile 'com.nagternal:spock-genesis:0.1.0'
+    testCompile 'com.nagternal:spock-genesis:0.1.1'
 }
 ```
 
