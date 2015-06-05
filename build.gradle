@@ -6,8 +6,8 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'net.saliman:gradle-cobertura-plugin:2.2.2',
-			'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
+		classpath 'net.saliman:gradle-cobertura-plugin:2.2.3',
+			'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
 	}
 }
 
@@ -21,16 +21,15 @@ apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven'
 
 group = 'com.nagternal'
-version = '0.1.1'
+version = '0.2.0'
 
 repositories {
 	mavenCentral()
 }
 
 dependencies {
-  compile('org.codehaus.groovy:groovy:2.2.2')
-  
-  compile('org.spockframework:spock-core:0.7-groovy-2.0')
+  	compile('org.codehaus.groovy:groovy:2.4.3')
+	compile('org.spockframework:spock-core:1.0-groovy-2.4')
 }
 
 codenarc {
