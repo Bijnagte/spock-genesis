@@ -40,6 +40,10 @@ codenarcTest {
 	ignoreFailures = true
 }
 
+codenarcMain {
+	maxPriority3Violations = 20
+}
+
 cobertura {
 	coverageFormats = ['xml','html']
 }

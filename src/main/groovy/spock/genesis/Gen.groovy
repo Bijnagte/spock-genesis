@@ -19,140 +19,143 @@ import spock.genesis.generators.values.RandomElementGenerator
 import spock.genesis.generators.values.StringGenerator
 import spock.genesis.generators.values.ValueGenerator
 
+/**
+ * static factory methods for Generators
+ */
 class Gen {
 
-	/**
-	 * @return an infinite lazy String Generator
-	 */
-	static StringGenerator getString() {
-		new StringGenerator()
-	}
-	/**
-	 * 
-	 * @param maxLength
-	 * @return an infinite lazy String Generator
-	 */
-	static StringGenerator string(int maxLength) {
-		new StringGenerator(maxLength)
-	}
-	
-	static StringGenerator string(String potentialCharacters) {
-		new StringGenerator(potentialCharacters)
-	}
-	
-	static StringGenerator string(int minLength, int maxLength) {
-		new StringGenerator(minLength, maxLength)
-	}
+    /**
+     * @return an infinite lazy String Generator
+     */
+    static StringGenerator getString() {
+        new StringGenerator()
+    }
+    /**
+     *
+     * @param maxLength
+     * @return an infinite lazy String Generator
+     */
+    static StringGenerator string(int maxLength) {
+        new StringGenerator(maxLength)
+    }
 
-	static ByteArrayGenerator getBytes() {
-		new ByteArrayGenerator()
-	}
+    static StringGenerator string(String potentialCharacters) {
+        new StringGenerator(potentialCharacters)
+    }
 
-	static IntegerGenerator getInteger() {
-		new IntegerGenerator()
-	}
-	
-	static IntegerGenerator integer(int min, int max) {
-		new IntegerGenerator(min, max)
-	}
+    static StringGenerator string(int minLength, int maxLength) {
+        new StringGenerator(minLength, maxLength)
+    }
 
-	static IntegerGenerator integer(IntRange range) {
-		new IntegerGenerator(range.from, range.to)
-	}
-	
-	static LongGenerator getLong() {
-		new LongGenerator()
-	}
-	
-	static CharacterGenerator getChar() {
-		new CharacterGenerator()
-	}
+    static ByteArrayGenerator getBytes() {
+        new ByteArrayGenerator()
+    }
 
-	static DoubleGenerator getDouble() {
-		new DoubleGenerator()
-	}
+    static IntegerGenerator getInteger() {
+        new IntegerGenerator()
+    }
 
-	static ValueGenerator value(def value) {
-		new ValueGenerator(value)
-	}
+    static IntegerGenerator integer(int min, int max) {
+        new IntegerGenerator(min, max)
+    }
 
-	/**
-	 * @param source {@link Collection} of {@link Object} to pick from at random
-	 * @return a {@link RandomElementGenerator}
-	 */
-	static RandomElementGenerator any(Collection source) {
-		new RandomElementGenerator(source)
-	}
-	
-	/**
-	 * @param source Array of {@link Object} to pick from at random 
-	 * @return a {@link RandomElementGenerator}
-	 */
-	static RandomElementGenerator any(Object... source) {
-		new RandomElementGenerator(source.toList())
-	}
+    static IntegerGenerator integer(IntRange range) {
+        new IntegerGenerator(range.from, range.to)
+    }
 
-	static CyclicGenerator cycle(Iterator source) {
-		new CyclicGenerator(source)
-	}
+    static LongGenerator getLong() {
+        new LongGenerator()
+    }
 
-	static CyclicGenerator cycle(Iterable source) {
-		new CyclicGenerator(source.iterator())
-	}
+    static CharacterGenerator getChar() {
+        new CharacterGenerator()
+    }
 
-	static PojoGenerator type(Map<String, Object> keysToValueGenerators, Class target) {
-		new PojoGenerator(target, map(keysToValueGenerators))
-	}
+    static DoubleGenerator getDouble() {
+        new DoubleGenerator()
+    }
 
-	static PojoGenerator type(Class target, Iterator... argGenerators) {
-		new PojoGenerator(target, tuple(argGenerators))
-	}
+    static ValueGenerator value(value) {
+        new ValueGenerator(value)
+    }
 
-	static DefinedMapGenerator map(Map keysToValueGenerators) {
-		new DefinedMapGenerator(keysToValueGenerators)
-	}
+    /**
+     * @param source {@link Collection} of {@link Object} to pick from at random
+     * @return a {@link RandomElementGenerator}
+     */
+    static RandomElementGenerator any(Collection source) {
+        new RandomElementGenerator(source)
+    }
 
-	static RandomMapGenerator map(Iterator keyGenerator, Iterator valueGenerator) {
-		new RandomMapGenerator(keyGenerator, valueGenerator)
-	}
-	
-	static ListGenerator list(Generator valueGenerator) {
-		new ListGenerator(valueGenerator)
-	}
-	
-	static ListGenerator list(Generator valueGenerator, int maxLength) {
-		new ListGenerator(valueGenerator, maxLength)
-	}
-	
-	static ListGenerator list(Generator valueGenerator, int minLength, int maxLength) {
-		new ListGenerator(valueGenerator, minLength, maxLength)
-	}
+    /**
+     * @param source Array of {@link Object} to pick from at random
+     * @return a {@link RandomElementGenerator}
+     */
+    static RandomElementGenerator any(Object... source) {
+        new RandomElementGenerator(source.toList())
+    }
 
-	static TupleGenerator tuple(Iterator... generators) {
-		new TupleGenerator(generators)
-	}
+    static CyclicGenerator cycle(Iterator source) {
+        new CyclicGenerator(source)
+    }
 
-	static DateGenerator getDate() {
-		new DateGenerator()
-	}
-	
-	static DateGenerator date(Date minDate, Date maxDate) {
-		new DateGenerator(minDate, maxDate)
-	}
+    static CyclicGenerator cycle(Iterable source) {
+        new CyclicGenerator(source.iterator())
+    }
 
-	static FactoryGenerator using(Closure factory) {
-		new FactoryGenerator(factory)
-	}
-	
-	static GeneratorDecorator these(Iterator iterator) {
-		new GeneratorDecorator(iterator)
-	}
-	
-	static GeneratorDecorator these(Iterable iterable) {
-		these(iterable.iterator())
-	}
-	
-	static GeneratorDecorator these(Object... values) {
-		these(values.iterator())
-	}
+    static PojoGenerator type(Map<String, Object> keysToValueGenerators, Class target) {
+        new PojoGenerator(target, map(keysToValueGenerators))
+    }
+
+    static PojoGenerator type(Class target, Iterator... argGenerators) {
+        new PojoGenerator(target, tuple(argGenerators))
+    }
+
+    static DefinedMapGenerator map(Map keysToValueGenerators) {
+        new DefinedMapGenerator(keysToValueGenerators)
+    }
+
+    static RandomMapGenerator map(Iterator keyGenerator, Iterator valueGenerator) {
+        new RandomMapGenerator(keyGenerator, valueGenerator)
+    }
+
+    static ListGenerator list(Generator valueGenerator) {
+        new ListGenerator(valueGenerator)
+    }
+
+    static ListGenerator list(Generator valueGenerator, int maxLength) {
+        new ListGenerator(valueGenerator, maxLength)
+    }
+
+    static ListGenerator list(Generator valueGenerator, int minLength, int maxLength) {
+        new ListGenerator(valueGenerator, minLength, maxLength)
+    }
+
+    static TupleGenerator tuple(Iterator... generators) {
+        new TupleGenerator(generators)
+    }
+
+    static DateGenerator getDate() {
+        new DateGenerator()
+    }
+
+    static DateGenerator date(Date minDate, Date maxDate) {
+        new DateGenerator(minDate, maxDate)
+    }
+
+    static FactoryGenerator using(Closure factory) {
+        new FactoryGenerator(factory)
+    }
+
+    static GeneratorDecorator these(Iterator iterator) {
+        new GeneratorDecorator(iterator)
+    }
+
+    static GeneratorDecorator these(Iterable iterable) {
+        these(iterable.iterator())
+    }
+
+    static GeneratorDecorator these(Object... values) {
+        these(values.iterator())
+    }
 }

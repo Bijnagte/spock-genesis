@@ -1,38 +1,37 @@
 package spock.genesis.generators
 
-
 class SequentialMultisourceGenerator<E> extends Generator<E> implements Closeable {
 
-	final Iterator<Iterator<E>> iterators
-	private Iterator<E> current
+    final Iterator<Iterator<E>> iterators
+    private Iterator<E> current
 
-	SequentialMultisourceGenerator(Iterator<E>... iterators) {
-		this.iterators = iterators.iterator()
-	}
+    SequentialMultisourceGenerator(Iterator<E>... iterators) {
+        this.iterators = iterators.iterator()
+    }
 
-	boolean hasNext() {
-		setupIterator()
-		current.hasNext()
-	}
-	
-	private void setupIterator() {
-		while (!current?.hasNext() && iterators.hasNext()) {
-			current = iterators.next()
-		}
-	} 
+    boolean hasNext() {
+        setupIterator()
+        current.hasNext()
+    }
 
-	E next() {
-		setupIterator()
-		current.next()
-	}
+    private void setupIterator() {
+        while (!current?.hasNext() && iterators.hasNext()) {
+            current = iterators.next()
+        }
+    }
 
-	void close() {
-		iterators.each { close(it) }
-	}
+    E next() {
+        setupIterator()
+        current.next()
+    }
 
-	void close(Iterator generator) {
-		if (generator.respondsTo('close')) {
-			generator.close()
-		}
-	}
+    void close() {
+        iterators.each { close(it) }
+    }
+
+    void close(Iterator generator) {
+        if (generator.respondsTo('close')) {
+            generator.close()
+        }
+    }
 }

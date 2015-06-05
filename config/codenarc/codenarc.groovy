@@ -7,7 +7,11 @@ ruleset {
 	ruleset('rulesets/dry.xml')
 	//ruleset('rulesets/enhanced.xml')
 	ruleset('rulesets/exceptions.xml')
-	ruleset('rulesets/formatting.xml')
+	ruleset('rulesets/formatting.xml') {
+		ClassJavadoc {
+			priority = 3
+		}
+	}
 	ruleset('rulesets/generic.xml')
 	ruleset('rulesets/groovyism.xml')
 	ruleset('rulesets/imports.xml')

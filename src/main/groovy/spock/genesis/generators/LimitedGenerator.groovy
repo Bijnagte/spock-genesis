@@ -1,23 +1,23 @@
 package spock.genesis.generators
 
 class LimitedGenerator<E> extends GeneratorDecorator<E> {
-	
-	final int iterationLimit
-	private int iteration = 0
 
-	LimitedGenerator( Iterator<E> generator, int iterationLimit) {
-		super(generator)
-		this.iterationLimit = iterationLimit
-	}
+    final int iterationLimit
+    private int iteration = 0
 
-	@Override
-	boolean hasNext() {
-		generator.hasNext() && iteration < iterationLimit
-	}
+    LimitedGenerator(Iterator<E> generator, int iterationLimit) {
+        super(generator)
+        this.iterationLimit = iterationLimit
+    }
 
-	@Override
-	E next() {
-		iteration ++
-		generator.next()
-	}
+    @Override
+    boolean hasNext() {
+        generator.hasNext() && iteration < iterationLimit
+    }
+
+    @Override
+    E next() {
+        iteration++
+        generator.next()
+    }
 }
