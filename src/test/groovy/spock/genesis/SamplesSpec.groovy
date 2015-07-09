@@ -1,5 +1,6 @@
 package spock.genesis
 
+import groovy.transform.Immutable
 import spock.genesis.extension.ExtensionMethods
 import spock.genesis.generators.Generator
 import spock.genesis.generators.MultiSourceGenerator
@@ -15,7 +16,7 @@ class SamplesSpec extends Specification {
             Gen.double.next() instanceof Double
             Gen.integer.next() instanceof Integer
             Gen.long.next() instanceof Long
-            Gen.char.next() instanceof Character
+            Gen.character.next() instanceof Character
             Gen.date.next() instanceof Date
     }
 
@@ -105,8 +106,9 @@ class SamplesSpec extends Specification {
         setup:
             def gen = Gen.type(TupleData, Gen.string, Gen.value(42), Gen.date)
         when:
-            TupleData result = gen.next()
+            def result = gen.next()
         then:
+            result instanceof TupleData
             result.d
             result.i == 42
             result.s
@@ -146,5 +148,40 @@ class SamplesSpec extends Specification {
             results.any { it.size() > 1 }
         and: 'all results should be from the supplied values'
             results.flatten().every { it in range }
+    }
+
+    def 'generate a string using a regular expression'() {
+        setup:
+            String regex = '(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|]\\d'
+        expect:
+            Gen.string(~regex).next() ==~ regex
+    }
+
+    @Immutable
+    static class Person {
+        int id
+        String name
+        String title
+        Date birthDate
+        char gender
+    }
+
+    def 'complex pogo'() {
+        expect:
+            person instanceof Person
+            person.gender in ['M', 'F', 'T', 'U'].collect { it as char }
+            person.id > 199
+            person.id < 10001
+            person.birthDate >= Date.parse('MM/dd/yyyy', '01/01/1940')
+            person.birthDate <= new Date()
+
+        where:
+            person << Gen.type(Person,
+                    id: Gen.integer(200..10000),
+                    name: Gen.string(~/[A-Z][a-z]+( [A-Z][a-z]+)?/),
+                    birthDate: Gen.date(Date.parse('MM/dd/yyyy', '01/01/1940'), new Date()),
+                    title: Gen.these('', null).then(Gen.any('Dr.', 'Mr.', 'Ms.', 'Mrs.')),
+                    gender: Gen.character('MFTU')
+            ).take(3)
     }
 }

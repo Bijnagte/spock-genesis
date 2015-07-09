@@ -18,35 +18,58 @@ repositories {
 }
 
 dependencies {
-    testCompile 'com.nagternal:spock-genesis:0.2.0'
+    testCompile 'com.nagternal:spock-genesis:0.3.0'
 }
 ```
 
 The primary way of constructing generators is [spock.genesis.Gen](./src/main/groovy/spock/genesis/Gen.groovy) which provides static factory methods for data generators.
+
 ```groovy
 @Unroll
 def 'test reverse #string'() {
     when:
-    def reversed = string.reverse()
-    
+        def reversed = string.reverse()
+
     then:
-    reversed.size() == string.size()
-    if (string) {
-        string.eachWithIndex { letter, i ->
-            letter == reversed[-(i + 1)] 
+        reversed.size() == string.size()
+        if (string) {
+            string.eachWithIndex { letter, i ->
+                letter == reversed[-(i + 1)]
+            }
         }
-    }
-    reversed.reverse() == string
-    
+        reversed.reverse() == string
+
     where:
-    string << Gen.these('').then(Gen.string).take(10000)
+        string << Gen.these('', 'foo').then(Gen.string).take(10000)
 }
 ```
+
+Given a Person class create a generator that can supply instances:
+
+```groovy
+    Gen.type(Person,
+        id: Gen.integer(200..10000),
+        name: Gen.string(~/[A-Z][a-z]+( [A-Z][a-z]+)?/),
+        birthDate: Gen.date(Date.parse('MM/dd/yyyy','01/01/1940'), new Date()),
+        title: Gen.these('', null).then(Gen.any('Dr.', 'Mr.', 'Ms.', 'Mrs.')),
+        gender: Gen.character('MFTU'))
+```
+
 See [SamplesSpec](./src/test/groovy/spock/genesis/SamplesSpec.groovy) for more examples
+
+
+Change log
+----------
+### 0.2.0
+* Update dependencies
+
+### 0.3.0
+* Add support for using regular expressions for String generation. Thanks to Generex
+* Using Groovy constructor selection for single arg Pojo construction
 
 Building Spock Genesis
 --------------
-The only prerequisite is that you have JDK 5 or higher installed.
+The only prerequisite is that you have JDK 7 or higher installed.
 
 After cloning the project, type `./gradlew clean build` (Windows: `gradlew clean build`). All build dependencies,
 including [Gradle](http://www.gradle.org) itself, will be downloaded automatically (unless already present).
@@ -55,3 +78,4 @@ Resources
 ---------
 * Spock Homepage -- http://spockframework.org
 * GitHub -- https://github.com/Bijnagte/spock-genesis
+* Generex -- https://github.com/mifmif/Generex
