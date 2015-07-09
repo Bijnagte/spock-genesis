@@ -21,7 +21,7 @@ apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven'
 
 group = 'com.nagternal'
-version = '0.2.0'
+version = '0.3.0'
 
 repositories {
 	mavenCentral()
@@ -30,6 +30,7 @@ repositories {
 dependencies {
   	compile('org.codehaus.groovy:groovy:2.4.3')
 	compile('org.spockframework:spock-core:1.0-groovy-2.4')
+	compile('com.github.mifmif:generex:0.0.3')
 }
 
 codenarc {

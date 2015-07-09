@@ -9,7 +9,7 @@ ruleset {
 	ruleset('rulesets/exceptions.xml')
 	ruleset('rulesets/formatting.xml') {
 		ClassJavadoc {
-			priority = 3
+			enabled = false
 		}
 	}
 	ruleset('rulesets/generic.xml')
