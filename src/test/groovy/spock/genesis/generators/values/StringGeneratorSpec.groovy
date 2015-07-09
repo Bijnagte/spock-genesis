@@ -1,6 +1,7 @@
 package spock.genesis.generators.values
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class StringGeneratorSpec extends Specification {
 
@@ -37,5 +38,25 @@ class StringGeneratorSpec extends Specification {
             }
         where:
             iteration << (0..1000)
+    }
+
+    @Unroll
+    def 'pattern #pattern generation'() {
+        setup:
+            def generator = new StringGenerator(~pattern)
+        when:
+            Set<String> results = generator.take(100).realized.toSet()
+        then:
+            results.size() > 1
+            results.each { assert it ==~ pattern }
+        where:
+            pattern << [
+                    /\d\w\d/,
+                    /\w*/,
+                    /[1-9][0-9]{2}-\d{3}-\d{4}/,
+                    /\d{3}-\d{3}-\d{4}\s(x|(ext))\d{3,5}/,
+                    '(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|]\\d',
+                    /[A-Z][a-z]+( [A-Z][a-z]+)?/
+            ]
     }
 }

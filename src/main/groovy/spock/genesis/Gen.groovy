@@ -19,9 +19,12 @@ import spock.genesis.generators.values.RandomElementGenerator
 import spock.genesis.generators.values.StringGenerator
 import spock.genesis.generators.values.ValueGenerator
 
+import java.util.regex.Pattern
+
 /**
  * static factory methods for Generators
  */
+@SuppressWarnings(['MethodCount'])
 class Gen {
 
     /**
@@ -47,6 +50,10 @@ class Gen {
         new StringGenerator(minLength, maxLength)
     }
 
+    static StringGenerator string(Pattern regex) {
+        new StringGenerator(regex)
+    }
+
     static ByteArrayGenerator getBytes() {
         new ByteArrayGenerator()
     }
@@ -67,8 +74,17 @@ class Gen {
         new LongGenerator()
     }
 
+    @Deprecated
     static CharacterGenerator getChar() {
         new CharacterGenerator()
+    }
+
+    static CharacterGenerator getCharacter() {
+        new CharacterGenerator()
+    }
+
+    static CharacterGenerator character(String potentialCharacters) {
+        new CharacterGenerator(potentialCharacters)
     }
 
     static DoubleGenerator getDouble() {
