@@ -94,14 +94,15 @@ class PojoGeneratorSpec extends Specification {
             arg << ['A', 1, 'Test', 200]
     }
 
-    def 'make var args constructor object fails'() {
+    def 'make var args constructor object succeeds'() {
         setup:
             Integer[] args = [10, 1, 77, 200]
             def generator = new PojoGenerator(VarArgsConstructorObj, [args].iterator())
         when:
             def result = generator.next()
         then:
-            thrown(IllegalArgumentException)
+            result instanceof VarArgsConstructorObj
+            result.args == args
     }
 
     def 'make var args constructor object succeeds if array wrapped in a list'() {

@@ -2,8 +2,6 @@ package spock.genesis.generators.composites
 
 import spock.genesis.generators.Generator
 
-import java.lang.reflect.Constructor
-
 class PojoGenerator<E> extends Generator<E> {
     Class<E> target
 
@@ -23,21 +21,17 @@ class PojoGenerator<E> extends Generator<E> {
     E next() {
         def params = generator.next()
         Class clazz = params.getClass()
-        Constructor constructor = findSingleArgConstructor(clazz)
-
-        if (constructor) {
-            constructor.newInstance(params)
-        } else if (List.isAssignableFrom(clazz)) {
-            params.asType(target)
-        } else if (Map.isAssignableFrom(clazz)) {
+        if (hasConstructorFor(clazz)) {
+            target.metaClass.invokeConstructor(params)
+        } else if (List.isAssignableFrom(clazz) || Map.isAssignableFrom(clazz)) {
             params.asType(target)
         }
     }
 
-    Constructor findSingleArgConstructor(Class clazz) {
-        target.constructors.find {
+    boolean hasConstructorFor(Class clazz) {
+        target.constructors.any {
             it.parameterTypes.length == 1 &&
-                    it.parameterTypes[0] == clazz
+                    it.parameterTypes[0].isAssignableFrom(clazz)
         }
     }
 }
