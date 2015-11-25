@@ -86,8 +86,8 @@ artifacts {
 }
 
 bintray {
-	user = bintrayUser
-	key = bintrayApiKey
+	user = project.hasProperty('bintrayUser') ? bintrayUser : ''
+	key = project.hasProperty('bintrayApiKey') ? bintrayApiKey : ''
 
 	configurations = ['archives']
 	dryRun = false
