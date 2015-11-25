@@ -8,6 +8,8 @@ In Spock [data driven tests] (http://spock-framework.readthedocs.org/en/latest/d
 Spock Genesis provides a variety of classes that extend from [Generator](./src/main/groovy/spock/genesis/generators/Generator.groovy) which meet that interface.
 Where possible the generators are lazy and infinite.
 
+![build status](https://circleci.com/gh/Bijnagte/spock-genesis.svg?style=shield&circle-token=ccab052d8c597ae916463f8319738d89e3d8a640)
+
 Usage
 -----
 From gradle:
