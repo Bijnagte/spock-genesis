@@ -174,4 +174,8 @@ class Gen {
     static GeneratorDecorator these(Object... values) {
         these(values.iterator())
     }
+
+    static GeneratorDecorator once(Object value) {
+        these([value] as Object[])
+    }
 }
