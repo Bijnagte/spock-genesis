@@ -136,6 +136,25 @@ class SamplesSpec extends Specification {
             gen.collect() == [1, 2, 3, 4, 5]
     }
 
+    def 'generate a value once'() {
+        setup:
+            def gen = Gen.once(value)
+        expect:
+            gen.collect() == [value]
+        where:
+            value << [null, 1, 'b', [1,2]]
+    }
+
+    def 'generate a value repeatedly'() {
+        setup:
+            def gen = Gen.value(null).take(100)
+        when:
+            def result = gen.collect()
+        then:
+            result.size() == 100
+            result.every { it == null }
+    }
+
     def 'generate a random value from specified values'() {
         setup:
             def range = 1..100
