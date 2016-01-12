@@ -4,9 +4,11 @@ class SequentialMultisourceGenerator<E> extends Generator<E> implements Closeabl
 
     final Iterator<Iterator<E>> iterators
     private Iterator<E> current
+    final boolean finite
 
     SequentialMultisourceGenerator(Iterator<E>... iterators) {
         this.iterators = iterators.iterator()
+        finite = iterators.every { it.respondsTo('isFinite') && it.finite }
     }
 
     boolean hasNext() {

@@ -163,16 +163,16 @@ class Gen {
         new FactoryGenerator(factory)
     }
 
-    static GeneratorDecorator these(Iterator iterator) {
-        new GeneratorDecorator(iterator)
+    static GeneratorDecorator these(Iterator iterator, boolean finite = false) {
+        new GeneratorDecorator(iterator, finite)
     }
 
     static GeneratorDecorator these(Iterable iterable) {
-        these(iterable.iterator())
+        these(iterable.iterator(), true)
     }
 
     static GeneratorDecorator these(Object... values) {
-        these(values.iterator())
+        these(values.iterator(), true)
     }
 
     static GeneratorDecorator once(Object value) {

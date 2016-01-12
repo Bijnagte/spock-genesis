@@ -80,6 +80,8 @@ abstract class Generator<E> implements Iterator<E> {
 
     abstract E next()
 
+    abstract boolean isFinite()
+
     @Override
     void remove() {
         throw new UnsupportedOperationException()

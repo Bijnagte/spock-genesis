@@ -3,9 +3,8 @@ package spock.genesis.generators.composites
 import spock.genesis.generators.Generator
 
 class PojoGenerator<E> extends Generator<E> {
-    Class<E> target
-
-    Iterator generator
+    final Class<E> target
+    final Iterator generator
 
     PojoGenerator(Class<E> target, Iterator generator) {
         this.target = target
@@ -33,5 +32,9 @@ class PojoGenerator<E> extends Generator<E> {
             it.parameterTypes.length == 1 &&
                     it.parameterTypes[0].isAssignableFrom(clazz)
         }
+    }
+
+    boolean isFinite() {
+        generator.respondsTo('isFinite') && generator.finite
     }
 }

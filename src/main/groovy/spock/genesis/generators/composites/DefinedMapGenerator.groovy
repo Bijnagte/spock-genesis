@@ -23,4 +23,8 @@ class DefinedMapGenerator<K, V> extends Generator<Map<K, V>> {
             [key, generator.next()]
         }
     }
+
+    boolean isFinite() {
+        keysToValueGenerators.values().every { it.respondsTo('isFinite') && it.finite }
+    }
 }

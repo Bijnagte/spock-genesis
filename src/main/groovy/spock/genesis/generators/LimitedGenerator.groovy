@@ -20,4 +20,8 @@ class LimitedGenerator<E> extends GeneratorDecorator<E> {
         iteration++
         generator.next()
     }
+
+    boolean isFinite() {
+        true
+    }
 }

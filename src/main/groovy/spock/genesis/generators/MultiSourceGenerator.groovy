@@ -69,4 +69,8 @@ class MultiSourceGenerator<E> extends Generator<E> implements Closeable {
             generator.close()
         }
     }
+
+    boolean isFinite() {
+        iterators.every { it.respondsTo('isFinite') && it.finite }
+    }
 }
