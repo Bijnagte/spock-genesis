@@ -1,5 +1,6 @@
 package spock.genesis.generators.composites
 
+import spock.genesis.generators.test.Pojo
 import spock.lang.Specification
 
 class PojoGeneratorSpec extends Specification {
@@ -14,14 +15,13 @@ class PojoGeneratorSpec extends Specification {
             iterable << [[1], []]
     }
 
-    def 'has next false if param generator does not hav'() {
+    def 'has next false if param generator does not have next'() {
         setup:
             def iterator = [1].iterator()
             def generator = new PojoGenerator(null, iterator)
         expect:
             generator.hasNext()
     }
-
 
     def 'make tuple constructor object'() {
         setup:
@@ -74,6 +74,27 @@ class PojoGeneratorSpec extends Specification {
             'A'    | 0
             null   | 0
             'B'    | null
+    }
+
+    def 'make default constructor final java object'() {
+        setup:
+            def map = [a: 'A']
+            def generator = new PojoGenerator(Pojo, [map].iterator())
+        when:
+            Pojo result = generator.next()
+        then:
+            result.a == 'A'
+    }
+
+    def 'make default constructor object with extra arg in map'() {
+        setup:
+            def map = [a: 'A', i: 1]
+            def generator = new PojoGenerator(Pojo, [map].iterator())
+        when:
+            generator.next()
+        then:
+            def ex = thrown(MissingPropertyException)
+            ex.message.contains('No such property: i for class')
     }
 
     def 'make single arg constructor object'() {
