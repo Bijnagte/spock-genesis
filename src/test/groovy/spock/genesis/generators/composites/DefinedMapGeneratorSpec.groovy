@@ -36,4 +36,15 @@ class DefinedMapGeneratorSpec extends Specification {
         expect:
             generator.hasNext() == false
     }
+
+    def 'isFinite'() {
+        expect:
+            new DefinedMapGenerator(generators).finite == expected
+
+        where:
+            generators                           || expected
+            [a : new IntegerGenerator()]         || false
+            [a : [].iterator()]                  || true
+            [a : new IntegerGenerator().take(1)] || true
+    }
 }

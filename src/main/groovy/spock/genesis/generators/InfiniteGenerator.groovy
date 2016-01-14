@@ -12,4 +12,8 @@ abstract class InfiniteGenerator<E> extends Generator<E> {
     }
 
     abstract E next()
+
+    boolean isFinite() {
+        false
+    }
 }

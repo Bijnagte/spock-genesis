@@ -1,6 +1,7 @@
 package spock.genesis.generators.composites
 
 import spock.genesis.generators.Generator
+import spock.genesis.generators.GeneratorUtils
 
 class DefinedMapGenerator<K, V> extends Generator<Map<K, V>> {
 
@@ -22,5 +23,9 @@ class DefinedMapGenerator<K, V> extends Generator<Map<K, V>> {
         keysToValueGenerators.collectEntries { key, generator ->
             [key, generator.next()]
         }
+    }
+
+    boolean isFinite() {
+         GeneratorUtils.anyFinite(keysToValueGenerators.values())
     }
 }

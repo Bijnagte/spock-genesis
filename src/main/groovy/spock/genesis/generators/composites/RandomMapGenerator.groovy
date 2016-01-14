@@ -1,6 +1,7 @@
 package spock.genesis.generators.composites
 
 import spock.genesis.generators.Generator
+import spock.genesis.generators.GeneratorUtils
 import spock.genesis.generators.values.WholeNumberGenerator
 
 class RandomMapGenerator<K, V> extends Generator<Map<K, V>> implements Closeable {
@@ -8,7 +9,7 @@ class RandomMapGenerator<K, V> extends Generator<Map<K, V>> implements Closeable
     static final int DEFAULT_ENTRY_LIMIT = 100
     final WholeNumberGenerator sizeSource
     final Iterator<K> keyGenerator
-    final Iterator valueGenerator
+    final Iterator<V> valueGenerator
 
     RandomMapGenerator(Iterator<K> keyGenerator, Iterator valueGenerator) {
         this.sizeSource = new WholeNumberGenerator(DEFAULT_ENTRY_LIMIT)
@@ -56,5 +57,9 @@ class RandomMapGenerator<K, V> extends Generator<Map<K, V>> implements Closeable
                 it.close()
             }
         }
+    }
+
+    boolean isFinite() {
+         GeneratorUtils.anyFinite(keyGenerator, valueGenerator)
     }
 }

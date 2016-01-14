@@ -19,7 +19,11 @@ class ExtensionMethods {
     }
 
     static GeneratorDecorator toGenerator(Collection self) {
-        new GeneratorDecorator(self.iterator())
+        new LimitedGenerator(self)
+    }
+
+    static GeneratorDecorator toGenerator(Object... self) {
+        new LimitedGenerator(self)
     }
 
     static GeneratorDecorator toGenerator(Iterator self) {

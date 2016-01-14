@@ -5,6 +5,7 @@ import spock.genesis.extension.ExtensionMethods
 import spock.genesis.generators.Generator
 import spock.genesis.generators.MultiSourceGenerator
 import spock.lang.Specification
+import spock.lang.Unroll
 import spock.util.mop.Use
 
 class SamplesSpec extends Specification {
@@ -49,12 +50,37 @@ class SamplesSpec extends Specification {
             results.size() == 3
     }
 
-    @Use(ExtensionMethods)
-    def 'convert collection to generator'() {
+    @Unroll('convert #source.class to generator')
+    @Use(ExtensionMethods) //this Extension will be added by the groovy runtime
+    def 'convert Collection, Array, Iterator, and Iterable to generator using method added by extension'() {
         setup:
-            def source = [1, 2, 3]
             def gen = source.toGenerator()
         expect:
+            Generator.isAssignableFrom(gen.class)
+        when:
+            def results = gen.collect()
+        then:
+            results == [1, 2, 3]
+        where:
+            source << [
+                    [1, 2, 3],
+                    [1, 2, 3].toArray(),
+                    [1, 2, 3].iterator(),
+                    new Iterable() { Iterator iterator() { [1, 2, 3].iterator() } }
+            ]
+    }
+
+    @Use(ExtensionMethods)
+    def 'convert iterable to generator'() {
+        setup:
+            def source = [1, 2, 3]
+            def iterable = new Iterable() {
+                Iterator iterator() { source.iterator() }
+            }
+
+            def gen = iterable.toGenerator()
+        expect:
+            iterable instanceof Collection == false
             Generator.isAssignableFrom(gen.class)
         when:
             def results = gen.collect()

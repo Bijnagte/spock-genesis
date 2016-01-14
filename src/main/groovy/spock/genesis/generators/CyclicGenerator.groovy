@@ -2,7 +2,7 @@ package spock.genesis.generators
 
 /**
  * A lazy infinite generator that repeats an iterator.
- * This generator keeps track of 1 iterator worth of data so infinite sources could lead to exesive memory usage.
+ * This generator keeps track of 1 iterator worth of data so infinite sources could lead to excessive memory usage.
  * @param < E >   the generated type
  */
 class CyclicGenerator<E> extends GeneratorDecorator<E> {
@@ -35,5 +35,9 @@ class CyclicGenerator<E> extends GeneratorDecorator<E> {
             repeatSource.add(val)
         }
         val
+    }
+
+    boolean isFinite() {
+        !hasNext()
     }
 }

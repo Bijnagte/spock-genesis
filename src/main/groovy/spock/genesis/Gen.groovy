@@ -4,6 +4,7 @@ import spock.genesis.generators.CyclicGenerator
 import spock.genesis.generators.FactoryGenerator
 import spock.genesis.generators.Generator
 import spock.genesis.generators.GeneratorDecorator
+import spock.genesis.generators.LimitedGenerator
 import spock.genesis.generators.composites.DefinedMapGenerator
 import spock.genesis.generators.composites.ListGenerator
 import spock.genesis.generators.composites.PojoGenerator
@@ -163,19 +164,23 @@ class Gen {
         new FactoryGenerator(factory)
     }
 
-    static GeneratorDecorator these(Iterator iterator) {
-        new GeneratorDecorator(iterator)
+    static GeneratorDecorator these(Iterator iterator, boolean finite = false) {
+        new GeneratorDecorator(iterator, finite)
     }
 
     static GeneratorDecorator these(Iterable iterable) {
-        these(iterable.iterator())
+        these(iterable.iterator(), true)
     }
 
     static GeneratorDecorator these(Object... values) {
-        these(values.iterator())
+        new LimitedGenerator(values)
+    }
+
+    static GeneratorDecorator these(Collection values) {
+        new LimitedGenerator(values)
     }
 
     static GeneratorDecorator once(Object value) {
-        these([value] as Object[])
+        these([value])
     }
 }
