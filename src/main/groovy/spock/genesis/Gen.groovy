@@ -4,6 +4,7 @@ import spock.genesis.generators.CyclicGenerator
 import spock.genesis.generators.FactoryGenerator
 import spock.genesis.generators.Generator
 import spock.genesis.generators.GeneratorDecorator
+import spock.genesis.generators.LimitedGenerator
 import spock.genesis.generators.composites.DefinedMapGenerator
 import spock.genesis.generators.composites.ListGenerator
 import spock.genesis.generators.composites.PojoGenerator
@@ -172,10 +173,14 @@ class Gen {
     }
 
     static GeneratorDecorator these(Object... values) {
-        these(values.iterator(), true)
+        new LimitedGenerator(values)
+    }
+
+    static GeneratorDecorator these(Collection values) {
+        new LimitedGenerator(values)
     }
 
     static GeneratorDecorator once(Object value) {
-        these([value] as Object[])
+        these([value])
     }
 }

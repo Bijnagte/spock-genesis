@@ -1,6 +1,7 @@
 package spock.genesis.generators.composites
 
 import spock.genesis.generators.Generator
+import spock.genesis.generators.GeneratorUtils
 import spock.genesis.generators.values.WholeNumberGenerator
 
 class RandomMapGenerator<K, V> extends Generator<Map<K, V>> implements Closeable {
@@ -59,6 +60,6 @@ class RandomMapGenerator<K, V> extends Generator<Map<K, V>> implements Closeable
     }
 
     boolean isFinite() {
-        [keyGenerator, valueGenerator].every { it.respondsTo('isFinite') && it.finite }
+         GeneratorUtils.anyFinite(keyGenerator, valueGenerator)
     }
 }

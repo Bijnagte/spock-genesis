@@ -1,6 +1,7 @@
 package spock.genesis.generators.composites
 
 import spock.genesis.generators.Generator
+import spock.genesis.generators.GeneratorUtils
 
 class PojoGenerator<E> extends Generator<E> {
     final Class<E> target
@@ -35,6 +36,6 @@ class PojoGenerator<E> extends Generator<E> {
     }
 
     boolean isFinite() {
-        generator.respondsTo('isFinite') && generator.finite
+        GeneratorUtils.isFinite(generator)
     }
 }

@@ -80,6 +80,10 @@ abstract class Generator<E> implements Iterator<E> {
 
     abstract E next()
 
+    /**
+     * If false then the generator may still terminate when iterated
+     * @return true if the Generator will terminate
+     */
     abstract boolean isFinite()
 
     @Override

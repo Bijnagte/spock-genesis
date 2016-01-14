@@ -6,11 +6,11 @@ package spock.genesis.generators
  */
 class GeneratorDecorator<E> extends Generator<E> implements Closeable {
     protected Iterator<E> generator
-    final boolean finite
+    final boolean finiteOverride
 
     GeneratorDecorator(Iterator<E> generator, boolean finite = false) {
         this.generator = generator
-        this.finite =  !generator.hasNext() || finite || (generator.respondsTo('isFinite') && generator.finite)
+        this.finiteOverride = finite
     }
 
     boolean hasNext() {
@@ -22,13 +22,16 @@ class GeneratorDecorator<E> extends Generator<E> implements Closeable {
         generator.next()
     }
 
+    @Override
+    boolean isFinite() {
+        finiteOverride || GeneratorUtils.isFinite(generator)
+    }
+
     void close() {
         if (generator.respondsTo('close')) {
             generator.close()
         }
     }
 
-    boolean isFinite() {
-        this.finite
-    }
+
 }

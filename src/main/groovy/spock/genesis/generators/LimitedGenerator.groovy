@@ -10,6 +10,16 @@ class LimitedGenerator<E> extends GeneratorDecorator<E> {
         this.iterationLimit = iterationLimit
     }
 
+    LimitedGenerator(Collection<E> collection) {
+        super(collection.iterator())
+        this.iterationLimit = collection.size()
+    }
+
+    LimitedGenerator(E... array) {
+        super(array.iterator())
+        this.iterationLimit = array.length
+    }
+
     @Override
     boolean hasNext() {
         generator.hasNext() && iteration < iterationLimit
@@ -21,6 +31,7 @@ class LimitedGenerator<E> extends GeneratorDecorator<E> {
         generator.next()
     }
 
+    @Override
     boolean isFinite() {
         true
     }

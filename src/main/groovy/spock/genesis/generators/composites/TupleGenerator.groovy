@@ -1,15 +1,14 @@
 package spock.genesis.generators.composites
 
 import spock.genesis.generators.Generator
+import spock.genesis.generators.GeneratorUtils
 
 class TupleGenerator<T> extends Generator<List<T>> {
 
     final List<Iterator<T>> iterators
-    final boolean finite
 
     TupleGenerator(List<Iterator<T>> iterators) {
         this.iterators = iterators.asImmutable()
-        finite = iterators.every { it.respondsTo('isFinite') && it.finite }
     }
 
     TupleGenerator(Iterator<T>... iterators) {
@@ -24,5 +23,10 @@ class TupleGenerator<T> extends Generator<List<T>> {
     @Override
     List<T> next() {
         iterators*.next()
+    }
+
+    @Override
+    boolean isFinite() {
+        GeneratorUtils.anyFinite(iterators)
     }
 }
