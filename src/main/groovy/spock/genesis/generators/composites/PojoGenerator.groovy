@@ -23,8 +23,10 @@ class PojoGenerator<E> extends Generator<E> {
         Class clazz = params.getClass()
         if (hasConstructorFor(clazz)) {
             target.metaClass.invokeConstructor(params)
-        } else if (List.isAssignableFrom(clazz) || Map.isAssignableFrom(clazz)) {
-            params.asType(target)
+        } else if (List.isAssignableFrom(clazz)) {
+            target.newInstance(*params)
+        } else if (Map.isAssignableFrom(clazz)) {
+            target.newInstance(params)
         }
     }
 
