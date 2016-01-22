@@ -8,32 +8,35 @@ import spock.lang.Specification
 import spock.lang.Unroll
 import spock.util.mop.Use
 
+
+//static import generator factory methods
+import static spock.genesis.Gen.*
+
 class SamplesSpec extends Specification {
 
     def 'using static factory methods'() {
         expect:
-            Gen.string.next() instanceof String
-            Gen.bytes.next() instanceof byte[]
-            Gen.double.next() instanceof Double
-            Gen.integer.next() instanceof Integer
-            Gen.long.next() instanceof Long
-            Gen.character.next() instanceof Character
-            Gen.date.next() instanceof Date
+            string.next() instanceof String
+            bytes.next() instanceof byte[]
+            getDouble().next() instanceof Double
+            integer.next() instanceof Integer
+            getLong().next() instanceof Long
+            character.next() instanceof Character
+            date.next() instanceof Date
     }
 
     def 'create multi source generator with & operator'() {
         setup:
-            def gen = Gen.string(100) & Gen.integer
+            def gen = string(100) & integer
         expect:
             gen instanceof MultiSourceGenerator
             gen.any { it instanceof Integer }
             gen.any { it instanceof String }
-
     }
 
     def 'multiply by int limits the quantity generated'() {
         setup:
-            def gen = Gen.string * 3
+            def gen = string * 3
         when:
             def results = gen.collect()
         then:
@@ -43,7 +46,7 @@ class SamplesSpec extends Specification {
     @Use(ExtensionMethods)
     def 'multiply int by generator limits the quantity generated'() {
         setup:
-            def gen = 3 * Gen.string
+            def gen = 3 * string
         when:
             def results = gen.collect()
         then:
@@ -96,7 +99,7 @@ class SamplesSpec extends Specification {
 
     def 'generate type with map'() {
         setup:
-            def gen = Gen.type(Data, s: Gen.string, i: Gen.integer, d: Gen.date)
+            def gen = type(Data, s: string, i: integer, d: date)
         when:
             Data result = gen.next()
         then:
@@ -107,7 +110,7 @@ class SamplesSpec extends Specification {
 
     def 'generate type then call method on instance'() {
         setup:
-            def gen = Gen.type(Data, i: Gen.integer, d: Gen.date).map { it.s = it.toString(); it }
+            def gen = type(Data, i: integer, d: date).map { it.s = it.toString(); it }
         when:
             Data result = gen.next()
         then:
@@ -130,7 +133,7 @@ class SamplesSpec extends Specification {
 
     def 'generate type with tuple'() {
         setup:
-            def gen = Gen.type(TupleData, Gen.string, Gen.value(42), Gen.date)
+            def gen = type(TupleData, string, value(42), date)
         when:
             def result = gen.next()
         then:
@@ -142,14 +145,14 @@ class SamplesSpec extends Specification {
 
     def 'generate with factory'() {
         setup:
-            def gen = Gen.using { new Date(42) }
+            def gen = using { new Date(42) }
         expect:
             gen.next() == new Date(42)
     }
 
     def 'call methods on generated value using with'() {
         setup:
-            def gen = Gen.date.with { setTime(1400) }
+            def gen = date.with { setTime(1400) }
 
         expect:
             gen.next().getTime() == 1400
@@ -157,14 +160,25 @@ class SamplesSpec extends Specification {
 
     def 'generate from multiple iterators in sequence'() {
         setup:
-            def gen = Gen.these(1, 2, 3).then([4, 5])
+            def gen = these(1, 2, 3).then([4, 5])
         expect:
             gen.collect() == [1, 2, 3, 4, 5]
     }
 
+    enum Days {
+        SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
+    }
+
+    def 'generate from an enum'() {
+        setup:
+            def gen = these Days
+        expect:
+            gen.collect() == Days.collect()
+    }
+
     def 'generate a value once'() {
         setup:
-            def gen = Gen.once(value)
+            def gen = once value
         expect:
             gen.collect() == [value]
         where:
@@ -173,7 +187,7 @@ class SamplesSpec extends Specification {
 
     def 'generate a value repeatedly'() {
         setup:
-            def gen = Gen.value(null).take(100)
+            def gen = value(null).take(100)
         when:
             def result = gen.collect()
         then:
@@ -184,7 +198,7 @@ class SamplesSpec extends Specification {
     def 'generate a random value from specified values'() {
         setup:
             def range = 1..100
-            def gen = Gen.any(range)
+            def gen = any range
         when: 'generate a list for each value until it is generated'
             def results = range.collect { num ->
                 gen.takeWhile { it != num }.collect()
@@ -199,7 +213,7 @@ class SamplesSpec extends Specification {
         setup:
             String regex = '(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|]\\d'
         expect:
-            Gen.string(~regex).next() ==~ regex
+            string(~regex).next() ==~ regex
     }
 
     @Immutable
@@ -221,12 +235,12 @@ class SamplesSpec extends Specification {
             person.birthDate <= new Date()
 
         where:
-            person << Gen.type(Person,
-                    id: Gen.integer(200..10000),
-                    name: Gen.string(~/[A-Z][a-z]+( [A-Z][a-z]+)?/),
-                    birthDate: Gen.date(Date.parse('MM/dd/yyyy', '01/01/1940'), new Date()),
-                    title: Gen.these('', null).then(Gen.any('Dr.', 'Mr.', 'Ms.', 'Mrs.')),
-                    gender: Gen.character('MFTU')
+            person << type(Person,
+                    id: integer(200..10000),
+                    name: string(~/[A-Z][a-z]+( [A-Z][a-z]+)?/),
+                    birthDate: date(Date.parse('MM/dd/yyyy', '01/01/1940'), new Date()),
+                    title: these('', null).then(Gen.any('Dr.', 'Mr.', 'Ms.', 'Mrs.')),
+                    gender: character('MFTU')
             ).take(3)
     }
 }

@@ -5,10 +5,10 @@ import spock.genesis.generators.GeneratorUtils
 
 class TupleGenerator<T> extends Generator<List<T>> {
 
-    final List<Iterator<T>> iterators
+    final List<Generator<T>> iterators
 
     TupleGenerator(List<Iterator<T>> iterators) {
-        this.iterators = iterators.asImmutable()
+        this.iterators = iterators.collect { it.toGenerator() }.asImmutable()
     }
 
     TupleGenerator(Iterator<T>... iterators) {

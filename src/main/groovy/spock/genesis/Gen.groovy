@@ -164,23 +164,27 @@ class Gen {
         new FactoryGenerator(factory)
     }
 
-    static GeneratorDecorator these(Iterator iterator, boolean finite = false) {
-        new GeneratorDecorator(iterator, finite)
+    static Generator these(Iterator iterator, boolean finite = false) {
+        iterator.toGenerator(finite)
     }
 
-    static GeneratorDecorator these(Iterable iterable) {
-        these(iterable.iterator(), true)
+    static Generator these(Iterable iterable) {
+        iterable.toGenerator()
     }
 
-    static GeneratorDecorator these(Object... values) {
-        new LimitedGenerator(values)
+    static Generator these(Class clazz) {
+        clazz.toGenerator()
     }
 
-    static GeneratorDecorator these(Collection values) {
-        new LimitedGenerator(values)
+    static Generator these(Object... values) {
+        values.toGenerator()
     }
 
-    static GeneratorDecorator once(Object value) {
+    static Generator these(Collection values) {
+        values.toGenerator()
+    }
+
+    static Generator once(Object value) {
         these([value])
     }
 }
