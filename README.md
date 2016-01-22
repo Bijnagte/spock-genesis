@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    testCompile 'com.nagternal:spock-genesis:0.3.1'
+    testCompile 'com.nagternal:spock-genesis:0.4.0'
 }
 ```
 
@@ -68,6 +68,11 @@ Change log
 ### 0.3.0
 * Add support for using regular expressions for String generation. Thanks to Generex
 * Using Groovy constructor selection for single arg Pojo construction
+
+### 0.4.0
+* improve toGenerator extension methods
+* better error handling for POJO construction
+* isFinite method to determine if generator will terminate
 
 Building Spock Genesis
 --------------
