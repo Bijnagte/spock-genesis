@@ -1,0 +1,73 @@
+== Values
+
+Values could be of any simple type such as a String, Integer,
+Byte...etc Before using any built-in generator remember to add the
+following import:
+
+[source,groovy]
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=genimport,indent=0]
+----
+
+Then you should be able to generate a simple value from the available
+generators:
+
+[source,groovy]
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=factorymethods,indent=0]
+----
+
+These examples are creating only the next available generated value
+from the correspondant generator. This way of using simple types
+generators doesn't put any constraint to the generated value apart
+from generate a specific type of value. We'll see later on how to add
+some boundaries to some of the value generators. For the time being,
+if for example, we would like a string we won't care about the length
+of the string.
+
+=== Strings
+
+Like we saw in the previous section if we don't care about the length
+or the content and we just wanted to generate a string then it's
+enough to call `Gen.getString()` or in a more `groovier` way
+`Gen.string`
+
+**By length**
+
+**By pattern**
+
+[source,groovy]
+.From a string pattern
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=stringregex,indent=0]
+----
+
+=== Numbers
+
+=== Date
+
+=== From value
+
+=== From enum
+
+If you already have an enum type and you would like to generate random values
+from it, then you could use `these`:
+
+[source,groovy]
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=fromenum,indent=0]
+----
+
+NOTE: `these` in general can generate values taken from a given
+source, in this case the source is an enum. To know more about `these`
+check the section `combine`.
+
+=== Using `with`
+
+You can use `with` if you would like to set some property of the
+generated value.
+
+[source,groovy]
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=datewith,indent=0]
+----

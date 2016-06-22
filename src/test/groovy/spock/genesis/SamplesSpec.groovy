@@ -9,11 +9,14 @@ import spock.lang.Unroll
 import spock.util.mop.Use
 
 
+// tag::genimport[]
 //static import generator factory methods
 import static spock.genesis.Gen.*
+// end::genimport[]
 
 class SamplesSpec extends Specification {
 
+    // tag::factorymethods[]
     def 'using static factory methods'() {
         expect:
             string.next() instanceof String
@@ -24,6 +27,7 @@ class SamplesSpec extends Specification {
             character.next() instanceof Character
             date.next() instanceof Date
     }
+    // end::factorymethods[]
 
     def 'create multi source generator with & operator'() {
         setup:
@@ -34,6 +38,7 @@ class SamplesSpec extends Specification {
             gen.any { it instanceof String }
     }
 
+    // tag::multiplyby[]
     def 'multiply by int limits the quantity generated'() {
         setup:
             def gen = string * 3
@@ -42,6 +47,7 @@ class SamplesSpec extends Specification {
         then:
             results.size() == 3
     }
+    // end::multiplyby[]
 
     @Use(ExtensionMethods)
     def 'multiply int by generator limits the quantity generated'() {
@@ -91,22 +97,26 @@ class SamplesSpec extends Specification {
             results == source
     }
 
+    // tag::data[]
     static class Data {
         String s
         Integer i
         Date d
     }
+    // end::data[]
 
+    // tag::typegenerator[]
     def 'generate type with map'() {
         setup:
-            def gen = type(Data, s: string, i: integer, d: date)
+            def gen = type(Data, s: string, i: integer, d: date) // <1>
         when:
-            Data result = gen.next()
+            Data result = gen.next() // <2>
         then:
             result.d
             result.i
             result.s
     }
+    // end::typegenerator[]
 
     def 'generate type then call method on instance'() {
         setup:
@@ -119,6 +129,7 @@ class SamplesSpec extends Specification {
             result.s == result.toString()
     }
 
+    // tag::tupledata[]
     static class TupleData {
         String s
         Integer i
@@ -130,7 +141,9 @@ class SamplesSpec extends Specification {
             this.d = d
         }
     }
+    // end::tupledata[]
 
+    // tag::typegenerator2[]
     def 'generate type with tuple'() {
         setup:
             def gen = type(TupleData, string, value(42), date)
@@ -142,6 +155,7 @@ class SamplesSpec extends Specification {
             result.i == 42
             result.s
     }
+    // end::typegenerator2[]
 
     def 'generate with factory'() {
         setup:
@@ -150,6 +164,7 @@ class SamplesSpec extends Specification {
             gen.next() == new Date(42)
     }
 
+    // tag::datewith[]
     def 'call methods on generated value using with'() {
         setup:
             def gen = date.with { setTime(1400) }
@@ -157,6 +172,7 @@ class SamplesSpec extends Specification {
         expect:
             gen.next().getTime() == 1400
     }
+    // end::datewith[]
 
     def 'generate from multiple iterators in sequence'() {
         setup:
@@ -165,6 +181,7 @@ class SamplesSpec extends Specification {
             gen.collect() == [1, 2, 3, 4, 5]
     }
 
+    // tag::fromenum[]
     enum Days {
         SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
     }
@@ -175,7 +192,9 @@ class SamplesSpec extends Specification {
         expect:
             gen.collect() == Days.collect()
     }
+    // end::fromenum[]
 
+    // tag::once[]
     def 'generate a value once'() {
         setup:
             def gen = once value
@@ -184,7 +203,9 @@ class SamplesSpec extends Specification {
         where:
             value << [null, 1, 'b', [1,2]]
     }
+    // end::once[]
 
+    // tag::take[]
     def 'generate a value repeatedly'() {
         setup:
             def gen = value(null).take(100)
@@ -194,6 +215,7 @@ class SamplesSpec extends Specification {
             result.size() == 100
             result.every { it == null }
     }
+    // end::take[]
 
     def 'generate a random value from specified values'() {
         setup:
@@ -209,12 +231,14 @@ class SamplesSpec extends Specification {
             results.flatten().every { it in range }
     }
 
+    // tag::stringregex[]
     def 'generate a string using a regular expression'() {
         setup:
             String regex = '(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|]\\d'
         expect:
             string(~regex).next() ==~ regex
     }
+    // end::stringregex[]
 
     @Immutable
     static class Person {

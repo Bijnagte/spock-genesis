@@ -1,0 +1,32 @@
+== Cardinality
+
+Once you chose a generator, you can tell the generator to produce a
+given number of values, lets see how.
+
+=== Once
+
+If you only want to produce a given value only once, then use `once`.
+
+[source,groovy]
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=once,indent=0]
+----
+
+=== Using `multiply by`
+
+You can tell how many items to generate from a given generator by
+using the `*` operator:
+
+[source,groovy]
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=multiplyby,indent=0]
+----
+
+=== Take
+
+If you know in advanced how many items you will need then use `take`.
+
+[source,groovy]
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=take,indent=0]
+----

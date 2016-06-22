@@ -6,8 +6,9 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'net.saliman:gradle-cobertura-plugin:2.2.3',
-			'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
+		classpath 'net.saliman:gradle-cobertura-plugin:2.2.3'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
+		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
 	}
 }
 
@@ -16,6 +17,7 @@ apply plugin: 'groovy'
 apply plugin: 'cobertura'
 apply plugin: 'codenarc'
 apply plugin: 'project-report'
+apply plugin: 'org.asciidoctor.convert'
 
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven'
@@ -31,6 +33,15 @@ dependencies {
   	compile('org.codehaus.groovy:groovy:2.4.5')
 	compile('org.spockframework:spock-core:1.0-groovy-2.4')
 	compile('com.github.mifmif:generex:0.0.4')
+}
+
+asciidoctor {
+    sourceDir 'src/docs'
+    attributes 'source-highlighter': 'prettify',
+               toc                 : 'left',
+               icons               : 'font',
+               toclevels           : 3,
+               'releaseVersion'    : project.version
 }
 
 codenarc {

@@ -1,0 +1,50 @@
+== Composites
+
+Generate values of basic types is great but sometimes we may want to
+create instances of more complex types such as maps, lists, or pojos.
+
+=== Map generator
+
+=== Type generator
+
+Given a class we may want to create a generator that can supply
+instances of that type. Here is an example of a given class:
+
+[source,groovy]
+.Data
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=data,indent=0]
+----
+
+The following generator creates instances of the previous type and it
+has defined a different generator for each field:
+
+[source,groovy]
+.Generator
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=typegenerator,indent=0]
+----
+
+<1> Create generator
+<2> Take next instance
+
+In the following example the type we would like to get instances from
+has a non default constructor:
+
+[source,groovy]
+.TupleData
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=tupledata,indent=0]
+----
+
+But that is not an issue, as long as we respect the number of
+arguments after declaring the class.
+
+[source,groovy]
+.Generator
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=typegenerator2,indent=0]
+----
+
+NOTE: Notice here we are generating the same name for the `i` field
+over and over again (42)
