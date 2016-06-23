@@ -29,6 +29,78 @@ class SamplesSpec extends Specification {
     }
     // end::factorymethods[]
 
+    // tag::stringlength[]
+    def 'create a string by length'() {
+        when: 'establishing max string length'
+            def shortWord = string(5).next() // <1>
+
+        then: 'word size should be less equal than max'
+            shortWord.size() <= 5
+
+        when: 'establishing min and max word size'
+            def largerWord = string(5,10).next() // <2>
+
+        then: 'word should be larger equal min'
+            largerWord.size() >= 5
+
+        and: 'word should be less equal max'
+            largerWord.size() <= 10
+    }
+    // end::stringlength[]
+
+    // tag::numbers[]
+    def 'generate numbers'() {
+        expect:
+            getDouble().next() instanceof Double
+            integer.next() instanceof Integer
+            getLong().next() instanceof Long
+            bytes.next() instanceof byte[]
+    }
+    // end::numbers[]
+
+    // tag::integerlength[]
+    def 'create an integer with min and max'() {
+        when: 'establishing max possible number'
+            def firstNumber = integer(5..10).next() // <1>
+
+        then: 'generated number will be less equals than max'
+            firstNumber >= 5
+            firstNumber <= 10
+
+        when: 'establishing min and max valid numbers'
+            def secondNumber = integer(5,10).next() // <2>
+
+        then: 'generated number must be between both numbers'
+            secondNumber >= 5
+            secondNumber <= 10
+    }
+    // end::integerlength[]
+
+    // tag::value[]
+    def 'create a value using the value() method'() {
+        expect: 'to get several copies of a value'
+        value(0).take(2).collect() == [0,0]
+
+        and: 'to get just one'
+        value(0).next() == 0
+    }
+    // end::value[]
+
+    // tag::dates[]
+    def 'create a new date value range'() {
+        given: "yesterday's reference and tomorrow's"
+        def yesterday = new Date() - 1
+        def tomorrow  = new Date() + 1
+
+        when: 'getting a new date'
+        def newDate = date(yesterday, tomorrow).next()
+
+        then: 'new date should be between boundaries'
+        tomorrow.after(newDate)
+        newDate.after(yesterday)
+    }
+    // end::dates[]
+
     def 'create multi source generator with & operator'() {
         setup:
             def gen = string(100) & integer
