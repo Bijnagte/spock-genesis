@@ -8,6 +8,6 @@ After cloning the project, type `./gradlew clean build` (Windows:
 `gradlew clean build`). All build dependencies, including Gradle
 itself, will be downloaded automatically (unless already present).
 
-=== Documentation and Groovydoc
+=== Groovydoc
 
-TODO
+`Groovydoc` can be found link:groovydoc/index.html[here].

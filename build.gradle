@@ -7,18 +7,18 @@ buildscript {
 
 	dependencies {
 		classpath 'net.saliman:gradle-cobertura-plugin:2.2.3'
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
 		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
+        classpath 'org.ajoberstar:gradle-git:1.4.2'
 	}
 }
 
 apply plugin: 'groovy'
-
 apply plugin: 'cobertura'
 apply plugin: 'codenarc'
 apply plugin: 'project-report'
 apply plugin: 'org.asciidoctor.convert'
-
+apply plugin: 'org.ajoberstar.github-pages'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven'
 
@@ -82,6 +82,11 @@ task javadocJar(type: Jar, dependsOn: groovydoc) {
 	from groovydoc
 }
 
+task allDocs(type:Copy, dependsOn: [groovydoc, asciidoctor]) {
+    from "$buildDir/docs/"
+    into "$buildDir/asciidoc/html5/"
+}
+
 check {
 	//dependsOn coberturaCheck
 }
@@ -97,8 +102,8 @@ artifacts {
 }
 
 bintray {
-	user = project.hasProperty('bintrayUser') ? bintrayUser : ''
-	key = project.hasProperty('bintrayApiKey') ? bintrayApiKey : ''
+	user = project.properties.bintrayUser
+	key = project.properties.bintrayApiKey
 
 	configurations = ['archives']
 	dryRun = false
@@ -114,4 +119,19 @@ bintray {
 		labels = ['spock']
 		publicDownloadNumbers = true
 	}
+}
+
+githubPages {
+    repoUri = 'https://github.com/Bijnagte/spock-genesis.git'
+    deleteExistingFiles = true
+
+    pages {
+        from file('build/asciidoc/html5')
+    }
+
+    //https://github.com/ajoberstar/gradle-git/wiki/Travis-CI-Authentication
+    credentials {
+        username = System.getenv('GH_TOKEN')
+        password = ''
+    }
 }

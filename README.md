@@ -57,8 +57,13 @@ Given a Person class create a generator that can supply instances:
         gender: Gen.character('MFTU'))
 ```
 
-See [SamplesSpec](./src/test/groovy/spock/genesis/SamplesSpec.groovy) for more examples
+Documentation
+-------------
 
+Check Spock-Genesis documentation is
+[here](https://Bijnagte.github.io/spock-genesis) or see
+[SamplesSpec](./src/test/groovy/spock/genesis/SamplesSpec.groovy) for
+more examples
 
 Change log
 ----------
