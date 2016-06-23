@@ -101,6 +101,7 @@ class SamplesSpec extends Specification {
     }
     // end::dates[]
 
+    // tag::ampersand[]
     def 'create multi source generator with & operator'() {
         setup:
             def gen = string(100) & integer
@@ -109,6 +110,7 @@ class SamplesSpec extends Specification {
             gen.any { it instanceof Integer }
             gen.any { it instanceof String }
     }
+    // end::ampersand[]
 
     // tag::multiplyby[]
     def 'multiply by int limits the quantity generated'() {
@@ -306,12 +308,30 @@ class SamplesSpec extends Specification {
     }
     // end::datewith[]
 
+    // tag::these[]
+    def 'generate from a specific set of values'() {
+        expect: 'to get numbers from a varargs'
+            these(1,2,3).take(3).collect() == [1,2,3]
+
+        and: 'to get values from an iterable object such as a list'
+            these([1,2,3]).take(2).collect() == [1,2]
+
+        and: 'to get values from a given class'
+            these(String).next() == String
+
+        and: 'to stop producing numbers if the source is exhausted'
+            these(1..3).take(10).collect() == [1,2,3]
+    }
+    // end::these[]
+
+    // tag::then[]
     def 'generate from multiple iterators in sequence'() {
         setup:
             def gen = these(1, 2, 3).then([4, 5])
         expect:
             gen.collect() == [1, 2, 3, 4, 5]
     }
+    // end::then[]
 
     // tag::fromenum[]
     enum Days {
@@ -348,6 +368,16 @@ class SamplesSpec extends Specification {
             result.every { it == null }
     }
     // end::take[]
+
+    // tag::any[]
+    def 'generate any value from a given source'() {
+        given: 'a source'
+            def source = [1,2,null,3]
+
+        expect: 'only that the generated value is any of the elements'
+            Gen.any(source).take(2).every { n -> n in source }
+    }
+    // end::any[]
 
     def 'generate a random value from specified values'() {
         setup:
