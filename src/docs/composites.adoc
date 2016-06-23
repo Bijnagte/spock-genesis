@@ -3,9 +3,79 @@
 Generate values of basic types is great but sometimes we may want to
 create instances of more complex types such as maps, lists, or pojos.
 
-=== Map generator
+=== Tuple
 
-=== Type generator
+A tuple is a finite ordered list of elements. As we'll see afterwards
+you can create random sized lists with the `list` generator, but if
+you only wanted to create a fixed sized lists with fixed types,
+`tuple` could be your best option.
+
+[source,groovy]
+.Tuple
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=tuple,indent=0]
+----
+
+In this example we're creating a tuple (a fixed list) of three elments
+of types: Integer, Integer and String.
+
+=== List
+
+As we've just seen you can create fixed lists with `tuple` but if you
+want to vary the size of the list, or use random element types then
+you should be using `list`. A list needs a given value generator to
+take its elements from and could have some size constraints like the
+minimum or/and maximum number of elements. A basic list generator
+without any size boundaries:
+
+[source,groovy]
+.Simple list
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=simplelist,indent=0]
+----
+
+<1> `list(valueGenerator)` in this case we are using the `integer`
+generator to create values of type `Integer`
+
+This example generates random sized lists with values taken from the
+value generator passed as parameter.
+
+**List length**
+
+On the other hand if you want to establish some size boundaries you
+could use `list(valueGenerator,min,max)` or
+`list(valueGenerator,max)`.
+
+[source,groovy]
+.List with size boundaries
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=sizedlist,indent=0]
+----
+
+<1> Creating a list with a minimum size of 1 and a maximum of 5
+<2> It should be an instance of list
+<3> It should have a minimum size of 1
+<4> It should have a maximum size of 5
+<5> All elements should be of type integer
+
+=== Map
+
+You can create instances of `java.util.Map` and also specify which
+type of values should be used per `key-value` entry.
+
+[source,groovy]
+.Map
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=mapgenerator,indent=0]
+----
+
+<1> Declaring a `map` generator
+<2> Declaring `id` will be a long
+<3> Declaring `name` will be a string
+<4> Declaring `age` will be an integer between 0 and 120. Then we get
+`next()` map generated value
+
+=== Type
 
 Given a class we may want to create a generator that can supply
 instances of that type. Here is an example of a given class:

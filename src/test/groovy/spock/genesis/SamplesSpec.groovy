@@ -169,6 +169,66 @@ class SamplesSpec extends Specification {
             results == source
     }
 
+    // tag::tuple[]
+    def 'generate a tuple'() {
+        when: 'generating a tuple of numbers'
+            def tuple = tuple(integer, integer, string).next()
+
+        then: 'make sure we get a list of the expected size'
+            tuple.size() == 3
+
+        and: 'the type of the members are the expected'
+            tuple.first() instanceof Integer
+            tuple.get(1) instanceof Integer
+            tuple.last() instanceof String
+    }
+    // end::tuple[]
+
+    // tag::simplelist[]
+    def 'generate a simple list'() {
+        when: 'generating a simple list'
+            def list = list(integer).next() // <1>
+
+        then: 'we only can be sure about the type of the list'
+            list instanceof List
+
+        and: 'the type of elements due to the value generator used'
+            list.every { it instanceof Integer }
+    }
+    // end::simplelist[]
+
+    // tag::sizedlist[]
+    def 'generate a list with size boundaries'() {
+        when: 'establishing the list definition'
+            def list = list(integer, 1, 5).next() // <1>
+
+        then: 'it should obey the following assertions'
+            list instanceof List                  // <2>
+            list.size() >= 1                      // <3>
+            list.size() <= 5                      // <4>
+            list.every { it instanceof Integer }  // <5>
+
+    }
+    // end::sizedlist[]
+
+    // tag::mapgenerator[]
+    def 'generate a map'() {
+        when: 'defining a map with different fields'
+            def myMap = map(                   // <1>
+                id: getLong(),                 // <2>
+                name: string,                  // <3>
+                age: integer(0, 120)).next()   // <4>
+
+        then: 'we should get instances of map'
+            myMap instanceof Map
+
+        and: 'the fields should follow the generators rules'
+            myMap.id instanceof Long
+            myMap.name instanceof String
+            myMap.age instanceof Integer
+    }
+    // end::mapgenerator[]
+
     // tag::data[]
     static class Data {
         String s
