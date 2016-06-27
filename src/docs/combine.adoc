@@ -1,0 +1,56 @@
+== Combine
+
+When generating values, sometimes we may want to mix different types
+of generators, or introduce certain values in the generation, maybe
+special cases. In order to do that we need to combine generators, or
+values.
+
+=== these
+
+The `Gen.these` method creates a generator from a set of values. This values
+could be any of:
+
+- java.util.Iterable
+- java.util.Collection
+- java.lang.Class
+- Or a variable arguments parameter
+
+When the generator produces new values it will be taking every element
+from the declared source in order until the source is exhausted
+
+[source,groovy]
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=these,indent=0]
+----
+
+=== then and `&`
+
+Lets say you are confortable with the values produced by a given
+generator but once the generator is exhausted it would be nice to
+continue producing values from another generator, that's exactly what
+the `then` method does.
+
+[source,groovy]
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=then,indent=0]
+----
+
+The `then` method is available in any generator and chains one
+generator with the next one.
+
+Also you can use the `&` operator to combine to generators:
+
+[source,groovy]
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=ampersand,indent=0]
+----
+
+=== any
+
+If `these` was producing elements from a source in order, `Gen.any`
+produces values from a given source but in **random order**.
+
+[source,groovy]
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=any,indent=0]
+----

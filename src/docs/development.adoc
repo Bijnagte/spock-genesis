@@ -1,0 +1,13 @@
+== Development
+
+=== Building `spock-genesis`
+
+The only prerequisite is that you have JDK 7 or higher installed.
+
+After cloning the project, type `./gradlew clean build` (Windows:
+`gradlew clean build`). All build dependencies, including Gradle
+itself, will be downloaded automatically (unless already present).
+
+=== Groovydoc
+
+`Groovydoc` can be found link:groovydoc/index.html[here].

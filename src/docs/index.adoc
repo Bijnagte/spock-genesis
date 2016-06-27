@@ -1,0 +1,24 @@
+= Spock-Genesis
+:revnumber: {releaseVersion}
+:numbered:
+:imagesDir: images/
+:baseDir: ../..
+:stem:
+
+:sourceDir: {baseDir}/src/main/groovy
+:testDir: {baseDir}/src/test/groovy
+
+Mostly lazy data generators for property based testing using the
+https://github.com/spockframework/spock[Spock] test framework
+
+include::intro.adoc[]
+
+include::values.adoc[]
+
+include::composites.adoc[]
+
+include::combine.adoc[]
+
+include::cardinality.adoc[]
+
+include::development.adoc[]
