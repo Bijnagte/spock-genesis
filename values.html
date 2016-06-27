@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.3">
-<title>Spock-Genesis</title>
+<title>Values</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -420,129 +420,25 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Spock-Genesis</h1>
-<div class="details">
-<span id="revnumber">version 0.4.0</span>
-</div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_intro">1. Intro</a>
+<li><a href="#_values">Values</a>
 <ul class="sectlevel2">
-<li><a href="#_license">1.1. License</a></li>
-<li><a href="#_usage">1.2. Usage</a></li>
-</ul>
-</li>
-<li><a href="#_values">2. Values</a>
-<ul class="sectlevel2">
-<li><a href="#_strings">2.1. Strings</a></li>
-<li><a href="#_numbers">2.2. Numbers</a></li>
-<li><a href="#_date">2.3. Date</a></li>
-<li><a href="#_from_value">2.4. From value</a></li>
-<li><a href="#_from_enum">2.5. From enum</a></li>
-<li><a href="#_using_code_with_code">2.6. Using <code>with</code></a></li>
-</ul>
-</li>
-<li><a href="#_composites">3. Composites</a>
-<ul class="sectlevel2">
-<li><a href="#_tuple">3.1. Tuple</a></li>
-<li><a href="#_list">3.2. List</a></li>
-<li><a href="#_map">3.3. Map</a></li>
-<li><a href="#_type">3.4. Type</a></li>
-</ul>
-</li>
-<li><a href="#_combine">4. Combine</a>
-<ul class="sectlevel2">
-<li><a href="#_these">4.1. these</a></li>
-<li><a href="#_then_and_code_code">4.2. then and <code>&amp;</code></a></li>
-<li><a href="#_any">4.3. any</a></li>
-</ul>
-</li>
-<li><a href="#_cardinality">5. Cardinality</a>
-<ul class="sectlevel2">
-<li><a href="#_once">5.1. Once</a></li>
-<li><a href="#_using_code_multiply_by_code">5.2. Using <code>multiply by</code></a></li>
-<li><a href="#_take">5.3. Take</a></li>
-</ul>
-</li>
-<li><a href="#_development">6. Development</a>
-<ul class="sectlevel2">
-<li><a href="#_building_code_spock_genesis_code">6.1. Building <code>spock-genesis</code></a></li>
-<li><a href="#_groovydoc">6.2. Groovydoc</a></li>
+<li><a href="#_strings">Strings</a></li>
+<li><a href="#_numbers">Numbers</a></li>
+<li><a href="#_date">Date</a></li>
+<li><a href="#_from_value">From value</a></li>
+<li><a href="#_from_enum">From enum</a></li>
+<li><a href="#_using_code_with_code">Using <code>with</code></a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>Mostly lazy data generators for property based testing using the
-<a href="https://github.com/spockframework/spock">Spock</a> test framework</p>
-</div>
-</div>
-</div>
 <div class="sect1">
-<h2 id="_intro">1. Intro</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Providing test data, especially when attempting to test for a wide
-range of inputs is tedious if not impossible to do by hand. Generating
-inputs allows for more thorough testing without a dramatic increase in
-effort. In Spock
-<a href="http://spockframework.github.io/spock/docs/1.0/data_driven_testing.html">data
-driven tests</a> can have data provided by any
-<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Iterator.html">Iterator</a>. Spock
-Genesis provides a variety of classes that extend from
-<a href="https://github.com/Bijnagte/spock-genesis/blob/master/src/main/groovy/spock/genesis/generators/Generator.groovy">Generator</a>
-which meet that interface. Where possible the generators are lazy and
-infinite.</p>
-</div>
-<div class="sect2">
-<h3 id="_license">1.1. License</h3>
-<div class="paragraph">
-<p>The <strong>Spock-Genesis</strong> project is open sourced under the
-<a href="https://github.com/Bijnagte/spock-genesis/blob/master/LICENSE.txt">MIT
-License</a>.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_usage">1.2. Usage</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">repositories {
-    jcenter()
-}
-
-dependencies {
-    testCompile 'com.nagternal:spock-genesis:0.4.0'
-}</code></pre>
-</div>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-Change <code>0.4.0</code> with the latest available version (current
-version is 0.4.0)
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>The primary way of constructing generators is
-<a href="https://github.com/Bijnagte/spock-genesis/blob/master/src/main/groovy/spock/genesis/Gen.groovy">spock.genesis.Gen</a>
-which provides static factory methods for data generators.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_values">2. Values</h2>
+<h2 id="_values">Values</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Values could be of any simple type such as a String, Integer,
@@ -551,8 +447,7 @@ following import:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">//static import generator factory methods
-import static spock.genesis.Gen.*</code></pre>
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">Unresolved directive in values.adoc - include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=genimport,indent=0]</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -561,16 +456,7 @@ generators:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'using static factory methods'() {
-    expect:
-        string.next() instanceof String
-        bytes.next() instanceof byte[]
-        getDouble().next() instanceof Double
-        integer.next() instanceof Integer
-        getLong().next() instanceof Long
-        character.next() instanceof Character
-        date.next() instanceof Date
-}</code></pre>
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">Unresolved directive in values.adoc - include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=factorymethods,indent=0]</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -583,7 +469,7 @@ if for example, we would like a string we won&#8217;t care about the length
 of the string.</p>
 </div>
 <div class="sect2">
-<h3 id="_strings">2.1. Strings</h3>
+<h3 id="_strings">Strings</h3>
 <div class="paragraph">
 <p>Like we saw in the previous section if we don&#8217;t care about the length
 or the content and we just wanted to generate a string then it&#8217;s
@@ -600,22 +486,7 @@ one of the following methods:</p>
 <div class="listingblock">
 <div class="title">Restricting string length</div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'create a string by length'() {
-    when: 'establishing max string length'
-        def shortWord = string(5).next() <i class="conum" data-value="1"></i><b>(1)</b>
-
-    then: 'word size should be less equal than max'
-        shortWord.size() &lt;= 5
-
-    when: 'establishing min and max word size'
-        def largerWord = string(5,10).next() <i class="conum" data-value="2"></i><b>(2)</b>
-
-    then: 'word should be larger equal min'
-        largerWord.size() &gt;= 5
-
-    and: 'word should be less equal max'
-        largerWord.size() &lt;= 10
-}</code></pre>
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">Unresolved directive in values.adoc - include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=stringlength,indent=0]</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -636,17 +507,12 @@ one of the following methods:</p>
 <div class="listingblock">
 <div class="title">From a string pattern</div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate a string using a regular expression'() {
-    setup:
-        String regex = '(https?|ftp|file)://[-A-Z0-9+&amp;@#/%?=~_|!:,.;]*[-A-Z0-9+&amp;@#/%=~_|]\\d'
-    expect:
-        string(~regex).next() ==~ regex
-}</code></pre>
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">Unresolved directive in values.adoc - include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=stringregex,indent=0]</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_numbers">2.2. Numbers</h3>
+<h3 id="_numbers">Numbers</h3>
 <div class="paragraph">
 <p><code>spock.genesis.Gen</code> has access to several number generators. All basic
 number types have a direct method to generate a random value without
@@ -654,13 +520,7 @@ establishing any restriction.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate numbers'() {
-    expect:
-        getDouble().next() instanceof Double
-        integer.next() instanceof Integer
-        getLong().next() instanceof Long
-        bytes.next() instanceof byte[]
-}</code></pre>
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">Unresolved directive in values.adoc - include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=numbers,indent=0]</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -669,21 +529,7 @@ the generated values directly.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'create an integer with min and max'() {
-    when: 'establishing max possible number'
-        def firstNumber = integer(5..10).next() <i class="conum" data-value="1"></i><b>(1)</b>
-
-    then: 'generated number will be less equals than max'
-        firstNumber &gt;= 5
-        firstNumber &lt;= 10
-
-    when: 'establishing min and max valid numbers'
-        def secondNumber = integer(5,10).next() <i class="conum" data-value="2"></i><b>(2)</b>
-
-    then: 'generated number must be between both numbers'
-        secondNumber &gt;= 5
-        secondNumber &lt;= 10
-}</code></pre>
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">Unresolved directive in values.adoc - include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=integerlength,indent=0]</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -700,7 +546,7 @@ the generated values directly.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_date">2.3. Date</h3>
+<h3 id="_date">Date</h3>
 <div class="paragraph">
 <p>In many applications could be handy to generate dates to validate some
 principles. For instance when booking a room to make sure the system
@@ -709,23 +555,12 @@ check-in right ?</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'create a new date value range'() {
-    given: "yesterday's reference and tomorrow's"
-    def yesterday = new Date() - 1
-    def tomorrow  = new Date() + 1
-
-    when: 'getting a new date'
-    def newDate = date(yesterday, tomorrow).next()
-
-    then: 'new date should be between boundaries'
-    tomorrow.after(newDate)
-    newDate.after(yesterday)
-}</code></pre>
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">Unresolved directive in values.adoc - include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=dates,indent=0]</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_from_value">2.4. From value</h3>
+<h3 id="_from_value">From value</h3>
 <div class="paragraph">
 <p>You&#8217;ve seen several ways of creating values from simple data
 types. But if you still wanted to create an infinite lazy generator
@@ -733,34 +568,19 @@ for a given value you can use <code>Gen.value</code></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'create a value using the value() method'() {
-    expect: 'to get several copies of a value'
-    value(0).take(2).collect() == [0,0]
-
-    and: 'to get just one'
-    value(0).next() == 0
-}</code></pre>
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">Unresolved directive in values.adoc - include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=value,indent=0]</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_from_enum">2.5. From enum</h3>
+<h3 id="_from_enum">From enum</h3>
 <div class="paragraph">
 <p>If you already have an enum type and you would like to generate random values
 from it, then you could use <code>these</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">enum Days {
-    SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
-}
-
-def 'generate from an enum'() {
-    setup:
-        def gen = these Days
-    expect:
-        gen.collect() == Days.collect()
-}</code></pre>
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">Unresolved directive in values.adoc - include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=fromenum,indent=0]</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -779,494 +599,15 @@ check the section <code>combine</code>.
 </div>
 </div>
 <div class="sect2">
-<h3 id="_using_code_with_code">2.6. Using <code>with</code></h3>
+<h3 id="_using_code_with_code">Using <code>with</code></h3>
 <div class="paragraph">
 <p>You can use <code>with</code> if you would like to set some property of the
 generated value.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'call methods on generated value using with'() {
-    setup:
-        def gen = date.with { setTime(1400) }
-
-    expect:
-        gen.next().getTime() == 1400
-}</code></pre>
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">Unresolved directive in values.adoc - include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=datewith,indent=0]</code></pre>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_composites">3. Composites</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Generate values of basic types is great but sometimes we may want to
-create instances of more complex types such as maps, lists, or pojos.</p>
-</div>
-<div class="sect2">
-<h3 id="_tuple">3.1. Tuple</h3>
-<div class="paragraph">
-<p>A tuple is a finite ordered list of elements. As we&#8217;ll see afterwards
-you can create random sized lists with the <code>list</code> generator, but if
-you only wanted to create a fixed sized lists with fixed types,
-<code>tuple</code> could be your best option.</p>
-</div>
-<div class="listingblock">
-<div class="title">Tuple</div>
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate a tuple'() {
-    when: 'generating a tuple of numbers'
-        def tuple = tuple(integer, integer, string).next()
-
-    then: 'make sure we get a list of the expected size'
-        tuple.size() == 3
-
-    and: 'the type of the members are the expected'
-        tuple.first() instanceof Integer
-        tuple.get(1) instanceof Integer
-        tuple.last() instanceof String
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>In this example we&#8217;re creating a tuple (a fixed list) of three elments
-of types: Integer, Integer and String.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_list">3.2. List</h3>
-<div class="paragraph">
-<p>As we&#8217;ve just seen you can create fixed lists with <code>tuple</code> but if you
-want to vary the size of the list, or use random element types then
-you should be using <code>list</code>. A list needs a given value generator to
-take its elements from and could have some size constraints like the
-minimum or/and maximum number of elements. A basic list generator
-without any size boundaries:</p>
-</div>
-<div class="listingblock">
-<div class="title">Simple list</div>
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate a simple list'() {
-    when: 'generating a simple list'
-        def list = list(integer).next() <i class="conum" data-value="1"></i><b>(1)</b>
-
-    then: 'we only can be sure about the type of the list'
-        list instanceof List
-
-    and: 'the type of elements due to the value generator used'
-        list.every { it instanceof Integer }
-}</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><code>list(valueGenerator)</code> in this case we are using the <code>integer</code>
-generator to create values of type <code>Integer</code></td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>This example generates random sized lists with values taken from the
-value generator passed as parameter.</p>
-</div>
-<div class="paragraph">
-<p><strong>List length</strong></p>
-</div>
-<div class="paragraph">
-<p>On the other hand if you want to establish some size boundaries you
-could use <code>list(valueGenerator,min,max)</code> or
-<code>list(valueGenerator,max)</code>.</p>
-</div>
-<div class="listingblock">
-<div class="title">List with size boundaries</div>
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate a list with size boundaries'() {
-    when: 'establishing the list definition'
-        def list = list(integer, 1, 5).next() <i class="conum" data-value="1"></i><b>(1)</b>
-
-    then: 'it should obey the following assertions'
-        list instanceof List                  <i class="conum" data-value="2"></i><b>(2)</b>
-        list.size() &gt;= 1                      <i class="conum" data-value="3"></i><b>(3)</b>
-        list.size() &lt;= 5                      <i class="conum" data-value="4"></i><b>(4)</b>
-        list.every { it instanceof Integer }  <i class="conum" data-value="5"></i><b>(5)</b>
-
-}</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Creating a list with a minimum size of 1 and a maximum of 5</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>It should be an instance of list</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>It should have a minimum size of 1</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>It should have a maximum size of 5</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>All elements should be of type integer</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_map">3.3. Map</h3>
-<div class="paragraph">
-<p>You can create instances of <code>java.util.Map</code> and also specify which
-type of values should be used per <code>key-value</code> entry.</p>
-</div>
-<div class="listingblock">
-<div class="title">Map</div>
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate a map'() {
-    when: 'defining a map with different fields'
-        def myMap = map(                   <i class="conum" data-value="1"></i><b>(1)</b>
-            id: getLong(),                 <i class="conum" data-value="2"></i><b>(2)</b>
-            name: string,                  <i class="conum" data-value="3"></i><b>(3)</b>
-            age: integer(0, 120)).next()   <i class="conum" data-value="4"></i><b>(4)</b>
-
-    then: 'we should get instances of map'
-        myMap instanceof Map
-
-    and: 'the fields should follow the generators rules'
-        myMap.id instanceof Long
-        myMap.name instanceof String
-        myMap.age instanceof Integer
-}</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Declaring a <code>map</code> generator</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Declaring <code>id</code> will be a long</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Declaring <code>name</code> will be a string</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Declaring <code>age</code> will be an integer between 0 and 120. Then we get
-<code>next()</code> map generated value</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_type">3.4. Type</h3>
-<div class="paragraph">
-<p>Given a class we may want to create a generator that can supply
-instances of that type. Here is an example of a given class:</p>
-</div>
-<div class="listingblock">
-<div class="title">Data</div>
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">static class Data {
-    String s
-    Integer i
-    Date d
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The following generator creates instances of the previous type and it
-has defined a different generator for each field:</p>
-</div>
-<div class="listingblock">
-<div class="title">Generator</div>
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate type with map'() {
-    setup:
-        def gen = type(Data, s: string, i: integer, d: date) <i class="conum" data-value="1"></i><b>(1)</b>
-    when:
-        Data result = gen.next() <i class="conum" data-value="2"></i><b>(2)</b>
-    then:
-        result.d
-        result.i
-        result.s
-}</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Create generator</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Take next instance</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>In the following example the type we would like to get instances from
-has a non default constructor:</p>
-</div>
-<div class="listingblock">
-<div class="title">TupleData</div>
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">static class TupleData {
-    String s
-    Integer i
-    Date d
-
-    TupleData(String s, Integer i, Date d) {
-        this.s = s
-        this.i = i
-        this.d = d
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>But that is not an issue, as long as we respect the number of
-arguments after declaring the class.</p>
-</div>
-<div class="listingblock">
-<div class="title">Generator</div>
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate type with tuple'() {
-    setup:
-        def gen = type(TupleData, string, value(42), date)
-    when:
-        def result = gen.next()
-    then:
-        result instanceof TupleData
-        result.d
-        result.i == 42
-        result.s
-}</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Notice here we are generating the same name for the <code>i</code> field
-over and over again (42)
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_combine">4. Combine</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>When generating values, sometimes we may want to mix different types
-of generators, or introduce certain values in the generation, maybe
-special cases. In order to do that we need to combine generators, or
-values.</p>
-</div>
-<div class="sect2">
-<h3 id="_these">4.1. these</h3>
-<div class="paragraph">
-<p>The <code>Gen.these</code> method creates a generator from a set of values. This values
-could be any of:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>java.util.Iterable</p>
-</li>
-<li>
-<p>java.util.Collection</p>
-</li>
-<li>
-<p>java.lang.Class</p>
-</li>
-<li>
-<p>Or a variable arguments parameter</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>When the generator produces new values it will be taking every element
-from the declared source in order until the source is exhausted</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate from a specific set of values'() {
-    expect: 'to get numbers from a varargs'
-        these(1,2,3).take(3).collect() == [1,2,3]
-
-    and: 'to get values from an iterable object such as a list'
-        these([1,2,3]).take(2).collect() == [1,2]
-
-    and: 'to get values from a given class'
-        these(String).next() == String
-
-    and: 'to stop producing numbers if the source is exhausted'
-        these(1..3).take(10).collect() == [1,2,3]
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_then_and_code_code">4.2. then and <code>&amp;</code></h3>
-<div class="paragraph">
-<p>Lets say you are confortable with the values produced by a given
-generator but once the generator is exhausted it would be nice to
-continue producing values from another generator, that&#8217;s exactly what
-the <code>then</code> method does.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate from multiple iterators in sequence'() {
-    setup:
-        def gen = these(1, 2, 3).then([4, 5])
-    expect:
-        gen.collect() == [1, 2, 3, 4, 5]
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>then</code> method is available in any generator and chains one
-generator with the next one.</p>
-</div>
-<div class="paragraph">
-<p>Also you can use the <code>&amp;</code> operator to combine to generators:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'create multi source generator with &amp; operator'() {
-    setup:
-        def gen = string(100) &amp; integer
-    expect:
-        gen instanceof MultiSourceGenerator
-        gen.any { it instanceof Integer }
-        gen.any { it instanceof String }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_any">4.3. any</h3>
-<div class="paragraph">
-<p>If <code>these</code> was producing elements from a source in order, <code>Gen.any</code>
-produces values from a given source but in <strong>random order</strong>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate any value from a given source'() {
-    given: 'a source'
-        def source = [1,2,null,3]
-
-    expect: 'only that the generated value is any of the elements'
-        Gen.any(source).take(2).every { n -&gt; n in source }
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_cardinality">5. Cardinality</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Once you chose a generator, you can tell the generator to produce a
-given number of values, lets see how.</p>
-</div>
-<div class="sect2">
-<h3 id="_once">5.1. Once</h3>
-<div class="paragraph">
-<p>If you only want to produce a given value only once, then use <code>once</code>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate a value once'() {
-    setup:
-        def gen = once value
-    expect:
-        gen.collect() == [value]
-    where:
-        value &lt;&lt; [null, 1, 'b', [1,2]]
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_using_code_multiply_by_code">5.2. Using <code>multiply by</code></h3>
-<div class="paragraph">
-<p>You can tell how many items to generate from a given generator by
-using the <code>*</code> operator:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'multiply by int limits the quantity generated'() {
-    setup:
-        def gen = string * 3
-    when:
-        def results = gen.collect()
-    then:
-        results.size() == 3
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_take">5.3. Take</h3>
-<div class="paragraph">
-<p>If you know in advanced how many items you will need then use <code>take</code>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate a value repeatedly'() {
-    setup:
-        def gen = value(null).take(100)
-    when:
-        def result = gen.collect()
-    then:
-        result.size() == 100
-        result.every { it == null }
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_development">6. Development</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_building_code_spock_genesis_code">6.1. Building <code>spock-genesis</code></h3>
-<div class="paragraph">
-<p>The only prerequisite is that you have JDK 7 or higher installed.</p>
-</div>
-<div class="paragraph">
-<p>After cloning the project, type <code>./gradlew clean build</code> (Windows:
-<code>gradlew clean build</code>). All build dependencies, including Gradle
-itself, will be downloaded automatically (unless already present).</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_groovydoc">6.2. Groovydoc</h3>
-<div class="paragraph">
-<p><code>Groovydoc</code> can be found <a href="groovydoc/index.html">here</a>.</p>
 </div>
 </div>
 </div>
@@ -1274,27 +615,11 @@ itself, will be downloaded automatically (unless already present).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.4.0<br>
 Last updated 2016-06-27 05:45:35 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
 <script>prettyPrint()</script>
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {
-    inlineMath: [["\\(", "\\)"]],
-    displayMath: [["\\[", "\\]"]],
-    ignoreClass: "nostem|nolatexmath"
-  },
-  asciimath2jax: {
-    delimiters: [["\\$", "\\$"]],
-    ignoreClass: "nostem|noasciimath"
-  },
-  TeX: { equationNumbers: { autoNumber: "none" } }
-});
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
 </body>
 </html>
