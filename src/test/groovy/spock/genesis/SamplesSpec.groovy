@@ -427,4 +427,13 @@ class SamplesSpec extends Specification {
                     gender: character('MFTU')
             ).take(3)
     }
+
+    def 'different amounts'() {
+        expect:
+        s instanceof String
+        i instanceof Integer
+        where:
+        [s, i] << tuple(string, integer).take(4)
+    }
+
 }
