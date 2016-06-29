@@ -6,7 +6,7 @@ class CyclicGeneratorSpec extends Specification {
 
     def 'generate repeats'() {
         setup:
-            def generator = new CyclicGenerator(iterable.iterator()).take(limit)
+            def generator = new CyclicGenerator(iterable).take(limit)
         when:
             def result = generator.realized
         then:
@@ -22,16 +22,16 @@ class CyclicGeneratorSpec extends Specification {
 
     def 'has next is false if the iterator has no entries'() {
         setup:
-            def iterator = [].iterator()
-            def generator = new CyclicGenerator(iterator)
+            def iterable = []
+            def generator = new CyclicGenerator(iterable)
         expect:
-            generator.hasNext() == false
+            generator.iterator().hasNext() == false
     }
 
     def 'generator is not finite'() {
         expect:
-            new CyclicGenerator([1].iterator()).isFinite() == false
-            new CyclicGenerator([].iterator()).isFinite() == true
+            new CyclicGenerator([1]).isFinite() == false
+            new CyclicGenerator([]).isFinite() == true
     }
 
 }

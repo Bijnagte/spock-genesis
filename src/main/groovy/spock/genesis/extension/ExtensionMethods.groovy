@@ -15,7 +15,7 @@ class ExtensionMethods {
     }
 
     static Generator toGenerator(Iterable self, boolean finite  = false) {
-        new GeneratorDecorator(self.iterator(), finite)
+        new GeneratorDecorator(self, finite)
     }
 
     static Generator toGenerator(Collection self) {
@@ -24,7 +24,7 @@ class ExtensionMethods {
 
     static Generator toGenerator(Class clazz) {
         if (clazz.isEnum()) {
-            toGenerator(clazz.iterator())
+            toGenerator(clazz.iterator().collect())
         } else {
             toGenerator([clazz])
         }
@@ -35,7 +35,12 @@ class ExtensionMethods {
     }
 
     static Generator toGenerator(Iterator self) {
-        new GeneratorDecorator(self)
+        new GeneratorDecorator(new Iterable() {
+            @Override
+            Iterator iterator() {
+                self
+            }
+        })
     }
 
     static Generator toGenerator(Generator self) {

@@ -6,41 +6,46 @@ package spock.genesis.generators
  */
 class MultiSourceGenerator<E> extends Generator<E> implements Closeable {
 
-    final List<Iterator<E>> iterators
+    final List<Iterable<E>> iterables
     final Random random = new Random()
 
-    MultiSourceGenerator(Collection<Iterator<E>> iterators) {
-        this.iterators = iterators.toList()
+    MultiSourceGenerator(Collection<Iterable<E>> iterables) {
+        this.iterables = iterables.toList()
     }
 
-    MultiSourceGenerator(Map<Iterator<E>, Integer> weightedIterators) {
+    MultiSourceGenerator(Map<Iterable<E>, Integer> weightedIterators) {
         List i = []
-        weightedIterators.each { iterator, qty ->
-            qty.times { i << iterator }
+        weightedIterators.each { iterable, qty ->
+            qty.times { i << iterable }
         }
-        this.iterators = i
+        this.iterables = i
     }
 
-    /**
-     * @return true if any of the source generators has next
-     */
-    @Override
-    boolean hasNext() {
-        iterators.any { it.hasNext() }
-    }
+    UnmodifiableIterator<E> iterator() {
+        new UnmodifiableIterator<E>() {
+            private final List<Iterator<E>> iterators = iterables*.iterator()
+            /**
+             * @return true if any of the source generators has next
+             */
+            @Override
+            boolean hasNext() {
+                iterators.any { it.hasNext() }
+            }
 
-    /** generates a value from one of the source generators
-     * @return the generated value
-     */
-    @Override
-    E next() {
-        boolean search = hasNext()
+            /** generates a value from one of the source generators
+             * @return the generated value
+             */
+            @Override
+            E next() {
+                boolean search = hasNext()
 
-        while (search) {
-            int i = random.nextInt(iterators.size())
-            def generator = iterators[i]
-            if (generator.hasNext()) {
-                return generator.next()
+                while (search) {
+                    int i = random.nextInt(iterators.size())
+                    def generator = iterators[i]
+                    if (generator.hasNext()) {
+                        return generator.next()
+                    }
+                }
             }
         }
     }
@@ -61,16 +66,16 @@ class MultiSourceGenerator<E> extends Generator<E> implements Closeable {
     }
 
     void close() {
-        iterators.each { close(it) }
+        iterables.each { close(it) }
     }
 
-    void close(Iterator generator) {
+    void close(Iterable generator) {
         if (generator.respondsTo('close')) {
             generator.close()
         }
     }
 
     boolean isFinite() {
-        GeneratorUtils.allFinite(iterators)
+        GeneratorUtils.allFinite(iterables)
     }
 }

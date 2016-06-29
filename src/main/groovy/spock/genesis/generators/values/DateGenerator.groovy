@@ -1,6 +1,7 @@
 package spock.genesis.generators.values
 
 import spock.genesis.generators.InfiniteGenerator
+import spock.genesis.generators.InfiniteIterator
 
 class DateGenerator extends InfiniteGenerator<Date> {
 
@@ -14,8 +15,13 @@ class DateGenerator extends InfiniteGenerator<Date> {
         this.millisProvider = new LongGenerator(minDate.time, maxDate.time)
     }
 
-    @Override
-    Date next() {
-        new Date(millisProvider.next())
+    InfiniteIterator<Date> iterator() {
+        final Iterator<Long> TIME = millisProvider.iterator()
+        new InfiniteIterator<Date>() {
+            @Override
+            Date next() {
+                new Date(TIME.next())
+            }
+        }
     }
 }

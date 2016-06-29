@@ -7,7 +7,7 @@ import spock.genesis.generators.values.NullGenerator
  * @param < E >   the generated type
  */
 @SuppressWarnings('SpaceAroundMapEntryColon')
-abstract class Generator<E> implements Iterator<E> {
+abstract class Generator<E> implements Iterable<E> {
 
     /**
      * Wraps this generator in a generator that returns values that matches the supplied predicate
@@ -34,12 +34,8 @@ abstract class Generator<E> implements Iterator<E> {
         new LimitedGenerator<E>(this, qty)
     }
 
-    SequentialMultisourceGenerator<E> then(Iterator<E>... iterators) {
-        new SequentialMultisourceGenerator<E>(this, *iterators)
-    }
-
-    SequentialMultisourceGenerator<E> then(Iterable<E>... iterators) {
-        new SequentialMultisourceGenerator<E>(this, *iterators*.iterator())
+    SequentialMultisourceGenerator<E> then(Iterable<E>... iterables) {
+        new SequentialMultisourceGenerator<E>(this, *iterables)
     }
 
     CyclicGenerator<E> repeat() {
@@ -67,29 +63,22 @@ abstract class Generator<E> implements Iterator<E> {
         new MultiSourceGenerator<E>(weightedGenerators)
     }
 
-    MultiSourceGenerator and(Iterator iterator) {
+    MultiSourceGenerator and(Iterable iterator) {
         if (MultiSourceGenerator.isAssignableFrom(this.getClass())) {
             MultiSourceGenerator gen = this
-            new MultiSourceGenerator(gen.iterators + iterator)
+            new MultiSourceGenerator(gen.iterables + iterator)
         } else {
             new MultiSourceGenerator([this, iterator])
         }
     }
 
-    abstract boolean hasNext()
-
-    abstract E next()
+    abstract UnmodifiableIterator<E> iterator()
 
     /**
      * If false then the generator may still terminate when iterated
      * @return true if the Generator will terminate
      */
     abstract boolean isFinite()
-
-    @Override
-    void remove() {
-        throw new UnsupportedOperationException()
-    }
 
     List<E> getRealized() {
         this.collect()

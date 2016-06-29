@@ -3,8 +3,6 @@ package spock.genesis
 import spock.genesis.generators.CyclicGenerator
 import spock.genesis.generators.FactoryGenerator
 import spock.genesis.generators.Generator
-import spock.genesis.generators.GeneratorDecorator
-import spock.genesis.generators.LimitedGenerator
 import spock.genesis.generators.composites.DefinedMapGenerator
 import spock.genesis.generators.composites.ListGenerator
 import spock.genesis.generators.composites.PojoGenerator
@@ -269,7 +267,7 @@ class Gen {
      * @param argGenerators generators per each field
      * @return an instance of {@link PojoGenerator}
      */
-    static PojoGenerator type(Class target, Iterator... argGenerators) {
+    static PojoGenerator type(Class target, Iterable... argGenerators) {
         new PojoGenerator(target, tuple(argGenerators))
     }
 
@@ -292,7 +290,7 @@ class Gen {
      * @param valueGenerator generators of map values
      * @return an instance of {@link RandomMapGenerator}
      */
-    static RandomMapGenerator map(Iterator keyGenerator, Iterator valueGenerator) {
+    static RandomMapGenerator map(Iterable keyGenerator, Iterable valueGenerator) {
         new RandomMapGenerator(keyGenerator, valueGenerator)
     }
 
@@ -341,7 +339,7 @@ class Gen {
      * @param generators generators for each tuple element
      * @return an instance of {@link TupleGenerator}
      */
-    static TupleGenerator tuple(Iterator... generators) {
+    static TupleGenerator tuple(Iterable... generators) {
         new TupleGenerator(generators)
     }
 
@@ -383,26 +381,14 @@ class Gen {
     /**
      * Produces a lazy infinite {@link LimitedGenerator}. This
      * generator will produce the values taken from a given {@link
-     * Iterator} in the order they were defined
-     *
-     * @param iterator {@link Iterable} declaring values to produce
-     * @param finite sets the generator as finite or not
-     * @return an instance of {@link Generator}
-     */
-    static Generator these(Iterator iterator, boolean finite = false) {
-        iterator.toGenerator(finite)
-    }
-
-    /**
-     * Produces a lazy infinite {@link LimitedGenerator}. This
-     * generator will produce the values taken from a given {@link
      * Iterable} in the order they were defined
      *
      * @param iterable {@link Iterable} declaring values to produce
+     * @param finite sets the generator as finite or not
      * @return an instance of {@link Generator}
      */
-    static Generator these(Iterable iterable) {
-        iterable.toGenerator()
+    static Generator these(Iterable iterable, boolean finite = false) {
+        iterable.toGenerator(finite)
     }
 
     /**

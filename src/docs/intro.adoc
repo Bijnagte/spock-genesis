@@ -27,11 +27,11 @@ repositories {
 }
 
 dependencies {
-    testCompile 'com.nagternal:spock-genesis:0.4.0'
+    testCompile 'com.nagternal:spock-genesis:0.5.0'
 }
 ----
 
-IMPORTANT: Change `0.4.0` with the latest available version (current
+IMPORTANT: Change `0.5.0` with the latest available version (current
 version is {releaseVersion})
 
 The primary way of constructing generators is

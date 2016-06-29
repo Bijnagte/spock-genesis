@@ -4,16 +4,22 @@ import spock.lang.Specification
 
 class LimitedGeneratorSpec extends Specification {
 
-    Iterator wrapped = Mock()
+    Iterable wrapped = Mock()
+    Iterator iterator = Mock()
+
+    def setup() {
+        wrapped.iterator() >> iterator
+    }
 
     def 'limits the wrapped iterator to the length specified'() {
         setup:
+
             def generator = new LimitedGenerator(wrapped, limit)
-            wrapped.hasNext() >> true
+            iterator.hasNext() >> true
         when:
             def result = generator.collect()
         then:
-            limit * wrapped.next() >> 'a'
+            limit * iterator.next() >> 'a'
             result.size() == limit
             result.every { it == 'a' }
         where:
@@ -26,8 +32,8 @@ class LimitedGeneratorSpec extends Specification {
         when:
             def result = generator.collect()
         then:
-            1 * wrapped.hasNext() >> false
-            0 * wrapped.next()
+            1 * iterator.hasNext() >> false
+            0 * iterator.next()
             result == []
     }
 

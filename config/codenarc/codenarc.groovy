@@ -2,7 +2,9 @@ ruleset {
 	ruleset('rulesets/basic.xml')
 	ruleset('rulesets/braces.xml')
 	ruleset('rulesets/concurrency.xml')
-	ruleset('rulesets/convention.xml')
+	ruleset('rulesets/convention.xml') {
+		NoDef(enabled: false)
+	}
 	ruleset('rulesets/design.xml')
 	ruleset('rulesets/dry.xml')
 	//ruleset('rulesets/enhanced.xml')
@@ -29,6 +31,8 @@ ruleset {
 			maxClassAverageMethodCrapScore = 20
 		}
 	}
-	ruleset('rulesets/unnecessary.xml')
+	ruleset('rulesets/unnecessary.xml') {
+		UnnecessaryCollectCall(enabled: false)
+	}
 	ruleset('rulesets/unused.xml')
 }

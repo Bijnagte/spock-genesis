@@ -1,14 +1,24 @@
 package spock.genesis.generators
 
-class TransformingGenerator<E, T> extends GeneratorDecorator<E> {
+class TransformingGenerator<E, T> extends GeneratorDecorator<T> {
     private final Closure<T> transform
 
-    TransformingGenerator(Iterator iterator, Closure<E> transform) {
-        super(iterator)
+    TransformingGenerator(Iterable<E> iterable, Closure<T> transform) {
+        super(iterable)
         this.transform = transform
     }
 
-    T next() {
-        transform(generator.next())
+    UnmodifiableIterator<E> iterator() {
+        final Iterator<E> ITERATOR = super.iterator()
+        new UnmodifiableIterator<E>() {
+            @Override
+            boolean hasNext() {
+                ITERATOR.hasNext()
+            }
+
+            T next() {
+                transform(ITERATOR.next())
+            }
+        }
     }
 }

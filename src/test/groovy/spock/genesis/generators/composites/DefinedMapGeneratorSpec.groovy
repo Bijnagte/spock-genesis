@@ -17,7 +17,7 @@ class DefinedMapGeneratorSpec extends Specification {
             ]
             def generator = new DefinedMapGenerator(generators)
         when:
-            def result = generator.next()
+            def result = generator.iterator().next()
         then:
             result.keySet() == [1, date, 'string'].toSet()
             result[1] instanceof Integer
@@ -34,7 +34,7 @@ class DefinedMapGeneratorSpec extends Specification {
             ]
             def generator = new DefinedMapGenerator(generators)
         expect:
-            generator.hasNext() == false
+            generator.iterator().hasNext() == false
     }
 
     def 'isFinite'() {
@@ -44,7 +44,7 @@ class DefinedMapGeneratorSpec extends Specification {
         where:
             generators                           || expected
             [a : new IntegerGenerator()]         || false
-            [a : [].iterator()]                  || true
+            [a : []]                             || true
             [a : new IntegerGenerator().take(1)] || true
     }
 }

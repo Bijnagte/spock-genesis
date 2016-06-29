@@ -5,21 +5,34 @@ package spock.genesis.generators
  * @param < E >   the generated type
  */
 class GeneratorDecorator<E> extends Generator<E> implements Closeable {
-    protected Iterator<E> generator
+    protected Iterable<E> generator
     final boolean finiteOverride
 
-    GeneratorDecorator(Iterator<E> generator, boolean finite = false) {
-        this.generator = generator
+    GeneratorDecorator(Iterable<E> iterable) {
+        this.generator = iterable
+        this.finiteOverride = false
+    }
+
+    GeneratorDecorator(Iterable<E> iterable, boolean finite) {
+        this.generator = iterable
         this.finiteOverride = finite
     }
 
-    boolean hasNext() {
-        generator.hasNext()
-    }
-
     @Override
-    E next() {
-        generator.next()
+    UnmodifiableIterator<E> iterator() {
+        new UnmodifiableIterator<E>() {
+            final private Iterator iterator = generator.iterator()
+
+            @Override
+            boolean hasNext() {
+                iterator.hasNext()
+            }
+
+            @Override
+            E next() {
+                iterator.next()
+            }
+        }
     }
 
     @Override
@@ -32,6 +45,4 @@ class GeneratorDecorator<E> extends Generator<E> implements Closeable {
             generator.close()
         }
     }
-
-
 }

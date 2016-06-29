@@ -1,6 +1,7 @@
 package spock.genesis.generators.values
 
 import spock.genesis.generators.InfiniteGenerator
+import spock.genesis.generators.InfiniteIterator
 
 class IntegerGenerator extends InfiniteGenerator<Integer> {
 
@@ -19,17 +20,21 @@ class IntegerGenerator extends InfiniteGenerator<Integer> {
         this.max = range.to
     }
 
-    @Override
-    Integer next() {
-        long magnitude = max - min + 1
-        if (magnitude <= Integer.MAX_VALUE) {
-            int val = random.nextInt(magnitude as int)
-            val + min
-        } else {
-            while (true) {
-                int val = random.nextInt()
-                if (val >= min && val <= max) {
-                    return val
+    InfiniteIterator<Integer> iterator() {
+        new InfiniteIterator<Integer>() {
+            @Override
+            Integer next() {
+                long magnitude = max - min + 1
+                if (magnitude <= Integer.MAX_VALUE) {
+                    int val = random.nextInt(magnitude as int)
+                    val + min
+                } else {
+                    while (true) {
+                        int val = random.nextInt()
+                        if (val >= min && val <= max) {
+                            return val
+                        }
+                    }
                 }
             }
         }

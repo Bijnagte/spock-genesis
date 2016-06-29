@@ -1,8 +1,9 @@
 package spock.genesis.generators.values
 
 import spock.genesis.generators.InfiniteGenerator
+import spock.genesis.generators.InfiniteIterator
 
-/** A lazy infinite {@link Generator} that returns a random element from a source Collection
+/** A lazy infinite {@code Generator} that returns a random element from a source Collection
  * @param < E >   the generated type
  */
 class RandomElementGenerator<E> extends InfiniteGenerator<E> {
@@ -16,7 +17,13 @@ class RandomElementGenerator<E> extends InfiniteGenerator<E> {
     }
 
     @Override
-    E next() {
-        elementSource[indexSource.next()]
+    InfiniteIterator<E> iterator() {
+        new InfiniteIterator<E>() {
+           private final Iterator indexIterator = indexSource.iterator()
+            @Override
+            E next() {
+                elementSource[indexIterator.next()]
+            }
+        }
     }
 }

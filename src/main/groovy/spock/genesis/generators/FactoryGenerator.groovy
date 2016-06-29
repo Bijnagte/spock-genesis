@@ -13,7 +13,12 @@ class FactoryGenerator<T> extends InfiniteGenerator<T> {
     }
 
     @Override
-    T next() {
-        factory.call()
+    InfiniteIterator<T> iterator() {
+        new InfiniteIterator<T>() {
+            @Override
+            T next() {
+                factory.call()
+            }
+        }
     }
 }

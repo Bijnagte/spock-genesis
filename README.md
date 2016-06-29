@@ -79,6 +79,10 @@ Change log
 * better error handling for POJO construction
 * isFinite method to determine if generator will terminate
 
+### 0.5.0
+* switch to Iterable from Iterator
+* improve performance of long generation using min and/or max
+
 Building Spock Genesis
 --------------
 The only prerequisite is that you have JDK 7 or higher installed.

@@ -1,6 +1,7 @@
 package spock.genesis.generators.values
 
 import spock.genesis.generators.InfiniteGenerator
+import spock.genesis.generators.InfiniteIterator
 
 class WholeNumberGenerator extends InfiniteGenerator<Integer> {
 
@@ -23,8 +24,12 @@ class WholeNumberGenerator extends InfiniteGenerator<Integer> {
         this(range.from, range.to)
     }
 
-    @Override
-    Integer next() {
-        min + random.nextInt(magnitude)
+    InfiniteIterator<Integer> iterator() {
+        new InfiniteIterator<Integer>() {
+            @Override
+            Integer next() {
+                min + random.nextInt(magnitude)
+            }
+        }
     }
 }
