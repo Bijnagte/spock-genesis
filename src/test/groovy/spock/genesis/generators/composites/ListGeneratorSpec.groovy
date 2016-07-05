@@ -12,7 +12,7 @@ class ListGeneratorSpec extends Specification {
         setup:
             def generator = new ListGenerator(gen, limit)
         when:
-            def result = generator.next()
+            def result = generator.iterator().next()
         then:
             result.size() <= limit
         where:

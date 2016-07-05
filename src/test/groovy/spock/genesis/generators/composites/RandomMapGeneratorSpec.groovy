@@ -1,6 +1,6 @@
 package spock.genesis.generators.composites
 
-import spock.genesis.generators.test.CloseableIterator
+import spock.genesis.generators.test.CloseableIterable
 import spock.genesis.generators.values.IntegerGenerator
 import spock.genesis.generators.values.StringGenerator
 import spock.lang.Specification
@@ -11,7 +11,7 @@ class RandomMapGeneratorSpec extends Specification {
         setup:
             def generator = new RandomMapGenerator(new StringGenerator(10), new IntegerGenerator())
         when:
-            Map result = generator.next()
+            Map result = generator.iterator().next()
         then:
             result.each { key, value ->
                 key instanceof String
@@ -21,8 +21,8 @@ class RandomMapGeneratorSpec extends Specification {
 
     def 'calling close does nothing if the generators have no close method'() {
         setup:
-            Iterator keyGenerator = Mock()
-            Iterator valueGenerator = Mock()
+            Iterable keyGenerator = Mock()
+            Iterable valueGenerator = Mock()
 
             def generator = new RandomMapGenerator(keyGenerator, valueGenerator)
         when:
@@ -34,8 +34,8 @@ class RandomMapGeneratorSpec extends Specification {
 
     def 'calling close calls close on key and value generators'() {
         setup:
-            CloseableIterator keyGenerator = Mock()
-            CloseableIterator valueGenerator = Mock()
+            CloseableIterable keyGenerator = Mock()
+            CloseableIterable valueGenerator = Mock()
             def generator = new RandomMapGenerator(keyGenerator, valueGenerator)
         when:
             generator.close()

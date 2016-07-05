@@ -6,38 +6,48 @@ package spock.genesis.generators
  * @param < E >   the generated type
  */
 class CyclicGenerator<E> extends GeneratorDecorator<E> {
-    private final List repeatSource = []
-    private boolean hasRepeated = false
-    private boolean started = false
 
-    CyclicGenerator(Iterator<E> iterator) {
-        super(iterator)
+    CyclicGenerator(E... array) {
+        this(array.size() == 1 ? new ObjectIteratorGenerator<E>(array[0]) : array.toList())
+    }
+
+    CyclicGenerator(Iterable<E> iterable) {
+        super(iterable, (iterable.respondsTo('isFinite') && iterable.isFinite()) || !Generator.isInstance(iterable))
     }
 
     @Override
-    boolean hasNext() {
-        if (started) {
-            true
-        } else {
-            generator.hasNext()
+    UnmodifiableIterator<E> iterator() {
+        new UnmodifiableIterator<E>() {
+            private Iterator<E> source = generator.iterator()
+            private final List repeatSource = []
+            private boolean hasRepeated = false
+            private boolean started = false
+
+            @Override
+            boolean hasNext() {
+                if (started) {
+                    true
+                } else {
+                    source.hasNext()
+                }
+            }
+
+            @Override
+            E next() {
+                started = true
+                if (!source.hasNext()) {
+                    hasRepeated = true
+                    source = repeatSource.iterator()
+                }
+                E val = source.next()
+                if (!hasRepeated) {
+                    repeatSource.add(val)
+                }
+                val
+            }
         }
     }
-
-    @Override
-    E next() {
-        started = true
-        if (!generator.hasNext()) {
-            hasRepeated = true
-            super.generator = repeatSource.iterator()
-        }
-        E val = generator.next()
-        if (!hasRepeated) {
-            repeatSource.add(val)
-        }
-        val
-    }
-
     boolean isFinite() {
-        !hasNext()
+        !iterator().hasNext()
     }
 }

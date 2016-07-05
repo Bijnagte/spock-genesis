@@ -1,6 +1,7 @@
 package spock.genesis.generators.values
 
 import spock.genesis.generators.InfiniteGenerator
+import spock.genesis.generators.InfiniteIterator
 
 class ValueGenerator<T> extends InfiniteGenerator<T> {
 
@@ -10,8 +11,12 @@ class ValueGenerator<T> extends InfiniteGenerator<T> {
         this.value = value
     }
 
-    @Override
-    T next() {
-        value
+    InfiniteIterator<T> iterator() {
+        new InfiniteIterator<T>() {
+            @Override
+            T next() {
+                value
+            }
+        }
     }
 }

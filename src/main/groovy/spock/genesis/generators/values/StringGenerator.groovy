@@ -2,6 +2,7 @@ package spock.genesis.generators.values
 
 import com.mifmif.common.regex.Generex
 import spock.genesis.generators.InfiniteGenerator
+import spock.genesis.generators.InfiniteIterator
 
 import java.util.regex.Pattern
 
@@ -65,20 +66,27 @@ class StringGenerator extends InfiniteGenerator<String> {
         generex = new Generex(regex.pattern())
     }
 
-    @Override
-    String next() {
-        if (charGenerator) {
-            makeString(lengthSource.next())
-        } else {
-            generex.random()
-        }
-    }
+    InfiniteIterator<String> iterator() {
+        new InfiniteIterator<String>() {
+            private final Iterator<Character> charIterator = charGenerator?.iterator()
+            private final Iterator<Integer> length = lengthSource.iterator()
 
-    String makeString(int length) {
-        char[] chars = new char[length]
-        length.times { index ->
-            chars[index] = charGenerator.next()
+            @Override
+            String next() {
+                if (charIterator) {
+                    makeString(length.next())
+                } else {
+                    generex.random()
+                }
+            }
+
+            private String makeString(int length) {
+                char[] chars = new char[length]
+                length.times { index ->
+                    chars[index] = charIterator.next()
+                }
+                chars.toString()
+            }
         }
-        chars.toString()
     }
 }

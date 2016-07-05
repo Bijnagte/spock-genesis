@@ -19,26 +19,26 @@ class SamplesSpec extends Specification {
     // tag::factorymethods[]
     def 'using static factory methods'() {
         expect:
-            string.next() instanceof String
-            bytes.next() instanceof byte[]
-            getDouble().next() instanceof Double
-            integer.next() instanceof Integer
-            getLong().next() instanceof Long
-            character.next() instanceof Character
-            date.next() instanceof Date
+            string.iterator().next() instanceof String
+            bytes.iterator().next() instanceof byte[]
+            getDouble().iterator().next() instanceof Double
+            integer.iterator().next() instanceof Integer
+            getLong().iterator().next() instanceof Long
+            character.iterator().next() instanceof Character
+            date.iterator().next() instanceof Date
     }
     // end::factorymethods[]
 
     // tag::stringlength[]
     def 'create a string by length'() {
         when: 'establishing max string length'
-            def shortWord = string(5).next() // <1>
+            def shortWord = string(5).iterator().next() // <1>
 
         then: 'word size should be less equal than max'
             shortWord.size() <= 5
 
         when: 'establishing min and max word size'
-            def largerWord = string(5,10).next() // <2>
+            def largerWord = string(5,10).iterator().next() // <2>
 
         then: 'word should be larger equal min'
             largerWord.size() >= 5
@@ -51,24 +51,24 @@ class SamplesSpec extends Specification {
     // tag::numbers[]
     def 'generate numbers'() {
         expect:
-            getDouble().next() instanceof Double
-            integer.next() instanceof Integer
-            getLong().next() instanceof Long
-            bytes.next() instanceof byte[]
+            getDouble().iterator().next() instanceof Double
+            integer.iterator().next() instanceof Integer
+            getLong().iterator().next() instanceof Long
+            bytes.iterator().next() instanceof byte[]
     }
     // end::numbers[]
 
     // tag::integerlength[]
     def 'create an integer with min and max'() {
         when: 'establishing max possible number'
-            def firstNumber = integer(5..10).next() // <1>
+            def firstNumber = integer(5..10).iterator().next() // <1>
 
         then: 'generated number will be less equals than max'
             firstNumber >= 5
             firstNumber <= 10
 
         when: 'establishing min and max valid numbers'
-            def secondNumber = integer(5,10).next() // <2>
+            def secondNumber = integer(5,10).iterator().next() // <2>
 
         then: 'generated number must be between both numbers'
             secondNumber >= 5
@@ -82,7 +82,7 @@ class SamplesSpec extends Specification {
         value(0).take(2).collect() == [0,0]
 
         and: 'to get just one'
-        value(0).next() == 0
+        value(0).iterator().next() == 0
     }
     // end::value[]
 
@@ -93,7 +93,7 @@ class SamplesSpec extends Specification {
         def tomorrow  = new Date() + 1
 
         when: 'getting a new date'
-        def newDate = date(yesterday, tomorrow).next()
+        def newDate = date(yesterday, tomorrow).iterator().next()
 
         then: 'new date should be between boundaries'
         tomorrow.after(newDate)
@@ -174,7 +174,7 @@ class SamplesSpec extends Specification {
     // tag::tuple[]
     def 'generate a tuple'() {
         when: 'generating a tuple of numbers'
-            def tuple = tuple(integer, integer, string).next()
+            def tuple = tuple(integer, integer, string).iterator().next()
 
         then: 'make sure we get a list of the expected size'
             tuple.size() == 3
@@ -189,7 +189,7 @@ class SamplesSpec extends Specification {
     // tag::simplelist[]
     def 'generate a simple list'() {
         when: 'generating a simple list'
-            def list = list(integer).next() // <1>
+            def list = list(integer).iterator().next() // <1>
 
         then: 'we only can be sure about the type of the list'
             list instanceof List
@@ -202,7 +202,7 @@ class SamplesSpec extends Specification {
     // tag::sizedlist[]
     def 'generate a list with size boundaries'() {
         when: 'establishing the list definition'
-            def list = list(integer, 1, 5).next() // <1>
+            def list = list(integer, 1, 5).iterator().next() // <1>
 
         then: 'it should obey the following assertions'
             list instanceof List                  // <2>
@@ -216,10 +216,10 @@ class SamplesSpec extends Specification {
     // tag::mapgenerator[]
     def 'generate a map'() {
         when: 'defining a map with different fields'
-            def myMap = map(                   // <1>
-                id: getLong(),                 // <2>
-                name: string,                  // <3>
-                age: integer(0, 120)).next()   // <4>
+            def myMap = map(                            // <1>
+                id: getLong(),                          // <2>
+                name: string,                           // <3>
+                age: integer(0, 120)).iterator().next() // <4>
 
         then: 'we should get instances of map'
             myMap instanceof Map
@@ -244,7 +244,7 @@ class SamplesSpec extends Specification {
         setup:
             def gen = type(Data, s: string, i: integer, d: date) // <1>
         when:
-            Data result = gen.next() // <2>
+            Data result = gen.iterator().next() // <2>
         then:
             result.d
             result.i
@@ -253,14 +253,13 @@ class SamplesSpec extends Specification {
     // end::typegenerator[]
 
     def 'generate type then call method on instance'() {
-        setup:
-            def gen = type(Data, i: integer, d: date).map { it.s = it.toString(); it }
-        when:
-            Data result = gen.next()
-        then:
+        expect:
+            result instanceof Data
             result.d
             result.i
             result.s == result.toString()
+        where:
+            result << type(Data, i: integer, d: date).map { it.s = it.toString(); it }.take(10)
     }
 
     // tag::tupledata[]
@@ -279,23 +278,22 @@ class SamplesSpec extends Specification {
 
     // tag::typegenerator2[]
     def 'generate type with tuple'() {
-        setup:
-            def gen = type(TupleData, string, value(42), date)
-        when:
-            def result = gen.next()
-        then:
+        expect:
             result instanceof TupleData
             result.d
             result.i == 42
             result.s
+
+        where:
+            result << type(TupleData, string, value(42), date).take(5)
     }
     // end::typegenerator2[]
 
     def 'generate with factory'() {
-        setup:
-            def gen = using { new Date(42) }
         expect:
-            gen.next() == new Date(42)
+            result == new Date(42)
+        where:
+            result << using { new Date(42) }.take(1)
     }
 
     // tag::datewith[]
@@ -304,7 +302,7 @@ class SamplesSpec extends Specification {
             def gen = date.with { setTime(1400) }
 
         expect:
-            gen.next().getTime() == 1400
+            gen.iterator().next().getTime() == 1400
     }
     // end::datewith[]
 
@@ -317,7 +315,7 @@ class SamplesSpec extends Specification {
             these([1,2,3]).take(2).collect() == [1,2]
 
         and: 'to get values from a given class'
-            these(String).next() == String
+            these(String).iterator().next() == String
 
         and: 'to stop producing numbers if the source is exhausted'
             these(1..3).take(10).collect() == [1,2,3]
@@ -395,10 +393,10 @@ class SamplesSpec extends Specification {
 
     // tag::stringregex[]
     def 'generate a string using a regular expression'() {
-        setup:
-            String regex = '(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|]\\d'
         expect:
-            string(~regex).next() ==~ regex
+            generatedString ==~ '(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|]\\d'
+        where:
+            generatedString << string(~'(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|]\\d').take(10)
     }
     // end::stringregex[]
 
@@ -417,16 +415,25 @@ class SamplesSpec extends Specification {
             person.gender in ['M', 'F', 'T', 'U'].collect { it as char }
             person.id > 199
             person.id < 10001
-            person.birthDate >= Date.parse('MM/dd/yyyy', '01/01/1940')
+            person.birthDate >= Date.parse('MM/dd/yyyy', '01/01/1980')
             person.birthDate <= new Date()
 
         where:
             person << type(Person,
                     id: integer(200..10000),
                     name: string(~/[A-Z][a-z]+( [A-Z][a-z]+)?/),
-                    birthDate: date(Date.parse('MM/dd/yyyy', '01/01/1940'), new Date()),
+                    birthDate: date(Date.parse('MM/dd/yyyy', '01/01/1980'), new Date()),
                     title: these('', null).then(Gen.any('Dr.', 'Mr.', 'Ms.', 'Mrs.')),
                     gender: character('MFTU')
             ).take(3)
     }
+
+    def 'different amounts'() {
+        expect:
+        s instanceof String
+        i instanceof Integer
+        where:
+        [s, i] << tuple(string, integer).take(4)
+    }
+
 }

@@ -7,7 +7,7 @@ class StringGeneratorSpec extends Specification {
 
     def 'test make string generation'() {
         setup:
-            def generator = new StringGenerator(length, potentialCharacters)
+            def generator = new StringGenerator(length, potentialCharacters).iterator()
         when:
             String result = generator.next()
         then:
@@ -27,7 +27,7 @@ class StringGeneratorSpec extends Specification {
 
     def 'default random string generation'() {
         setup:
-            def generator = new StringGenerator()
+            def generator = new StringGenerator().iterator()
             Set potential = CharacterGenerator.DEFAULT_CHARACTERS.toSet()*.toString()
         when:
             String result = generator.next()

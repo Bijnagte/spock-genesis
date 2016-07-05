@@ -17,9 +17,9 @@ class GeneratorUtilsSpec extends Specification {
     @Unroll
     def 'all iterator is finite or empty'() {
         expect:
-            GeneratorUtils.allFinite(iterators*.iterator()) == expected
+            GeneratorUtils.allFinite(iterables) == expected
         where:
-            iterators                                   || expected
+            iterables                                   || expected
             [['a', 'b'], [1, 2], [5, 6, 7]]             || false
             [[]]                                        || true
             [[], [1, 2, 3, 4, 5]]                       || false
@@ -31,7 +31,7 @@ class GeneratorUtilsSpec extends Specification {
     @Unroll
     def 'any iterator is finite or empty'() {
         expect:
-            GeneratorUtils.anyFinite(iterators*.iterator()) == expected
+            GeneratorUtils.anyFinite(iterators) == expected
         where:
             iterators                                   || expected
             [['a', 'b'], [1, 2], [5, 6, 7]]             || false
@@ -45,8 +45,8 @@ class GeneratorUtilsSpec extends Specification {
     @Unroll
     def 'is finite iterator'() {
         expect:
-            GeneratorUtils.isFinite([].iterator()) == true
-            GeneratorUtils.isFinite([1].iterator()) == false
+            GeneratorUtils.isFinite([]) == true
+            GeneratorUtils.isFinite([1]) == false
     }
 
     @Unroll
@@ -57,8 +57,12 @@ class GeneratorUtilsSpec extends Specification {
             def finite = isFinite
 
             def generator = new Generator() {
-                boolean hasNext() { has }
-                def next() {}
+                UnmodifiableIterator iterator() {
+                    new UnmodifiableIterator() {
+                        boolean hasNext() { has }
+                        def next() {}
+                    }
+                }
                 boolean isFinite() { finite }
             }
         expect:

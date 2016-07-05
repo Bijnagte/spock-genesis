@@ -1,65 +1,92 @@
 package spock.genesis.generators.values
 
-import spock.genesis.generators.Generator
 import spock.genesis.generators.InfiniteGenerator
+import spock.genesis.generators.InfiniteIterator
 
 class LongGenerator extends InfiniteGenerator<Long> {
 
-    final Generator<Long> candidateProvider
     final long min
     final long max
+    final Random random = new Random()
 
     LongGenerator() {
         this.min = Long.MIN_VALUE
         this.max = Long.MAX_VALUE
-        this.candidateProvider = chooseProvider(min, max)
     }
 
     LongGenerator(long min, long max) {
         assert min < max
         this.min = min
         this.max = max
-        this.candidateProvider = chooseProvider(min, max)
     }
 
-    Generator chooseProvider(BigInteger min, BigInteger max) {
+    InfiniteIterator<Long> chooseProvider(BigInteger min, BigInteger max) {
         BigInteger magnitude = max - min
         if (magnitude <= Integer.MAX_VALUE) {
-            new ShiftedIntegerGenerator(magnitude as int, min as long)
+            new ShiftedIntegerIterator(magnitude as int, min as long)
+        } else if (magnitude <= Long.MAX_VALUE) {
+            new ShiftedLongIterator(magnitude as long, min as long)
         } else {
-            new RandomLongGenerator()
+            new RandomLongIterator()
         }
     }
 
-    @Override
-    Long next() {
-        while (true) {
-            Long val = candidateProvider.next()
-            if (val >= min && val <= max) {
-                return val
+    InfiniteIterator<Long> iterator() {
+        final InfiniteIterator<Long> CANDIDATE_PROVIDER = chooseProvider(min, max)
+        new InfiniteIterator<Long>() {
+            @Override
+            Long next() {
+                while (true) {
+                    Long val = CANDIDATE_PROVIDER.next()
+                    if (val >= min && val <= max) {
+                        return val
+                    }
+                }
             }
         }
     }
 
-    private class RandomLongGenerator extends InfiniteGenerator<Long> {
-        final Random random = new Random()
-
+    private class RandomLongIterator extends InfiniteIterator<Long> {
         Long next() {
             random.nextLong()
         }
     }
 
-    private class ShiftedIntegerGenerator extends InfiniteGenerator<Long> {
-        final IntegerGenerator generator
+    private class ShiftedLongIterator extends  InfiniteIterator<Long> {
+        final long magnitude
         final long shift
 
-        ShiftedIntegerGenerator(int magnitude, long shift) {
-            generator = new IntegerGenerator(0, magnitude)
+        ShiftedLongIterator(long magnitude, long shift) {
+            this.magnitude = magnitude
             this.shift = shift
         }
 
         Long next() {
-            shift + generator.next()
+            // error checking and 2^x checking removed for simplicity.
+            long bits
+            long val
+
+            boolean seek = true
+            while (seek) {
+                bits = (random.nextLong() << 1) >>> 1
+                val = bits % magnitude
+                seek = bits - val + (magnitude - 1) < 0L
+            }
+            shift + val
+        }
+    }
+
+    private class ShiftedIntegerIterator extends InfiniteIterator<Long> {
+        final InfiniteIterator<Integer> iterator
+        final long shift
+
+        ShiftedIntegerIterator(int magnitude, long shift) {
+            iterator = new IntegerGenerator(0, magnitude).iterator()
+            this.shift = shift
+        }
+
+        Long next() {
+            shift + iterator.next()
         }
     }
 }

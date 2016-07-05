@@ -7,29 +7,20 @@ class PojoGeneratorSpec extends Specification {
 
     def 'has next true if param generator has next'() {
         setup:
-            def iterator = iterable.iterator()
-            def generator = new PojoGenerator(null, iterator)
+            def generator = new PojoGenerator(null, iterable)
         expect:
-            iterator.hasNext() == generator.hasNext()
+            iterable.iterator().hasNext() == generator.iterator().hasNext()
         where:
             iterable << [[1], []]
-    }
-
-    def 'has next false if param generator does not have next'() {
-        setup:
-            def iterator = [1].iterator()
-            def generator = new PojoGenerator(null, iterator)
-        expect:
-            generator.hasNext()
     }
 
     def 'make tuple constructor object'() {
         setup:
             def tuple = [string, integer]
-            def generator = new PojoGenerator(TupleConstructorObj, [tuple].iterator())
+            def generator = new PojoGenerator(TupleConstructorObj, [tuple])
 
         when:
-            def result = generator.next()
+            def result = generator.iterator().next()
         then:
             result instanceof TupleConstructorObj
             result.string == string
@@ -44,9 +35,9 @@ class PojoGeneratorSpec extends Specification {
     def 'make map constructor object'() {
         setup:
             def map = [string: string, integer: integer]
-            def generator = new PojoGenerator(MapConstructorObj, [map].iterator())
+            def generator = new PojoGenerator(MapConstructorObj, [map])
         when:
-            def result = generator.next()
+            def result = generator.iterator().next()
         then:
             result instanceof MapConstructorObj
             result.string == string
@@ -62,9 +53,9 @@ class PojoGeneratorSpec extends Specification {
     def 'make default constructor object'() {
         setup:
             def map = [string: string, integer: integer]
-            def generator = new PojoGenerator(DefaultConstructorObj, [map].iterator())
+            def generator = new PojoGenerator(DefaultConstructorObj, [map])
         when:
-            def result = generator.next()
+            def result = generator.iterator().next()
         then:
             result instanceof DefaultConstructorObj
             result.string == string
@@ -79,9 +70,9 @@ class PojoGeneratorSpec extends Specification {
     def 'make default constructor final java object'() {
         setup:
             def map = [a: 'A']
-            def generator = new PojoGenerator(Pojo, [map].iterator())
+            def generator = new PojoGenerator(Pojo, [map])
         when:
-            Pojo result = generator.next()
+            Pojo result = generator.iterator().next()
         then:
             result.a == 'A'
     }
@@ -89,9 +80,9 @@ class PojoGeneratorSpec extends Specification {
     def 'make default constructor object with extra arg in map'() {
         setup:
             def map = [a: 'A', i: 1]
-            def generator = new PojoGenerator(Pojo, [map].iterator())
+            def generator = new PojoGenerator(Pojo, [map])
         when:
-            generator.next()
+            generator.iterator().next()
         then:
             def ex = thrown(MissingPropertyException)
             ex.message.contains('No such property: i for class')
@@ -99,9 +90,9 @@ class PojoGeneratorSpec extends Specification {
 
     def 'make single arg constructor object'() {
         setup:
-            def generator = new PojoGenerator(SingleArgConstructorObj, [arg].iterator())
+            def generator = new PojoGenerator(SingleArgConstructorObj, [arg])
         when:
-            def result = generator.next()
+            def result = generator.iterator().next()
         then:
             result instanceof SingleArgConstructorObj
             if (arg instanceof String) {
@@ -118,9 +109,9 @@ class PojoGeneratorSpec extends Specification {
     def 'make var args constructor object succeeds'() {
         setup:
             Integer[] args = [10, 1, 77, 200]
-            def generator = new PojoGenerator(VarArgsConstructorObj, [args].iterator())
+            def generator = new PojoGenerator(VarArgsConstructorObj, [args])
         when:
-            def result = generator.next()
+            def result = generator.iterator().next()
         then:
             result instanceof VarArgsConstructorObj
             result.args == args
@@ -130,9 +121,9 @@ class PojoGeneratorSpec extends Specification {
         setup:
             Integer[] args = [10, 1, 77, 200]
             def argList = [args]
-            def generator = new PojoGenerator(VarArgsConstructorObj, [argList].iterator())
+            def generator = new PojoGenerator(VarArgsConstructorObj, [argList])
         when:
-            def result = generator.next()
+            def result = generator.iterator().next()
         then:
             result instanceof VarArgsConstructorObj
             result.args == args

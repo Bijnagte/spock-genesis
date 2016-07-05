@@ -2,6 +2,7 @@ package spock.genesis.generators.composites
 
 import spock.genesis.generators.Generator
 import spock.genesis.generators.GeneratorDecorator
+import spock.genesis.generators.UnmodifiableIterator
 import spock.genesis.generators.values.WholeNumberGenerator
 
 class ListGenerator<E> extends GeneratorDecorator<List<E>> {
@@ -30,10 +31,21 @@ class ListGenerator<E> extends GeneratorDecorator<List<E>> {
         this.lengthSource = new WholeNumberGenerator(range)
     }
 
-    @Override
-    List<E> next() {
-        Generator gen = generator as Generator
-        gen.take(lengthSource.next()).realized
+    UnmodifiableIterator<List<E>> iterator() {
+        new UnmodifiableIterator<List<E>>() {
+            private final Iterator<E> source = generator.iterator()
+            private final Iterator length = lengthSource.iterator()
+
+            @Override
+            boolean hasNext() {
+                source.hasNext()
+            }
+
+            @Override
+            List<E> next() {
+                source.take(length.next()).toList()
+            }
+        }
     }
 }
 
