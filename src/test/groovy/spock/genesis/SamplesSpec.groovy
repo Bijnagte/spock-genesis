@@ -4,6 +4,7 @@ import groovy.transform.Immutable
 import spock.genesis.extension.ExtensionMethods
 import spock.genesis.generators.Generator
 import spock.genesis.generators.MultiSourceGenerator
+import spock.genesis.transform.Iterations
 import spock.lang.Specification
 import spock.lang.Unroll
 import spock.util.mop.Use
@@ -428,12 +429,14 @@ class SamplesSpec extends Specification {
             ).take(3)
     }
 
-    def 'different amounts'() {
+    @Iterations(2)
+    def 'limiting iterations to 2 makes it so the first 2 iterations are all that run'() {
         expect:
         s instanceof String
         i instanceof Integer
+        i < 3
         where:
-        [s, i] << tuple(string, integer).take(4)
+        s << string.take(4)
+        i << these(1,2,3,4,5,6)
     }
-
 }
