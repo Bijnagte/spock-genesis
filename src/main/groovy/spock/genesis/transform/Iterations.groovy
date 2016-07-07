@@ -14,5 +14,5 @@ import java.lang.annotation.Target
     /**
      * The number of iterations to limit to.
      */
-    int value() default 0
+    int value() default 100
 }

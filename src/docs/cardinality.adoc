@@ -3,6 +3,24 @@
 Once you chose a generator, you can tell the generator to produce a
 given number of values, lets see how.
 
+=== @Iterations
+
+If you want to limit the number of iterations that will be run you can use the
+`@Iterations` annotation. It is particularly useful when using infinite generators.
+It can be applied to the Specification or to individual features. If no value is
+provided it will default to 100.
+
+.Class
+[source,groovy]
+----
+include::{testDir}/spock/genesis/transform/IterationsSpec.groovy[tags=class,indent=0]
+----
+.Feature
+[source,groovy]
+----
+include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=iterations,indent=0]
+----
+
 === Once
 
 If you only want to produce a given value only once, then use `once`.

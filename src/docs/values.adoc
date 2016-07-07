@@ -18,7 +18,7 @@ include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=factorymethods,indent=0
 ----
 
 These examples are creating only the next available generated value
-from the correspondant generator. This way of using simple types
+from the corresponding generator. This way of using simple types
 generators doesn't put any constraint to the generated value apart
 from generate a specific type of value. We'll see later on how to add
 some boundaries to some of the value generators. For the time being,

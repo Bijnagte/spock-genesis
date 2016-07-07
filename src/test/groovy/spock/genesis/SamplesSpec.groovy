@@ -429,6 +429,7 @@ class SamplesSpec extends Specification {
             ).take(3)
     }
 
+    //tag::iterations[]
     @Iterations(2)
     def 'limiting iterations to 2 makes it so the first 2 iterations are all that run'() {
         expect:
@@ -436,7 +437,8 @@ class SamplesSpec extends Specification {
         i instanceof Integer
         i < 3
         where:
-        s << string.take(4)
+        s << string(~/[A-Z][a-z]+( [A-Z][a-z]+)?/)
         i << these(1,2,3,4,5,6)
     }
+    //end::iterations[]
 }

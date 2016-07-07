@@ -4,8 +4,10 @@ import spock.genesis.Gen
 import spock.lang.Specification
 import spock.lang.Stepwise
 
-@Iterations(5)
+
 @Stepwise
+// tag::class[]
+@Iterations(5)
 class IterationsSpec extends Specification {
 
     static List NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
@@ -18,6 +20,7 @@ class IterationsSpec extends Specification {
         where:
             value << NUMBERS
     }
+// end::class[]
 
     @Iterations(2)
     def 'method annotation less than class annotation'() {
