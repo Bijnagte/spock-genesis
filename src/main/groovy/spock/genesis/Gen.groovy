@@ -243,8 +243,8 @@ class Gen {
      * @param source {@link Iterable} to repeat over
      * @return an instance of {@link CyclicGenerator}
      */
-    static CyclicGenerator cycle(Iterable source) {
-        new CyclicGenerator(source.iterator())
+    static <T> CyclicGenerator cycle(Iterable<T> source) {
+        new CyclicGenerator<T>(source)
     }
 
     /**
@@ -267,7 +267,7 @@ class Gen {
      * @param argGenerators generators per each field
      * @return an instance of {@link PojoGenerator}
      */
-    static PojoGenerator type(Class target, Iterable... argGenerators) {
+    static <T> PojoGenerator<T> type(T target, Iterable... argGenerators) {
         new PojoGenerator(target, tuple(argGenerators))
     }
 

@@ -30,7 +30,7 @@ class DefinedMapGeneratorSpec extends Specification {
             def generators = [
                     1     : new IntegerGenerator(),
                     string: new StringGenerator(20),
-                    empty : [].iterator()
+                    empty : []
             ]
             def generator = new DefinedMapGenerator(generators)
         expect:
@@ -42,9 +42,9 @@ class DefinedMapGeneratorSpec extends Specification {
             new DefinedMapGenerator(generators).finite == expected
 
         where:
-            generators                           || expected
-            [a : new IntegerGenerator()]         || false
-            [a : []]                             || true
-            [a : new IntegerGenerator().take(1)] || true
+            generators                          || expected
+            [a: new IntegerGenerator()]         || false
+            [a: []]                             || true
+            [a: new IntegerGenerator().take(1)] || true
     }
 }

@@ -1,14 +1,19 @@
 package spock.genesis.generators.composites
 
+import groovy.transform.CompileDynamic
+import groovy.transform.CompileStatic
 import spock.genesis.generators.Generator
 import spock.genesis.generators.GeneratorUtils
 import spock.genesis.generators.UnmodifiableIterator
 
+import java.lang.reflect.Constructor
+
+@CompileStatic
 class PojoGenerator<E> extends Generator<E> {
-    final Class<E> target
+    final Class target
     final Iterable generator
 
-    PojoGenerator(Class<E> target, Iterable generator) {
+    PojoGenerator(E target, Iterable generator) {
         this.target = target
         this.generator = generator
     }
@@ -23,6 +28,7 @@ class PojoGenerator<E> extends Generator<E> {
             }
 
             @Override
+            @CompileDynamic
             E next() {
                 def params = iterator.next()
                 Class clazz = params.getClass()
@@ -36,9 +42,9 @@ class PojoGenerator<E> extends Generator<E> {
             }
 
             private boolean hasConstructorFor(Class clazz) {
-                target.constructors.any {
-                    it.parameterTypes.length == 1 &&
-                            it.parameterTypes[0].isAssignableFrom(clazz)
+                target.constructors.any { Constructor constructor ->
+                    constructor.parameterTypes.length == 1 &&
+                            constructor.parameterTypes[0].isAssignableFrom(clazz)
                 }
             }
         }

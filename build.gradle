@@ -1,20 +1,18 @@
-
 buildscript {
-	repositories {
-		mavenCentral()
-		jcenter()
-	}
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
 
-	dependencies {
-		classpath 'net.saliman:gradle-cobertura-plugin:2.2.3'
-		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
         classpath 'org.ajoberstar:gradle-git:1.4.2'
-	}
+    }
 }
 
 apply plugin: 'groovy'
-apply plugin: 'cobertura'
+apply plugin: 'jacoco'
 apply plugin: 'codenarc'
 apply plugin: 'project-report'
 apply plugin: 'org.asciidoctor.convert'
@@ -26,99 +24,96 @@ group = 'com.nagternal'
 version = '0.5.0'
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-  	compile('org.codehaus.groovy:groovy-all:2.4.7')
-	compile('org.spockframework:spock-core:1.0-groovy-2.4')
-	compile('com.github.mifmif:generex:1.0.1')
+    compile('org.codehaus.groovy:groovy-all:2.4.7')
+    compile('org.spockframework:spock-core:1.0-groovy-2.4')
+    compile('com.github.mifmif:generex:1.0.1')
 }
 
 asciidoctor {
     sourceDir 'src/docs'
     attributes 'source-highlighter': 'prettify',
-               toc                 : 'left',
-               icons               : 'font',
-               toclevels           : 3,
-               'releaseVersion'    : project.version
+            toc: 'left',
+            icons: 'font',
+            toclevels: 3,
+            'releaseVersion': project.version
 }
 
 codenarc {
-	configFile = file "${project.projectDir}/config/codenarc/codenarc.groovy"
+    configFile = file "${project.projectDir}/config/codenarc/codenarc.groovy"
 }
 
 codenarcTest {
-	ignoreFailures = true
+    ignoreFailures = true
 }
 
 codenarcMain {
-	maxPriority3Violations = 20
+    maxPriority3Violations = 20
 }
 
-cobertura {
-	coverageFormats = ['xml','html']
-}
-
-codenarcMain {
-	dependsOn 'cobertura'
-	dependsOn 'generateCoberturaReport'
+jacocoTestReport {
+    reports {
+        xml.enabled true
+    }
 }
 
 jar {
-	from "${projectDir}/LICENSE.txt"
+    from "${projectDir}/LICENSE.txt"
 }
 
 task sourceJar(type: Jar) {
-	group 'Build'
-	description 'An archive of the source code'
-	classifier 'sources'
-	from sourceSets.main.allSource
-	from "${projectDir}/LICENSE.txt"
+    group 'Build'
+    description 'An archive of the source code'
+    classifier 'sources'
+    from sourceSets.main.allSource
+    from "${projectDir}/LICENSE.txt"
 }
 
 task javadocJar(type: Jar, dependsOn: groovydoc) {
-	classifier = 'javadoc'
-	from groovydoc
+    classifier = 'javadoc'
+    from groovydoc
 }
 
-task allDocs(type:Copy, dependsOn: [groovydoc, asciidoctor]) {
+task allDocs(type: Copy, dependsOn: [groovydoc, asciidoctor]) {
     from "$buildDir/docs/"
     into "$buildDir/asciidoc/html5/"
 }
 
 check {
-	//dependsOn coberturaCheck
+    dependsOn jacocoTestReport
 }
 
 build {
-	dependsOn sourceJar, javadocJar
+    dependsOn sourceJar, javadocJar
 }
 
 artifacts {
-	archives jar
-	archives sourceJar
-	archives javadocJar
+    archives jar
+    archives sourceJar
+    archives javadocJar
 }
 
 bintray {
-	user = project.properties.bintrayUser
-	key = project.properties.bintrayApiKey
+    user = project.properties.bintrayUser
+    key = project.properties.bintrayApiKey
 
-	configurations = ['archives']
-	dryRun = false
-	publish = true
-	pkg {
-		repo = 'nagternal'
-		name = 'spock-genesis'
-		desc =  'Mostly lazy data generators for property based testing using the Spock test framework'
-		websiteUrl = 'https://github.com/Bijnagte/spock-genesis'
-		issueTrackerUrl = 'https://github.com/Bijnagte/spock-genesis/issues'
-		vcsUrl = 'https://github.com/Bijnagte/spock-genesis.git'
-		licenses = ['MIT']
-		labels = ['spock']
-		publicDownloadNumbers = true
-	}
+    configurations = ['archives']
+    dryRun = false
+    publish = true
+    pkg {
+        repo = 'nagternal'
+        name = 'spock-genesis'
+        desc = 'Mostly lazy data generators for property based testing using the Spock test framework'
+        websiteUrl = 'https://github.com/Bijnagte/spock-genesis'
+        issueTrackerUrl = 'https://github.com/Bijnagte/spock-genesis/issues'
+        vcsUrl = 'https://github.com/Bijnagte/spock-genesis.git'
+        licenses = ['MIT']
+        labels = ['spock']
+        publicDownloadNumbers = true
+    }
 }
 
 githubPages {

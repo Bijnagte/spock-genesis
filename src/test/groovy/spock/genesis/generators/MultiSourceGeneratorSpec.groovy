@@ -4,9 +4,9 @@ import spock.lang.Specification
 
 class MultiSourceGeneratorSpec extends Specification {
 
-    def 'multiple iterators run until all are empty'() {
+    def 'multiple iterables run until all are empty'() {
         setup:
-            def generator = new MultiSourceGenerator(iterables*.iterator())
+            def generator = new MultiSourceGenerator(iterables)
             def expectedCount = iterables*.size().sum()
         when:
             def result = generator.realized

@@ -1,9 +1,13 @@
 package spock.genesis.generators
 
+import groovy.transform.CompileDynamic
+import groovy.transform.CompileStatic
+
 /**
  * A generator that returns the next value from one of its source generators at random.
  * @param < E >   the generated type
  */
+@CompileStatic
 class MultiSourceGenerator<E> extends Generator<E> implements Closeable {
 
     final List<Iterable<E>> iterables
@@ -51,7 +55,7 @@ class MultiSourceGenerator<E> extends Generator<E> implements Closeable {
     }
 
     @SuppressWarnings('ExplicitCallToPlusMethod')
-    MultiSourceGenerator plus(Iterator additional) {
+    MultiSourceGenerator plus(Iterable additional) {
         plus([additional])
     }
 
@@ -61,14 +65,15 @@ class MultiSourceGenerator<E> extends Generator<E> implements Closeable {
      * @param additional
      * @return a new MultiSourceGenerator
      */
-    MultiSourceGenerator plus(Collection<Iterator> additional) {
-        new MultiSourceGenerator(additional + iterators)
+    MultiSourceGenerator plus(Collection<Iterable<E>> additional) {
+        new MultiSourceGenerator(additional + iterables)
     }
 
     void close() {
         iterables.each { close(it) }
     }
 
+    @CompileDynamic
     void close(Iterable generator) {
         if (generator.respondsTo('close')) {
             generator.close()

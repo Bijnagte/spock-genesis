@@ -1,8 +1,10 @@
 package spock.genesis.generators.values
 
+import groovy.transform.CompileStatic
 import spock.genesis.generators.InfiniteGenerator
 import spock.genesis.generators.InfiniteIterator
 
+@CompileStatic
 class WholeNumberGenerator extends InfiniteGenerator<Integer> {
 
     final Random random = new Random()

@@ -1,10 +1,13 @@
 package spock.genesis.generators
 
+import groovy.transform.CompileStatic
+
 /**
  * A lazy infinite generator that repeats an iterator.
  * This generator keeps track of 1 iterator worth of data so infinite sources could lead to excessive memory usage.
  * @param < E >   the generated type
  */
+@CompileStatic
 class CyclicGenerator<E> extends GeneratorDecorator<E> {
 
     CyclicGenerator(E... array) {
@@ -12,7 +15,7 @@ class CyclicGenerator<E> extends GeneratorDecorator<E> {
     }
 
     CyclicGenerator(Iterable<E> iterable) {
-        super(iterable, (iterable.respondsTo('isFinite') && iterable.isFinite()) || !Generator.isInstance(iterable))
+        super(iterable, GeneratorUtils.isFinite(iterable) || !Generator.isInstance(iterable))
     }
 
     @Override

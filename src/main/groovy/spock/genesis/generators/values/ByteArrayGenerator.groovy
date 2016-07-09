@@ -31,6 +31,7 @@ class ByteArrayGenerator extends InfiniteGenerator<byte[]> {
     InfiniteIterator<byte[]> iterator() {
         new InfiniteIterator<byte[]>() {
             private final InfiniteIterator<Integer> length = lengthSource.iterator()
+
             @Override
             byte[] next() {
                 byte[] bytes = new byte[length.next()]

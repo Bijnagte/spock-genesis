@@ -1,5 +1,6 @@
 package spock.genesis.generators
 
+import groovy.transform.CompileStatic
 import spock.genesis.generators.values.NullGenerator
 
 /**
@@ -7,6 +8,7 @@ import spock.genesis.generators.values.NullGenerator
  * @param < E >   the generated type
  */
 @SuppressWarnings('SpaceAroundMapEntryColon')
+@CompileStatic
 abstract class Generator<E> implements Iterable<E> {
 
     /**
@@ -35,7 +37,13 @@ abstract class Generator<E> implements Iterable<E> {
     }
 
     SequentialMultisourceGenerator<E> then(Iterable<E>... iterables) {
-        new SequentialMultisourceGenerator<E>(this, *iterables)
+        Iterable<E>[] all = new Iterable<E>[iterables.length + 1]
+        all[0] = this
+        for (int i = 0; i < iterables.length; i++) {
+            all[i +1] = iterables[i]
+
+        }
+        new SequentialMultisourceGenerator<E>(all)
     }
 
     CyclicGenerator<E> repeat() {
@@ -65,7 +73,7 @@ abstract class Generator<E> implements Iterable<E> {
 
     MultiSourceGenerator and(Iterable iterator) {
         if (MultiSourceGenerator.isAssignableFrom(this.getClass())) {
-            MultiSourceGenerator gen = this
+            MultiSourceGenerator gen = this as MultiSourceGenerator
             new MultiSourceGenerator(gen.iterables + iterator)
         } else {
             new MultiSourceGenerator([this, iterator])
@@ -81,6 +89,6 @@ abstract class Generator<E> implements Iterable<E> {
     abstract boolean isFinite()
 
     List<E> getRealized() {
-        this.collect()
+        this.collect().asList()
     }
 }

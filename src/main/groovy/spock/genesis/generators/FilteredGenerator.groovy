@@ -1,9 +1,12 @@
 package spock.genesis.generators
 
+import groovy.transform.CompileStatic
+
 /**
  * A lazy generator that returns the next value from the wrapped iterator that satisfies a predicate Closure.
  * @param < E >   the generated type
  */
+@CompileStatic
 class FilteredGenerator<E> extends GeneratorDecorator<E> {
 
     private final Closure predicate

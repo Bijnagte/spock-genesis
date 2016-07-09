@@ -1,6 +1,7 @@
 package spock.genesis.generators.values
 
 import com.mifmif.common.regex.Generex
+import groovy.transform.CompileStatic
 import spock.genesis.generators.InfiniteGenerator
 import spock.genesis.generators.InfiniteIterator
 
@@ -9,6 +10,7 @@ import java.util.regex.Pattern
 /**
  * lazy infinite {@link java.lang.String} generator
  */
+@CompileStatic
 class StringGenerator extends InfiniteGenerator<String> {
 
     static final int DEFAULT_LENGTH_LIMIT = 1024
@@ -68,8 +70,8 @@ class StringGenerator extends InfiniteGenerator<String> {
 
     InfiniteIterator<String> iterator() {
         new InfiniteIterator<String>() {
-            private final Iterator<Character> charIterator = charGenerator?.iterator()
-            private final Iterator<Integer> length = lengthSource.iterator()
+            private final InfiniteIterator<Character> charIterator = charGenerator?.iterator()
+            private final InfiniteIterator<Integer> length = lengthSource?.iterator()
 
             @Override
             String next() {
@@ -81,11 +83,11 @@ class StringGenerator extends InfiniteGenerator<String> {
             }
 
             private String makeString(int length) {
-                char[] chars = new char[length]
-                length.times { index ->
-                    chars[index] = charIterator.next()
+                def sb = new StringBuffer(length)
+                for (int i = 0; i < length; i++) {
+                    sb.append(charIterator.next())
                 }
-                chars.toString()
+                sb.toString()
             }
         }
     }

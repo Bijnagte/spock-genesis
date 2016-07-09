@@ -1,10 +1,13 @@
 package spock.genesis.generators.composites
 
+import groovy.transform.CompileDynamic
+import groovy.transform.CompileStatic
 import spock.genesis.generators.Generator
 import spock.genesis.generators.GeneratorUtils
 import spock.genesis.generators.UnmodifiableIterator
 import spock.genesis.generators.values.WholeNumberGenerator
 
+@CompileStatic
 class RandomMapGenerator<K, V> extends Generator<Map<K, V>> implements Closeable {
 
     static final int DEFAULT_ENTRY_LIMIT = 100
@@ -36,7 +39,7 @@ class RandomMapGenerator<K, V> extends Generator<Map<K, V>> implements Closeable
         this.valueGenerator = valueGenerator
     }
 
-    UnmodifiableIterator<Map<K,V>> iterator() {
+    UnmodifiableIterator<Map<K, V>> iterator() {
         new UnmodifiableIterator<Map<K, V>>() {
             Iterator keys = keyGenerator.iterator()
             Iterator values = valueGenerator.iterator()
@@ -61,6 +64,7 @@ class RandomMapGenerator<K, V> extends Generator<Map<K, V>> implements Closeable
         }
     }
 
+    @CompileDynamic
     void close() {
         [keyGenerator, valueGenerator].each {
             if (it.respondsTo('close')) {
@@ -70,6 +74,6 @@ class RandomMapGenerator<K, V> extends Generator<Map<K, V>> implements Closeable
     }
 
     boolean isFinite() {
-         GeneratorUtils.anyFinite(keyGenerator, valueGenerator)
+        GeneratorUtils.anyFinite(keyGenerator, valueGenerator)
     }
 }

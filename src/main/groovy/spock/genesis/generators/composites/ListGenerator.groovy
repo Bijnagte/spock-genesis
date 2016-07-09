@@ -5,6 +5,7 @@ import spock.genesis.generators.GeneratorDecorator
 import spock.genesis.generators.UnmodifiableIterator
 import spock.genesis.generators.values.WholeNumberGenerator
 
+
 class ListGenerator<E> extends GeneratorDecorator<List<E>> {
 
     static final int DEFAULT_LENGTH_LIMIT = 1000
@@ -31,6 +32,7 @@ class ListGenerator<E> extends GeneratorDecorator<List<E>> {
         this.lengthSource = new WholeNumberGenerator(range)
     }
 
+    @Override
     UnmodifiableIterator<List<E>> iterator() {
         new UnmodifiableIterator<List<E>>() {
             private final Iterator<E> source = generator.iterator()
@@ -48,4 +50,3 @@ class ListGenerator<E> extends GeneratorDecorator<List<E>> {
         }
     }
 }
-
