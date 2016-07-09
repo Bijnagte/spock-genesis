@@ -133,6 +133,8 @@ class GenASTTransformation implements ASTTransformation {
             if (value instanceof ConstantExpression) {
                 ConstantExpression valueExpression = (ConstantExpression) value
                 return (Integer) valueExpression.value
+            } else {
+                return 100
             }
         }
     }

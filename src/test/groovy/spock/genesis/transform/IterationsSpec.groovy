@@ -98,4 +98,23 @@ class IterationsSpec extends Specification {
         then:
             VALUES.size() == 0
     }
+
+    @Iterations
+    def 'no value sets iterations to 100'() {
+        given:
+            VALUES.add(value)
+        expect:
+            value < 101
+        where:
+            value << (1..200)
+    }
+
+    def 'VALUES has 100 entries at this point'() {
+        expect:
+            VALUES.size() == 100
+        when: 'reset'
+            VALUES.clear()
+        then:
+            VALUES.size() == 0
+    }
 }

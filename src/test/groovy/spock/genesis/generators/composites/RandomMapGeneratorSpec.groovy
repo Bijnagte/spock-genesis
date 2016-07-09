@@ -1,8 +1,10 @@
 package spock.genesis.generators.composites
 
+import spock.genesis.Gen
 import spock.genesis.generators.test.CloseableIterable
 import spock.genesis.generators.values.IntegerGenerator
 import spock.genesis.generators.values.StringGenerator
+import spock.genesis.transform.Iterations
 import spock.lang.Specification
 
 class RandomMapGeneratorSpec extends Specification {
@@ -42,5 +44,44 @@ class RandomMapGeneratorSpec extends Specification {
         then:
             1 * keyGenerator.close()
             1 * valueGenerator.close()
+    }
+
+    @Iterations
+    def 'generates map that is limited to max size'() {
+        expect:
+            result instanceof Map
+            result.size() <= 100
+            result.size() >= 0
+            result.every { key, value ->
+                key instanceof String && value instanceof Integer
+            }
+        where:
+            result << new RandomMapGenerator(Gen.string(10), Gen.integer, 100)
+    }
+
+    @Iterations
+    def 'generates map that is limited to min and max size'() {
+        expect:
+            result instanceof Map
+            result.size() <= 100
+            result.size() >= 90
+            result.every { key, value ->
+                key instanceof String && value instanceof Integer
+            }
+        where:
+            result << new RandomMapGenerator(Gen.string(10), Gen.integer, 90, 100)
+    }
+
+    @Iterations
+    def 'generates map that is limited to size range'() {
+        expect:
+            result instanceof Map
+            result.size() <= 100
+            result.size() >= 90
+            result.every { key, value ->
+                key instanceof String && value instanceof Integer
+            }
+        where:
+            result << new RandomMapGenerator(Gen.string(10), Gen.integer, 90..100)
     }
 }

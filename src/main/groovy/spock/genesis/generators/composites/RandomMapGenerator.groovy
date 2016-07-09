@@ -27,7 +27,7 @@ class RandomMapGenerator<K, V> extends Generator<Map<K, V>> implements Closeable
         this.valueGenerator = valueGenerator
     }
 
-    RandomMapGenerator(Iterable<K> keyGenerator, Iterable<V> valueGenerator, int maxSize, int minSize) {
+    RandomMapGenerator(Iterable<K> keyGenerator, Iterable<V> valueGenerator, int minSize, int maxSize) {
         this.sizeSource = new WholeNumberGenerator(minSize, maxSize)
         this.keyGenerator = keyGenerator
         this.valueGenerator = valueGenerator
@@ -55,7 +55,7 @@ class RandomMapGenerator<K, V> extends Generator<Map<K, V>> implements Closeable
                 int targetSize = sizes.next()
                 int i = 0
                 Map result = [:]
-                while (i < targetSize && hasNext()) {
+                while (result.size() < targetSize && hasNext()) {
                     result[keys.next()] = values.next()
                     i++
                 }

@@ -71,12 +71,11 @@ abstract class Generator<E> implements Iterable<E> {
         new MultiSourceGenerator<E>(weightedGenerators)
     }
 
-    MultiSourceGenerator and(Iterable iterator) {
+    MultiSourceGenerator and(Iterable iterable) {
         if (MultiSourceGenerator.isAssignableFrom(this.getClass())) {
-            MultiSourceGenerator gen = this as MultiSourceGenerator
-            new MultiSourceGenerator(gen.iterables + iterator)
+            ((MultiSourceGenerator) this) + iterable
         } else {
-            new MultiSourceGenerator([this, iterator])
+            new MultiSourceGenerator([this, iterable])
         }
     }
 

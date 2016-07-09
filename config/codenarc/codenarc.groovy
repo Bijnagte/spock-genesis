@@ -26,7 +26,6 @@ ruleset {
 	ruleset('rulesets/serialization.xml')
 	ruleset('rulesets/size.xml') {
 		CrapMetric {
-			coberturaXmlFile = 'file:build/reports/cobertura/coverage.xml'
 			maxMethodCrapScore = 20
 			maxClassAverageMethodCrapScore = 20
 		}

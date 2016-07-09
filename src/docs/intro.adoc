@@ -6,7 +6,7 @@ inputs allows for more thorough testing without a dramatic increase in
 effort. In Spock
 http://spockframework.github.io/spock/docs/1.0/data_driven_testing.html[data
 driven tests] can have data provided by any
-http://docs.oracle.com/javase/7/docs/api/java/util/Iterator.html[Iterator]. Spock
+http://docs.oracle.com/javase/7/docs/api/java/util/Iterable.html[Iterable]. Spock
 Genesis provides a variety of classes that extend from
 https://github.com/Bijnagte/spock-genesis/blob/master/src/main/groovy/spock/genesis/generators/Generator.groovy[Generator]
 which meet that interface. Where possible the generators are lazy and

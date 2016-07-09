@@ -105,11 +105,12 @@ class SamplesSpec extends Specification {
     // tag::ampersand[]
     def 'create multi source generator with & operator'() {
         setup:
-            def gen = string(100) & integer
+            def gen = string(100) & integer & date
         expect:
             gen instanceof MultiSourceGenerator
             gen.any { it instanceof Integer }
             gen.any { it instanceof String }
+            gen.any { it instanceof Date }
     }
     // end::ampersand[]
 
