@@ -16,6 +16,8 @@ test:
     # Archive the jar files that were output
     - cp build/libs/spock-genesis-*.jar $CIRCLE_ARTIFACTS/ || true
 
+    - bash <(curl -s https://codecov.io/bash)
+
 deployment:
   release:
     tag: /v[0-9]+(\.[0-9]+)*/
