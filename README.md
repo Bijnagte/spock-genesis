@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    testCompile 'com.nagternal:spock-genesis:0.4.0'
+    testCompile 'com.nagternal:spock-genesis:0.5.0'
 }
 ```
 
@@ -82,6 +82,9 @@ Change log
 ### 0.5.0
 * switch to Iterable from Iterator
 * improve performance of long generation using min and/or max
+* improved documentation (thanks to @mariogarcia)
+* [@Iterations](./src/main/groovy/spock/genesis/transform/Iterations.groovy) annotation
+* updated dependencies
 
 Building Spock Genesis
 --------------
