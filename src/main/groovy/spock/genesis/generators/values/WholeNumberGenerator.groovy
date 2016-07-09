@@ -1,8 +1,10 @@
 package spock.genesis.generators.values
 
+import groovy.transform.CompileStatic
 import spock.genesis.generators.InfiniteGenerator
 import spock.genesis.generators.InfiniteIterator
 
+@CompileStatic
 class WholeNumberGenerator extends InfiniteGenerator<Integer> {
 
     final Random random = new Random()
@@ -14,10 +16,12 @@ class WholeNumberGenerator extends InfiniteGenerator<Integer> {
     }
 
     WholeNumberGenerator(int min, int max) {
-        assert min >= 0
-        assert max >= min
+        if (min < 0 || max < min) {
+            throw new IllegalArgumentException("min $min must be 0 or greater and max $max must be greater than min")
+        }
         this.min = min
-        this.magnitude = max - min + 1
+        int magnitude = max - min
+        this.magnitude = magnitude == Integer.MAX_VALUE ? magnitude : magnitude + 1
     }
 
     WholeNumberGenerator(IntRange range) {

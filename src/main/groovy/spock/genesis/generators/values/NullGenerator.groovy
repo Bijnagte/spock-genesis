@@ -1,7 +1,9 @@
 package spock.genesis.generators.values
 
+import groovy.transform.CompileStatic
 import spock.genesis.generators.InfiniteIterator
 
+@CompileStatic
 class NullGenerator<E> extends ValueGenerator<E> {
 
     NullGenerator() {

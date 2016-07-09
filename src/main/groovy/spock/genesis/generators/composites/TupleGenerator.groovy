@@ -1,15 +1,20 @@
 package spock.genesis.generators.composites
 
+import groovy.transform.CompileStatic
+import spock.genesis.extension.ExtensionMethods
 import spock.genesis.generators.Generator
 import spock.genesis.generators.GeneratorUtils
 import spock.genesis.generators.UnmodifiableIterator
 
+@CompileStatic
 class TupleGenerator<T> extends Generator<List<T>> {
 
     private final List<Generator<T>> generators
 
     TupleGenerator(List<Iterable<T>> iterables) {
-        this.generators = iterables.collect { it.toGenerator() }.asImmutable()
+        List<Generator<T>> collector = []
+        iterables.collect(collector) { ExtensionMethods.toGenerator(it) }
+        this.generators = collector.asImmutable()
     }
 
     TupleGenerator(Iterable<T>... iterables) {
@@ -18,7 +23,8 @@ class TupleGenerator<T> extends Generator<List<T>> {
 
     UnmodifiableIterator<List<T>> iterator() {
         new UnmodifiableIterator<List<T>>() {
-            List<Iterator> iterators = generators*.iterator()
+            List<UnmodifiableIterator> iterators = generators*.iterator()
+
             @Override
             boolean hasNext() {
                 iterators.every { it.hasNext() }
@@ -33,6 +39,6 @@ class TupleGenerator<T> extends Generator<List<T>> {
 
     @Override
     boolean isFinite() {
-        GeneratorUtils.anyFinite(iterators)
+        GeneratorUtils.anyFinite(generators)
     }
 }

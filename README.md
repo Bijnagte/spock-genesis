@@ -9,6 +9,7 @@ Spock Genesis provides a variety of classes that extend from [Generator](./src/m
 Where possible the generators are lazy and infinite.
 
 ![build status](https://circleci.com/gh/Bijnagte/spock-genesis.svg?style=shield&circle-token=ccab052d8c597ae916463f8319738d89e3d8a640)
+[![codecov](https://codecov.io/gh/Bijnagte/spock-genesis/branch/master/graph/badge.svg)](https://codecov.io/gh/Bijnagte/spock-genesis)
 
 Usage
 -----

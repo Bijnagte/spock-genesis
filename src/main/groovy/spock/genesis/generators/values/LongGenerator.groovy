@@ -1,12 +1,14 @@
 package spock.genesis.generators.values
 
+import groovy.transform.CompileStatic
 import spock.genesis.generators.InfiniteGenerator
 import spock.genesis.generators.InfiniteIterator
 
+@CompileStatic
 class LongGenerator extends InfiniteGenerator<Long> {
 
-    final long min
-    final long max
+    final Long min
+    final Long max
     final Random random = new Random()
 
     LongGenerator() {
@@ -32,7 +34,7 @@ class LongGenerator extends InfiniteGenerator<Long> {
     }
 
     InfiniteIterator<Long> iterator() {
-        final InfiniteIterator<Long> CANDIDATE_PROVIDER = chooseProvider(min, max)
+        final InfiniteIterator<Long> CANDIDATE_PROVIDER = chooseProvider(min.toBigInteger(), max.toBigInteger())
         new InfiniteIterator<Long>() {
             @Override
             Long next() {
@@ -52,7 +54,7 @@ class LongGenerator extends InfiniteGenerator<Long> {
         }
     }
 
-    private class ShiftedLongIterator extends  InfiniteIterator<Long> {
+    private class ShiftedLongIterator extends InfiniteIterator<Long> {
         final long magnitude
         final long shift
 

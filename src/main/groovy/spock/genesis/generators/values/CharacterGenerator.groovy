@@ -1,21 +1,20 @@
 package spock.genesis.generators.values
 
+import groovy.transform.CompileStatic
+
+@CompileStatic
 class CharacterGenerator extends RandomElementGenerator<Character> {
-    static final String DEFAULT_CHARACTERS = (' '..'~').join()
+    static final String DEFAULT_CHARACTERS = (' '..'~').join('')
 
     CharacterGenerator() {
-        super(convertToCharacters(DEFAULT_CHARACTERS))
+        super(DEFAULT_CHARACTERS.collect { it as char })
     }
 
-    CharacterGenerator(List<Character> potentialCharacters) {
-        super(convertToCharacters(potentialCharacters))
+    CharacterGenerator(Collection<Character> potentialCharacters) {
+        super(potentialCharacters)
     }
 
     CharacterGenerator(String potentialCharacters) {
-        super(convertToCharacters(potentialCharacters))
-    }
-
-    static List<Character> convertToCharacters(chars) {
-        chars.collect { it as char }
+        super(potentialCharacters.collect { it as char })
     }
 }

@@ -1,5 +1,9 @@
 package spock.genesis.generators
 
+import groovy.transform.CompileDynamic
+import groovy.transform.CompileStatic
+
+@CompileStatic
 class SequentialMultisourceGenerator<E> extends Generator<E> implements Closeable {
 
     private final List<Iterable<E>> iterables
@@ -37,6 +41,7 @@ class SequentialMultisourceGenerator<E> extends Generator<E> implements Closeabl
         iterables.each { close(it) }
     }
 
+    @CompileDynamic
     void close(Iterable generator) {
         if (generator.respondsTo('close')) {
             generator.close()

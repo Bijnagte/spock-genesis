@@ -1,5 +1,8 @@
 package spock.genesis.generators
 
+import groovy.transform.CompileStatic
+
+@CompileStatic
 class ObjectIteratorGenerator<E> extends Generator<E> {
     private final Object object
 

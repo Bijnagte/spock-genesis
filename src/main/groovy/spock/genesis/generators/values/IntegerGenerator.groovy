@@ -1,8 +1,10 @@
 package spock.genesis.generators.values
 
+import groovy.transform.CompileStatic
 import spock.genesis.generators.InfiniteGenerator
 import spock.genesis.generators.InfiniteIterator
 
+@CompileStatic
 class IntegerGenerator extends InfiniteGenerator<Integer> {
 
     final long min

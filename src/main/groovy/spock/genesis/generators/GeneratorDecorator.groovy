@@ -1,9 +1,13 @@
 package spock.genesis.generators
 
+import groovy.transform.CompileDynamic
+import groovy.transform.CompileStatic
+
 /**
  * A generator that wraps an iterator to provide {@link Generator} methods.
  * @param < E >   the generated type
  */
+@CompileStatic
 class GeneratorDecorator<E> extends Generator<E> implements Closeable {
     protected Iterable<E> generator
     final boolean finiteOverride
@@ -40,6 +44,7 @@ class GeneratorDecorator<E> extends Generator<E> implements Closeable {
         finiteOverride || GeneratorUtils.isFinite(generator)
     }
 
+    @CompileDynamic
     void close() {
         if (generator.respondsTo('close')) {
             generator.close()
