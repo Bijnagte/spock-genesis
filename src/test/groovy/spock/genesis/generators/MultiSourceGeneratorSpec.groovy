@@ -20,8 +20,8 @@ class MultiSourceGeneratorSpec extends Specification {
             result != iterables.flatten()
         where:
             iterables << [
-                    [['a', 'b', 'c', 'd', 'e'], [1, 2, 3, 4, 5, 6, 8, 9]],
-                    [[null, 'b', 'c', [key: 'value']], [1, 2, 3, new Date()], [8, 9, 10]]
+                    [['a', 'b', 'c', 'd', 'e'], (1..100).collect()],
+                    [[null, 'b', 'c', [key: 'value']], [1, 2, 3, new Date()], (1..100).collect()]
             ]
     }
 }
