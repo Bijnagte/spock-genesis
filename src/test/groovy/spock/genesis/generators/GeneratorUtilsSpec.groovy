@@ -1,6 +1,5 @@
 package spock.genesis.generators
 
-import spock.genesis.generators.composites.TupleGenerator
 import spock.genesis.generators.values.IntegerGenerator
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -23,8 +22,8 @@ class GeneratorUtilsSpec extends Specification {
             [['a', 'b'], [1, 2], [5, 6, 7]]             || false
             [[]]                                        || true
             [[], [1, 2, 3, 4, 5]]                       || false
-            [new LimitedGenerator([1, 2, 3, 4, 5])]     || true
-            [new LimitedGenerator([1, 2, 3, 4, 5]), []] || true
+            [new IterableGenerator([1, 2, 3, 4, 5])]     || true
+            [new IterableGenerator([1, 2, 3, 4, 5]), []] || true
             [new IntegerGenerator(), []]                || false
     }
 
@@ -37,8 +36,8 @@ class GeneratorUtilsSpec extends Specification {
             [['a', 'b'], [1, 2], [5, 6, 7]]             || false
             [[]]                                        || true
             [[], [1, 2, 3, 4, 5]]                       || true
-            [new LimitedGenerator([1, 2, 3, 4, 5])]     || true
-            [new LimitedGenerator([1, 2, 3, 4, 5]), []] || true
+            [new IterableGenerator([1, 2, 3, 4, 5])]     || true
+            [new IterableGenerator([1, 2, 3, 4, 5]), []] || true
             [new IntegerGenerator(), []]                || true
     }
 

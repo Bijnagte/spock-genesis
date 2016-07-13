@@ -132,9 +132,9 @@ class GenASTTransformation implements ASTTransformation {
             def value = iterationsAnnotation.getMember('value')
             if (value instanceof ConstantExpression) {
                 ConstantExpression valueExpression = (ConstantExpression) value
-                return (Integer) valueExpression.value
+                (Integer) valueExpression.value
             } else {
-                return 100
+                100
             }
         }
     }

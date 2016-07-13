@@ -2,8 +2,7 @@ package spock.genesis.extension
 
 import groovy.transform.CompileStatic
 import spock.genesis.generators.Generator
-import spock.genesis.generators.GeneratorDecorator
-import spock.genesis.generators.LimitedGenerator
+import spock.genesis.generators.IterableGenerator
 import spock.genesis.generators.ObjectIteratorGenerator
 
 @CompileStatic
@@ -18,15 +17,23 @@ class ExtensionMethods {
     }
 
     static <T> Generator<T> toGenerator(Iterable<T> self, boolean finite = false) {
-        new GeneratorDecorator<T>(self, finite)
+        new IterableGenerator<T>(self, finite)
     }
 
     static Generator<String> toGenerator(String self) {
         new ObjectIteratorGenerator<String>(self)
     }
 
+    static Generator<Object> toGenerator(Object self) {
+        new ObjectIteratorGenerator(self)
+    }
+
+    static <K,V> Generator<Map.Entry<K,V>> toGenerator(Map<K,V> self) {
+        new ObjectIteratorGenerator(self)
+    }
+
     static <T> Generator<T> toGenerator(Collection<T> self) {
-        new LimitedGenerator<T>(self)
+        new IterableGenerator<T>(self)
     }
 
     static Generator toGenerator(Class clazz) {
@@ -38,11 +45,11 @@ class ExtensionMethods {
     }
 
     static <T> Generator<T> toGenerator(T... self) {
-        new LimitedGenerator<T>(self)
+        new IterableGenerator<T>(self)
     }
 
-    static Generator toGenerator(Iterator self) {
-        new GeneratorDecorator(new Iterable() {
+    static <T> Generator<T> toGenerator(Iterator<T> self) {
+        new IterableGenerator<T>(new Iterable () {
             @Override
             Iterator iterator() {
                 self

@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
         classpath 'org.ajoberstar:gradle-git:1.4.2'
     }
@@ -31,6 +31,7 @@ dependencies {
     compile('org.codehaus.groovy:groovy-all:2.4.7')
     compile('org.spockframework:spock-core:1.0-groovy-2.4')
     compile('com.github.mifmif:generex:1.0.1')
+    testCompile('cglib:cglib-nodep:3.2.4')
 }
 
 asciidoctor {
@@ -107,7 +108,7 @@ bintray {
         repo = 'nagternal'
         name = 'spock-genesis'
         desc = 'Mostly lazy data generators for property based testing using the Spock test framework'
-        websiteUrl = 'https://github.com/Bijnagte/spock-genesis'
+        websiteUrl = 'https://bijnagte.github.io/spock-genesis'
         issueTrackerUrl = 'https://github.com/Bijnagte/spock-genesis/issues'
         vcsUrl = 'https://github.com/Bijnagte/spock-genesis.git'
         licenses = ['MIT']

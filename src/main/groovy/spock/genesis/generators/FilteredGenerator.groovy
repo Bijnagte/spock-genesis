@@ -1,6 +1,7 @@
 package spock.genesis.generators
 
 import groovy.transform.CompileStatic
+import spock.genesis.extension.ExtensionMethods
 
 /**
  * A lazy generator that returns the next value from the wrapped iterator that satisfies a predicate Closure.
@@ -12,7 +13,7 @@ class FilteredGenerator<E> extends GeneratorDecorator<E> {
     private final Closure predicate
 
     FilteredGenerator(Iterable<E> iterable, Closure predicate) {
-        super(iterable)
+        super(ExtensionMethods.toGenerator(iterable))
         this.predicate = predicate
     }
 

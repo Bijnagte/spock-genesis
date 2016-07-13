@@ -7,9 +7,8 @@ import spock.genesis.generators.values.NullGenerator
  * An Iterator that generates a type (usually lazily)
  * @param < E >   the generated type
  */
-@SuppressWarnings('SpaceAroundMapEntryColon')
 @CompileStatic
-abstract class Generator<E> implements Iterable<E> {
+abstract class Generator<E> implements Iterable<E>, Closeable {
 
     /**
      * Wraps this generator in a generator that returns values that matches the supplied predicate
@@ -40,7 +39,7 @@ abstract class Generator<E> implements Iterable<E> {
         Iterable<E>[] all = new Iterable<E>[iterables.length + 1]
         all[0] = this
         for (int i = 0; i < iterables.length; i++) {
-            all[i +1] = iterables[i]
+            all[i + 1] = iterables[i]
 
         }
         new SequentialMultisourceGenerator<E>(all)
@@ -66,6 +65,7 @@ abstract class Generator<E> implements Iterable<E> {
      * @param resultsPerNull the average number of results from this generator per null result
      * @return {@link spock.genesis.generators.MultiSourceGenerator}
      */
+    @SuppressWarnings('SpaceAroundMapEntryColon')
     MultiSourceGenerator<E> withNulls(int resultsPerNull) {
         Map weightedGenerators = [(this): resultsPerNull, (new NullGenerator<E>()): 1]
         new MultiSourceGenerator<E>(weightedGenerators)
@@ -85,9 +85,14 @@ abstract class Generator<E> implements Iterable<E> {
      * If false then the generator may still terminate when iterated
      * @return true if the Generator will terminate
      */
-    abstract boolean isFinite()
+    boolean isFinite() {
+        !iterator().hasNext()
+    }
 
     List<E> getRealized() {
         this.collect().asList()
     }
+
+    @SuppressWarnings('EmptyMethodInAbstractClass')
+    void close() { }
 }

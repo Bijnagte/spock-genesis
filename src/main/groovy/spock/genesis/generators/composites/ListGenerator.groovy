@@ -5,7 +5,6 @@ import spock.genesis.generators.GeneratorDecorator
 import spock.genesis.generators.UnmodifiableIterator
 import spock.genesis.generators.values.WholeNumberGenerator
 
-
 class ListGenerator<E> extends GeneratorDecorator<List<E>> {
 
     static final int DEFAULT_LENGTH_LIMIT = 1000
