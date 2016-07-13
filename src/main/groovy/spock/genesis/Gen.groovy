@@ -3,6 +3,7 @@ package spock.genesis
 import spock.genesis.generators.CyclicGenerator
 import spock.genesis.generators.FactoryGenerator
 import spock.genesis.generators.Generator
+import spock.genesis.generators.IterableGenerator
 import spock.genesis.generators.composites.DefinedMapGenerator
 import spock.genesis.generators.composites.ListGenerator
 import spock.genesis.generators.composites.PojoGenerator
@@ -227,24 +228,13 @@ class Gen {
 
     /**
      * Produces a lazy infinite {@link CyclicGenerator} that repeats
-     * an {@link Iterator}.
-     *
-     * @param source {@link Iterator} to repeat over
-     * @return an instance of {@link CyclicGenerator}
-     */
-    static CyclicGenerator cycle(Iterator source) {
-        new CyclicGenerator(source)
-    }
-
-    /**
-     * Produces a lazy infinite {@link CyclicGenerator} that repeats
      * an {@link Iterable}.
      *
      * @param source {@link Iterable} to repeat over
      * @return an instance of {@link CyclicGenerator}
      */
     static <T> CyclicGenerator cycle(Iterable<T> source) {
-        new CyclicGenerator<T>(source)
+        new IterableGenerator<T>(source).repeat()
     }
 
     /**

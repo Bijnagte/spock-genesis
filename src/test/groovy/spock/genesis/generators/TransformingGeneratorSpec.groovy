@@ -4,8 +4,8 @@ import spock.lang.Specification
 
 class TransformingGeneratorSpec extends Specification {
 
-    Iterator iterator = Mock()
-    Iterable supplier = Stub {
+    UnmodifiableIterator iterator = Mock()
+    Generator supplier = Stub {
         iterator() >> iterator
     }
 

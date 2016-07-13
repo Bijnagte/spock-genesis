@@ -4,8 +4,8 @@ import spock.lang.Specification
 
 class LimitedGeneratorSpec extends Specification {
 
-    Iterable wrapped = Mock()
-    Iterator iterator = Mock()
+    Generator wrapped = Mock()
+    UnmodifiableIterator iterator = Mock()
 
     def setup() {
         wrapped.iterator() >> iterator
@@ -40,12 +40,5 @@ class LimitedGeneratorSpec extends Specification {
     def 'is finite'() {
         expect:
             new LimitedGenerator(wrapped, 20).isFinite() == true
-    }
-
-    def 'collection and array constructors iterate complete source'() {
-        expect:
-            new LimitedGenerator([1, 2, 3]).realized == [1, 2, 3]
-            new LimitedGenerator([1, 2, 3].toSet()).realized == [1, 2, 3]
-            new LimitedGenerator([1, 2, 3].toArray()).realized == [1, 2, 3]
     }
 }

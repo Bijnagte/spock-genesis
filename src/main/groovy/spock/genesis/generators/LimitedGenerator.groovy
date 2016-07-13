@@ -1,6 +1,7 @@
 package spock.genesis.generators
 
 import groovy.transform.CompileStatic
+import spock.genesis.extension.ExtensionMethods
 
 @CompileStatic
 class LimitedGenerator<E> extends GeneratorDecorator<E> {
@@ -8,18 +9,8 @@ class LimitedGenerator<E> extends GeneratorDecorator<E> {
     final int iterationLimit
 
     LimitedGenerator(Iterable<E> iterable, int iterationLimit) {
-        super(iterable)
+        super(ExtensionMethods.toGenerator(iterable))
         this.iterationLimit = iterationLimit
-    }
-
-    LimitedGenerator(Collection<E> collection) {
-        super(collection)
-        this.iterationLimit = collection.size()
-    }
-
-    LimitedGenerator(E... array) {
-        super(Arrays.asList(array))
-        this.iterationLimit = array.length
     }
 
     UnmodifiableIterator<E> iterator() {

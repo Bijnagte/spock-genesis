@@ -1,7 +1,7 @@
 package spock.genesis.generators
 
-import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
+import spock.genesis.extension.ExtensionMethods
 
 /**
  * A generator that returns the next value from one of its source generators at random.
@@ -10,24 +10,25 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class MultiSourceGenerator<E> extends Generator<E> implements Closeable {
 
-    final List<Iterable<E>> iterables
+    private final List<Generator<E>> generators
     final Random random = new Random()
 
     MultiSourceGenerator(Collection<Iterable<E>> iterables) {
-        this.iterables = iterables.toList()
+        this.generators = iterables.collect { ExtensionMethods.toGenerator(it) }
     }
 
     MultiSourceGenerator(Map<Iterable<E>, Integer> weightedIterators) {
         List i = []
         weightedIterators.each { iterable, qty ->
-            qty.times { i << iterable }
+            def generator = ExtensionMethods.toGenerator(iterable)
+            qty.times { i << generator }
         }
-        this.iterables = i
+        this.generators = i
     }
 
     UnmodifiableIterator<E> iterator() {
         new UnmodifiableIterator<E>() {
-            private final List<Iterator<E>> iterators = iterables*.iterator()
+            private final List<UnmodifiableIterator<E>> iterators = generators*.iterator()
             /**
              * @return true if any of the source generators has next
              */
@@ -65,22 +66,15 @@ class MultiSourceGenerator<E> extends Generator<E> implements Closeable {
      * @param additional
      * @return a new MultiSourceGenerator
      */
-    MultiSourceGenerator plus(Collection<Iterable<E>> additional) {
-        new MultiSourceGenerator(additional + iterables)
+    MultiSourceGenerator<E> plus(Collection<Iterable<E>> additional) {
+        new MultiSourceGenerator(additional + generators)
     }
 
     void close() {
-        iterables.each { close(it) }
-    }
-
-    @CompileDynamic
-    void close(Iterable generator) {
-        if (generator.respondsTo('close')) {
-            generator.close()
-        }
+        generators.each { it.close() }
     }
 
     boolean isFinite() {
-        GeneratorUtils.allFinite(iterables)
+        generators.every { it.finite }
     }
 }

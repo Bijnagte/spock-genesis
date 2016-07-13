@@ -1,6 +1,7 @@
 package spock.genesis.generators
 
 import groovy.transform.CompileStatic
+import spock.genesis.extension.ExtensionMethods
 
 /**
  * A lazy infinite generator that repeats an iterator.
@@ -15,7 +16,7 @@ class CyclicGenerator<E> extends GeneratorDecorator<E> {
     }
 
     CyclicGenerator(Iterable<E> iterable) {
-        super(iterable, GeneratorUtils.isFinite(iterable) || !Generator.isInstance(iterable))
+        super(ExtensionMethods.toGenerator(iterable))
     }
 
     @Override
