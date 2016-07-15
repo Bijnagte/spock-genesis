@@ -1,5 +1,7 @@
 package spock.genesis.extension
 
+import groovy.transform.CompileStatic
+import spock.genesis.Gen
 import spock.genesis.generators.Generator
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -26,6 +28,18 @@ class ExtensionMethodsSpec extends Specification {
 
     enum Option {
         YES, NO
+    }
+
+    def 'to generator on generator returns the original generator through static method' () {
+        expect:
+            toGenerator(generator).is(generator)
+        where:
+            generator << [Gen.string, Gen.bytes, Gen.once('foo'), Gen.double, Gen.list(Gen.integer)]
+    }
+
+    @CompileStatic
+    static Generator toGenerator(Iterable iterable) {
+        iterable.toGenerator()
     }
 
 }

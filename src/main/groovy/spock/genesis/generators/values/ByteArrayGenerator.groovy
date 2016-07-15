@@ -9,7 +9,6 @@ class ByteArrayGenerator extends InfiniteGenerator<byte[]> {
 
     static final int DEFAULT_LENGTH_LIMIT = 1024 * 10
     final WholeNumberGenerator lengthSource
-    final Random random = new Random()
 
     ByteArrayGenerator() {
         this.lengthSource = new WholeNumberGenerator(DEFAULT_LENGTH_LIMIT)
@@ -39,5 +38,12 @@ class ByteArrayGenerator extends InfiniteGenerator<byte[]> {
                 bytes
             }
         }
+    }
+
+    @Override
+    ByteArrayGenerator seed(Long seed) {
+        lengthSource.seed(seed)
+        super.seed(seed)
+        this
     }
 }

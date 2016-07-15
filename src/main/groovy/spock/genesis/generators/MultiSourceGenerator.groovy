@@ -11,7 +11,6 @@ import spock.genesis.extension.ExtensionMethods
 class MultiSourceGenerator<E> extends Generator<E> implements Closeable {
 
     private final List<Generator<E>> generators
-    final Random random = new Random()
 
     MultiSourceGenerator(Collection<Iterable<E>> iterables) {
         this.generators = iterables.collect { ExtensionMethods.toGenerator(it) }
@@ -76,5 +75,12 @@ class MultiSourceGenerator<E> extends Generator<E> implements Closeable {
 
     boolean isFinite() {
         generators.every { it.finite }
+    }
+
+    @Override
+    MultiSourceGenerator<E> seed(Long seed) {
+        generators.each { it.seed(seed) }
+        super.seed(seed)
+        this
     }
 }

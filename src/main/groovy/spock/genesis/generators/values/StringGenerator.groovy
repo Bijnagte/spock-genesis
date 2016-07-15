@@ -91,4 +91,13 @@ class StringGenerator extends InfiniteGenerator<String> {
             }
         }
     }
+
+    @Override
+    StringGenerator seed(Long seed) {
+        super.seed(seed)
+        charGenerator?.seed(seed)
+        lengthSource?.seed(seed)
+        generex?.setSeed(seed)
+        this
+    }
 }

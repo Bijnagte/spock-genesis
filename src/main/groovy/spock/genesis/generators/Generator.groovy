@@ -1,6 +1,7 @@
 package spock.genesis.generators
 
 import groovy.transform.CompileStatic
+import spock.genesis.extension.ExtensionMethods
 import spock.genesis.generators.values.NullGenerator
 
 /**
@@ -9,6 +10,7 @@ import spock.genesis.generators.values.NullGenerator
  */
 @CompileStatic
 abstract class Generator<E> implements Iterable<E>, Closeable {
+    final Random random = new Random()
 
     /**
      * Wraps this generator in a generator that returns values that matches the supplied predicate
@@ -36,10 +38,10 @@ abstract class Generator<E> implements Iterable<E>, Closeable {
     }
 
     SequentialMultisourceGenerator<E> then(Iterable<E>... iterables) {
-        Iterable<E>[] all = new Iterable<E>[iterables.length + 1]
+        Generator<E>[] all = new Generator<E>[iterables.length + 1]
         all[0] = this
         for (int i = 0; i < iterables.length; i++) {
-            all[i + 1] = iterables[i]
+            all[i + 1] = ExtensionMethods.toGenerator(iterables[i])
 
         }
         new SequentialMultisourceGenerator<E>(all)
@@ -95,4 +97,9 @@ abstract class Generator<E> implements Iterable<E>, Closeable {
 
     @SuppressWarnings('EmptyMethodInAbstractClass')
     void close() { }
+
+    Generator<E> seed(Long seed) {
+        random.setSeed(seed)
+        this
+    }
 }

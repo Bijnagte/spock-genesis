@@ -1,5 +1,7 @@
 package spock.genesis
 
+import groovy.transform.CompileStatic
+import spock.genesis.extension.ExtensionMethods
 import spock.genesis.generators.CyclicGenerator
 import spock.genesis.generators.FactoryGenerator
 import spock.genesis.generators.Generator
@@ -25,6 +27,7 @@ import java.util.regex.Pattern
  * Static factory methods for Generators
  */
 @SuppressWarnings(['MethodCount'])
+@CompileStatic
 class Gen {
 
     /**
@@ -151,18 +154,6 @@ class Gen {
      * random values of type {@link Character}
      *
      * @return an infinite lazy {@link CharacterGenerator}
-     * @deprecated use {@link Gen#getCharacter} instead
-     */
-    @Deprecated
-    static CharacterGenerator getChar() {
-        new CharacterGenerator()
-    }
-
-    /**
-     * Produces a {@link CharacterGenerator} capable of producing
-     * random values of type {@link Character}
-     *
-     * @return an infinite lazy {@link CharacterGenerator}
      */
     static CharacterGenerator getCharacter() {
         new CharacterGenerator()
@@ -198,7 +189,7 @@ class Gen {
      * @param value value you want to produce over an over again
      * @return an infinite lazy of type {@link ValueGenerator}
      */
-    static ValueGenerator value(value) {
+    static <T> ValueGenerator<T> value(T value) {
         new ValueGenerator(value)
     }
 
@@ -210,7 +201,7 @@ class Gen {
      * from
      * @return a {@link RandomElementGenerator}
      */
-    static RandomElementGenerator any(Collection source) {
+    static <T> RandomElementGenerator<T> any(Collection<T> source) {
         new RandomElementGenerator(source)
     }
 
@@ -222,7 +213,7 @@ class Gen {
      * from
      * @return a {@link RandomElementGenerator}
      */
-    static RandomElementGenerator any(Object... source) {
+    static <T> RandomElementGenerator<T> any(T... source) {
         new RandomElementGenerator(source.toList())
     }
 
@@ -245,7 +236,7 @@ class Gen {
      * @param target type of the object we would like to generate
      * @return an instance of {@link PojoGenerator}
      */
-    static PojoGenerator type(Map<String, Object> keysToValueGenerators, Class target) {
+    static <T> PojoGenerator<T,Map> type(Map<String, Object> keysToValueGenerators, T target) {
         new PojoGenerator(target, map(keysToValueGenerators))
     }
 
@@ -257,7 +248,7 @@ class Gen {
      * @param argGenerators generators per each field
      * @return an instance of {@link PojoGenerator}
      */
-    static <T> PojoGenerator<T> type(T target, Iterable... argGenerators) {
+    static <T> PojoGenerator<T, List> type(T target, Iterable... argGenerators) {
         new PojoGenerator(target, tuple(argGenerators))
     }
 
@@ -280,8 +271,8 @@ class Gen {
      * @param valueGenerator generators of map values
      * @return an instance of {@link RandomMapGenerator}
      */
-    static RandomMapGenerator map(Iterable keyGenerator, Iterable valueGenerator) {
-        new RandomMapGenerator(keyGenerator, valueGenerator)
+    static <K,V> RandomMapGenerator map(Iterable<K> keyGenerator, Iterable<V> valueGenerator) {
+        new RandomMapGenerator<K,V>(keyGenerator, valueGenerator)
     }
 
     /**
@@ -291,7 +282,7 @@ class Gen {
      * @param valueGenerator generates values of the produced list
      * @return an instance of {@link ListGenerator}
      */
-    static ListGenerator list(Generator valueGenerator) {
+    static <T> ListGenerator<T> list(Generator<T> valueGenerator) {
         new ListGenerator(valueGenerator)
     }
 
@@ -304,7 +295,7 @@ class Gen {
      * @param maxLength maximum length of generated lists
      * @return an instance of {@link ListGenerator}
      */
-    static ListGenerator list(Generator valueGenerator, int maxLength) {
+    static <T> ListGenerator<T> list(Generator<T> valueGenerator, int maxLength) {
         new ListGenerator(valueGenerator, maxLength)
     }
 
@@ -329,7 +320,7 @@ class Gen {
      * @param generators generators for each tuple element
      * @return an instance of {@link TupleGenerator}
      */
-    static TupleGenerator tuple(Iterable... generators) {
+    static <T> TupleGenerator<T> tuple(Iterable<T>... generators) {
         new TupleGenerator(generators)
     }
 
@@ -364,12 +355,12 @@ class Gen {
      * @param factory the closure that defines the generated value
      * @return an instance of {@link FactoryGenerator}
      */
-    static FactoryGenerator using(Closure factory) {
+    static <T> FactoryGenerator<T> using(Closure<T> factory) {
         new FactoryGenerator(factory)
     }
 
     /**
-     * Produces a lazy infinite {@link LimitedGenerator}. This
+     * Produces a lazy infinite {@link Generator}. This
      * generator will produce the values taken from a given {@link
      * Iterable} in the order they were defined
      *
@@ -377,54 +368,54 @@ class Gen {
      * @param finite sets the generator as finite or not
      * @return an instance of {@link Generator}
      */
-    static Generator these(Iterable iterable, boolean finite = false) {
-        iterable.toGenerator(finite)
+    static <T> Generator<T> these(Iterable<T> iterable, boolean finite = false) {
+        ExtensionMethods.toGenerator(iterable, finite)
     }
 
     /**
-     * Produces a lazy infinite {@link LimitedGenerator}. This
+     * Produces a lazy infinite {@link Generator}. This
      * generator will produce classes of the type passed as parameter
      *
      * @param clazz the type of class you want to produce
      * @return an instance of {@link Generator}
      */
     static Generator these(Class clazz) {
-        clazz.toGenerator()
+        ExtensionMethods.toGenerator(clazz)
     }
 
     /**
-     * Produces a lazy infinite {@link LimitedGenerator}. This
+     * Produces a lazy infinite {@link Generator}. This
      * generator will produce the values taken from the values passed
      * as arguments in the order they were defined
      *
      * @param values variable arguments to get values from
      * @return an instance of {@link Generator}
      */
-    static Generator these(Object... values) {
-        values.toGenerator()
+    static <T> Generator<T> these(T... values) {
+        ExtensionMethods.toGenerator(values)
     }
 
     /**
-     * Produces a lazy infinite {@link LimitedGenerator}. This
+     * Produces a lazy infinite {@link Generator}. This
      * generator will produce the values taken from the values passed
      * as arguments in the order they were defined
      *
      * @param values collection to get values from
      * @return an instance of {@link Generator}
      */
-    static Generator these(Collection values) {
-        values.toGenerator()
+    static <T> Generator<T> these(Collection<T> values) {
+        ExtensionMethods.toGenerator(values)
     }
 
     /**
-     * Produces a lazy infinite {@link LimitedGenerator}. This
+     * Produces a lazy infinite {@link Generator}. This
      * generator will produce copies of the value passed as parameter
      *
      * @param value sample value
      * @return an instance of {@link Generator} that produces copies
      * of the sample value
      */
-    static Generator once(Object value) {
+    static <T> Generator<T> once(T value) {
         these([value])
     }
 }

@@ -59,4 +59,24 @@ class StringGeneratorSpec extends Specification {
                     /[A-Z][a-z]+( [A-Z][a-z]+)?/
             ]
     }
+
+    def 'setting seed produces the same sequences for different generators' () {
+        given:
+            def a = new StringGenerator().seed(seed).take(100).realized
+            def b = new StringGenerator().seed(seed).take(100).realized
+        expect:
+            a == b
+        where:
+            seed << [Long.MIN_VALUE, 100, Long.MAX_VALUE]
+    }
+
+    def 'setting seed produces the same sequences for different generators using generex' () {
+        given:
+            def a = new StringGenerator(~/\d{3}-\d{3}-\d{4}\s(x|(ext))\d{3,5}/).seed(seed).take(100).realized
+            def b = new StringGenerator(~/\d{3}-\d{3}-\d{4}\s(x|(ext))\d{3,5}/).seed(seed).take(100).realized
+        expect:
+            a == b
+        where:
+            seed << [Long.MIN_VALUE, 100, Long.MAX_VALUE]
+    }
 }

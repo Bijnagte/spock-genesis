@@ -1,9 +1,8 @@
 package spock.genesis.generators.composites
 
-import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
+import spock.genesis.extension.ExtensionMethods
 import spock.genesis.generators.Generator
-import spock.genesis.generators.GeneratorUtils
 import spock.genesis.generators.UnmodifiableIterator
 import spock.genesis.generators.values.WholeNumberGenerator
 
@@ -12,31 +11,29 @@ class RandomMapGenerator<K, V> extends Generator<Map<K, V>> implements Closeable
 
     static final int DEFAULT_ENTRY_LIMIT = 100
     final WholeNumberGenerator sizeSource
-    final Iterable<K> keyGenerator
-    final Iterable<V> valueGenerator
+    final Generator<K> keyGenerator
+    final Generator<V> valueGenerator
 
     RandomMapGenerator(Iterable<K> keyGenerator, Iterable valueGenerator) {
-        this.sizeSource = new WholeNumberGenerator(DEFAULT_ENTRY_LIMIT)
-        this.keyGenerator = keyGenerator
-        this.valueGenerator = valueGenerator
+        this(keyGenerator, valueGenerator, new WholeNumberGenerator(DEFAULT_ENTRY_LIMIT))
     }
 
     RandomMapGenerator(Iterable<K> keyGenerator, Iterable<V> valueGenerator, int maxSize) {
-        this.sizeSource = new WholeNumberGenerator(maxSize)
-        this.keyGenerator = keyGenerator
-        this.valueGenerator = valueGenerator
+        this(keyGenerator, valueGenerator, new WholeNumberGenerator(maxSize))
     }
 
     RandomMapGenerator(Iterable<K> keyGenerator, Iterable<V> valueGenerator, int minSize, int maxSize) {
-        this.sizeSource = new WholeNumberGenerator(minSize, maxSize)
-        this.keyGenerator = keyGenerator
-        this.valueGenerator = valueGenerator
+        this(keyGenerator, valueGenerator, new WholeNumberGenerator(minSize, maxSize))
     }
 
     RandomMapGenerator(Iterable<K> keyGenerator, Iterable<V> valueGenerator, IntRange sizeRange) {
-        this.sizeSource = new WholeNumberGenerator(sizeRange)
-        this.keyGenerator = keyGenerator
-        this.valueGenerator = valueGenerator
+        this(keyGenerator, valueGenerator, new WholeNumberGenerator(sizeRange))
+    }
+
+    RandomMapGenerator(Iterable<K> keyGenerator, Iterable<V> valueGenerator, WholeNumberGenerator sizeSource) {
+        this.sizeSource = sizeSource
+        this.keyGenerator = ExtensionMethods.toGenerator(keyGenerator)
+        this.valueGenerator = ExtensionMethods.toGenerator(valueGenerator)
     }
 
     UnmodifiableIterator<Map<K, V>> iterator() {
@@ -64,16 +61,23 @@ class RandomMapGenerator<K, V> extends Generator<Map<K, V>> implements Closeable
         }
     }
 
-    @CompileDynamic
+    @Override
     void close() {
-        [keyGenerator, valueGenerator].each {
-            if (it.respondsTo('close')) {
-                it.close()
-            }
-        }
+        keyGenerator.close()
+        valueGenerator.close()
     }
 
+    @Override
     boolean isFinite() {
-        GeneratorUtils.anyFinite(keyGenerator, valueGenerator)
+        keyGenerator.finite || valueGenerator.finite
+    }
+
+    @Override
+    RandomMapGenerator<K, V> seed(Long seed) {
+        keyGenerator.seed(seed)
+        valueGenerator.seed(seed)
+        sizeSource.seed(seed)
+        super.seed(seed)
+        this
     }
 }

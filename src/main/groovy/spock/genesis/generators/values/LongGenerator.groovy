@@ -1,6 +1,7 @@
 package spock.genesis.generators.values
 
 import groovy.transform.CompileStatic
+import spock.genesis.generators.Generator
 import spock.genesis.generators.InfiniteGenerator
 import spock.genesis.generators.InfiniteIterator
 
@@ -9,7 +10,7 @@ class LongGenerator extends InfiniteGenerator<Long> {
 
     final Long min
     final Long max
-    final Random random = new Random()
+    private final IntegerGenerator integerGenerator
 
     LongGenerator() {
         this.min = Long.MIN_VALUE
@@ -20,12 +21,16 @@ class LongGenerator extends InfiniteGenerator<Long> {
         assert min < max
         this.min = min
         this.max = max
+        def magnitude = magnitude(min, max)
+        if (magnitude <= Integer.MAX_VALUE) {
+            integerGenerator = new IntegerGenerator(0, magnitude as int)
+        }
     }
 
-    InfiniteIterator<Long> chooseProvider(BigInteger min, BigInteger max) {
-        BigInteger magnitude = max - min
+    InfiniteIterator<Long> chooseProvider(long min, long max) {
+        BigInteger magnitude = magnitude(min, max)
         if (magnitude <= Integer.MAX_VALUE) {
-            new ShiftedIntegerIterator(magnitude as int, min as long)
+            new ShiftedIntegerIterator(min as long)
         } else if (magnitude <= Long.MAX_VALUE) {
             new ShiftedLongIterator(magnitude as long, min as long)
         } else {
@@ -33,8 +38,12 @@ class LongGenerator extends InfiniteGenerator<Long> {
         }
     }
 
+    private static BigInteger magnitude(long min, long max) {
+        max.toBigInteger() - min.toBigInteger()
+    }
+
     InfiniteIterator<Long> iterator() {
-        final InfiniteIterator<Long> CANDIDATE_PROVIDER = chooseProvider(min.toBigInteger(), max.toBigInteger())
+        final InfiniteIterator<Long> CANDIDATE_PROVIDER = chooseProvider(min, max)
         new InfiniteIterator<Long>() {
             @Override
             Long next() {
@@ -48,13 +57,13 @@ class LongGenerator extends InfiniteGenerator<Long> {
         }
     }
 
-    private class RandomLongIterator extends InfiniteIterator<Long> {
+    class RandomLongIterator extends InfiniteIterator<Long> {
         Long next() {
             random.nextLong()
         }
     }
 
-    private class ShiftedLongIterator extends InfiniteIterator<Long> {
+    class ShiftedLongIterator extends InfiniteIterator<Long> {
         final long magnitude
         final long shift
 
@@ -78,17 +87,24 @@ class LongGenerator extends InfiniteGenerator<Long> {
         }
     }
 
-    private class ShiftedIntegerIterator extends InfiniteIterator<Long> {
+    class ShiftedIntegerIterator extends InfiniteIterator<Long> {
         final InfiniteIterator<Integer> iterator
         final long shift
 
-        ShiftedIntegerIterator(int magnitude, long shift) {
-            iterator = new IntegerGenerator(0, magnitude).iterator()
+        ShiftedIntegerIterator(long shift) {
+            iterator = integerGenerator.iterator()
             this.shift = shift
         }
 
         Long next() {
             shift + iterator.next()
         }
+    }
+
+    @Override
+    Generator<Long> seed(Long seed) {
+        super.seed(seed)
+        integerGenerator?.seed(seed)
+        this
     }
 }

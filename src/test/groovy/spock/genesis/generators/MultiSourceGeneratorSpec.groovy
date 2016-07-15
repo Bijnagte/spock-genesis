@@ -6,7 +6,7 @@ class MultiSourceGeneratorSpec extends Specification {
 
     def 'multiple iterables run until all are empty'() {
         setup:
-            def generator = new MultiSourceGenerator(iterables)
+            def generator = new MultiSourceGenerator(iterables).seed(9809)
             def expectedCount = iterables*.size().sum()
         when:
             def result = generator.realized
