@@ -10,7 +10,7 @@ import spock.genesis.generators.values.NullGenerator
  */
 @CompileStatic
 abstract class Generator<E> implements Iterable<E>, Closeable {
-    final Random random = new Random()
+    protected final Random random = new Random()
 
     /**
      * Wraps this generator in a generator that returns values that matches the supplied predicate
@@ -21,8 +21,8 @@ abstract class Generator<E> implements Iterable<E>, Closeable {
         new FilteredGenerator<E>(this, predicate)
     }
 
-    TransformingGenerator<E, ?> map(Closure<?> transform) {
-        new TransformingGenerator<E, ?>(this, transform)
+    public <T> TransformingGenerator<E, T> map(Closure<T> transform) {
+        new TransformingGenerator<E, T>(this, transform)
     }
 
     TransformingGenerator<E, E> with(Closure<?> transform) {
@@ -98,6 +98,12 @@ abstract class Generator<E> implements Iterable<E>, Closeable {
     @SuppressWarnings('EmptyMethodInAbstractClass')
     void close() { }
 
+    /**
+     * Set the {@link Random} seed for this generator and all contained generators.
+     * This method mutates the generator!
+     * @param seed
+     * @return this generator
+     */
     Generator<E> seed(Long seed) {
         random.setSeed(seed)
         this

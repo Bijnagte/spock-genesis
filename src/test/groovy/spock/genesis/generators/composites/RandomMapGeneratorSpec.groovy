@@ -99,7 +99,6 @@ class RandomMapGeneratorSpec extends Specification {
             0 * _
     }
 
-    @Iterations
     def 'setting seed returns the same values with 2 generators configured the same'() {
         given:
             def generatorA = new RandomMapGenerator(Gen.string(10), Gen.integer, 10..20).seed(seed).take(10).realized

@@ -4,7 +4,6 @@ import spock.genesis.Gen
 import spock.genesis.generators.values.IntegerGenerator
 import spock.genesis.generators.values.NullGenerator
 import spock.genesis.generators.values.StringGenerator
-import spock.genesis.transform.Iterations
 import spock.lang.Specification
 
 class DefinedMapGeneratorSpec extends Specification {

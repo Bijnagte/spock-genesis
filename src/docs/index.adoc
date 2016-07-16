@@ -21,4 +21,7 @@ include::combine.adoc[]
 
 include::cardinality.adoc[]
 
+include::output.adoc[]
+
 include::development.adoc[]
+
