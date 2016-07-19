@@ -7,8 +7,6 @@ import spock.genesis.generators.InfiniteIterator
 @CompileStatic
 class DoubleGenerator extends InfiniteGenerator<Double> {
 
-    final Random random = new Random()
-
     InfiniteIterator<Double> iterator() {
         new InfiniteIterator<Double>() {
             @Override

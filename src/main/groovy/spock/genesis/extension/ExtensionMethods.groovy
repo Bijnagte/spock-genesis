@@ -17,14 +17,18 @@ class ExtensionMethods {
     }
 
     static <T> Generator<T> toGenerator(Iterable<T> self, boolean finite = false) {
-        new IterableGenerator<T>(self, finite)
+        if (Generator.isInstance(self)) {
+            (Generator) self
+        } else {
+            new IterableGenerator<T>(self, finite)
+        }
     }
 
     static Generator<String> toGenerator(String self) {
         new ObjectIteratorGenerator<String>(self)
     }
 
-    static Generator<Object> toGenerator(Object self) {
+    static Generator toGenerator(Object self) {
         new ObjectIteratorGenerator(self)
     }
 

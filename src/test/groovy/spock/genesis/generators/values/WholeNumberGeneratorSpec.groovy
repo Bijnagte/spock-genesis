@@ -36,7 +36,7 @@ class WholeNumberGeneratorSpec extends Specification {
     }
 
     @Unroll
-    def 'arguments must be possitive and the correct order'() {
+    def 'arguments must be positive and the correct order'() {
         when:
             new WholeNumberGenerator(*args)
         then:

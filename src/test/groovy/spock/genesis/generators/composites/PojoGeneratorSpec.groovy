@@ -1,5 +1,6 @@
 package spock.genesis.generators.composites
 
+import spock.genesis.Gen
 import spock.genesis.generators.test.Pojo
 import spock.lang.Specification
 
@@ -127,6 +128,17 @@ class PojoGeneratorSpec extends Specification {
         then:
             result instanceof VarArgsConstructorObj
             result.args == args
+    }
+
+    def 'setting seed returns the same values with 2 generators configured the same'() {
+        setup:
+            def generatorA = new PojoGenerator(Pojo, Gen.map(a: Gen.string)).seed(seed).take(10).realized
+            def generatorB = new PojoGenerator(Pojo, Gen.map(a: Gen.string)).seed(seed).take(10).realized
+        expect:
+            generatorA == generatorB
+        where:
+            seed = 100L
+
     }
 
     static class TupleConstructorObj {

@@ -29,4 +29,11 @@ class RandomElementGenerator<E> extends InfiniteGenerator<E> {
             }
         }
     }
+
+    @Override
+    RandomElementGenerator<E> seed(Long seed) {
+        indexSource.seed(seed)
+        super.seed(seed)
+        this
+    }
 }

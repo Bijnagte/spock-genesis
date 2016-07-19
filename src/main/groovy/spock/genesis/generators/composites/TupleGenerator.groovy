@@ -3,11 +3,10 @@ package spock.genesis.generators.composites
 import groovy.transform.CompileStatic
 import spock.genesis.extension.ExtensionMethods
 import spock.genesis.generators.Generator
-import spock.genesis.generators.GeneratorUtils
 import spock.genesis.generators.UnmodifiableIterator
 
 @CompileStatic
-class TupleGenerator<T> extends Generator<List<T>> {
+class TupleGenerator<T> extends Generator<List<T>> implements Closeable {
 
     private final List<Generator<T>> generators
 
@@ -39,6 +38,18 @@ class TupleGenerator<T> extends Generator<List<T>> {
 
     @Override
     boolean isFinite() {
-        GeneratorUtils.anyFinite(generators)
+        generators.every { it.finite }
+    }
+
+    @Override
+    void close() {
+        generators.each { it.close() }
+    }
+
+    @Override
+    TupleGenerator<T> seed(Long seed) {
+        generators.each { it.seed(seed) }
+        super.seed(seed)
+        this
     }
 }

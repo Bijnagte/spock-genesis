@@ -1,23 +1,20 @@
 package spock.genesis.generators
 
-import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 
 @CompileStatic
 class SequentialMultisourceGenerator<E> extends Generator<E> implements Closeable {
 
-    private final List<Iterable<E>> iterables
-    final boolean finite
+    private final List<Generator<E>> generators
 
-    SequentialMultisourceGenerator(Iterable<E>... iterables) {
-        this.iterables = iterables.toList()
-        finite = GeneratorUtils.allFinite(iterables)
+    SequentialMultisourceGenerator(Generator<E>... iterables) {
+        this.generators = iterables.toList()
     }
 
     UnmodifiableIterator<E> iterator() {
         new UnmodifiableIterator<E>() {
-            private Iterator<E> current
-            private final Iterator<Iterator<E>> iterators = iterables.collect { it.iterator() }.iterator()
+            private Iterator current
+            private final Iterator iterators = generators.collect { it.iterator() }.iterator()
 
             boolean hasNext() {
                 setupIterator()
@@ -38,13 +35,16 @@ class SequentialMultisourceGenerator<E> extends Generator<E> implements Closeabl
     }
 
     void close() {
-        iterables.each { close(it) }
+        generators.each { it.close() }
     }
 
-    @CompileDynamic
-    void close(Iterable generator) {
-        if (generator.respondsTo('close')) {
-            generator.close()
-        }
+    boolean isFinite() {
+        generators.every { it.finite }
+    }
+
+    SequentialMultisourceGenerator<E> seed(Long seed) {
+        generators.each { it.seed(seed) }
+        super.seed(seed)
+        this
     }
 }

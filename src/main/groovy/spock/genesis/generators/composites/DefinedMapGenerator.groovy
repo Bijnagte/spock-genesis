@@ -3,7 +3,6 @@ package spock.genesis.generators.composites
 import groovy.transform.CompileStatic
 import spock.genesis.extension.ExtensionMethods
 import spock.genesis.generators.Generator
-import spock.genesis.generators.GeneratorUtils
 import spock.genesis.generators.UnmodifiableIterator
 
 @CompileStatic
@@ -44,6 +43,13 @@ class DefinedMapGenerator<K, V> extends Generator<Map<K, V>> {
     }
 
     boolean isFinite() {
-        GeneratorUtils.anyFinite(keysToValueGenerators.values())
+        keysToValueGenerators.any { k, generator -> generator.finite }
+    }
+
+    @Override
+    DefinedMapGenerator<K, V> seed(Long seed) {
+        keysToValueGenerators.each { k, generator -> generator.seed(seed) }
+        super.seed(seed)
+        this
     }
 }

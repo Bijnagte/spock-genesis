@@ -9,10 +9,11 @@ import spock.lang.Specification
 import spock.lang.Unroll
 import spock.util.mop.Use
 
+import static spock.genesis.Gen.*
+
 
 // tag::genimport[]
 //static import generator factory methods
-import static spock.genesis.Gen.*
 // end::genimport[]
 
 class SamplesSpec extends Specification {
@@ -254,15 +255,16 @@ class SamplesSpec extends Specification {
     }
     // end::typegenerator[]
 
-    def 'generate type then call method on instance'() {
+    // tag::transform[]
+    @Iterations(10)
+    def 'transform the output of a generator'() {
         expect:
-            result instanceof Data
-            result.d
-            result.i
-            result.s == result.toString()
+            result instanceof String
+            result.isInteger()
         where:
-            result << type(Data, i: integer, d: date).map { it.s = it.toString(); it }.take(10)
+            result << integer.map { val -> val.toString() }
     }
+    // end::transform[]
 
     // tag::tupledata[]
     static class TupleData {
@@ -442,4 +444,25 @@ class SamplesSpec extends Specification {
         i << these(1,2,3,4,5,6)
     }
     //end::iterations[]
+
+    //tag::seed[]
+    def 'setting seed returns the same values with 2 generators configured the same'() {
+        given:
+            def generatedA = string(10).seed(879).take(10).realized
+            def generatedB = string(10).seed(879).take(10).realized
+        expect:
+            generatedA == generatedB
+    }
+    //end::seed[]
+
+    //tag::differentseed[]
+    def 'setting seed to different values produces different sequences'() {
+        given:
+            def generatedA = integer.seed(879).take(4).realized
+            def generatedB = integer.seed(3).take(4).realized
+        expect:
+            generatedA == [-1295148427, 2105117961, -922763979, 1733784787]
+            generatedB == [-1155099828, -1879439976, 304908421, -836442134]
+    }
+    //end::differentseed[]
 }

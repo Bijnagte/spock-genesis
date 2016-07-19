@@ -112,13 +112,3 @@ include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=fromenum,indent=0]
 NOTE: `these` in general can generate values taken from a given
 source, in this case the source is an enum. To know more about `these`
 check the section `combine`.
-
-=== Using `with`
-
-You can use `with` if you would like to set some property of the
-generated value.
-
-[source,groovy]
-----
-include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=datewith,indent=0]
-----

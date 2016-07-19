@@ -26,4 +26,11 @@ class DateGenerator extends InfiniteGenerator<Date> {
             }
         }
     }
+
+    @Override
+    DateGenerator seed(Long seed) {
+        super.seed(seed)
+        millisProvider.seed(seed)
+        this
+    }
 }

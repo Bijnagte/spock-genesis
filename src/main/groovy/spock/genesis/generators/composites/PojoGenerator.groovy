@@ -2,20 +2,20 @@ package spock.genesis.generators.composites
 
 import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
+import spock.genesis.extension.ExtensionMethods
 import spock.genesis.generators.Generator
-import spock.genesis.generators.GeneratorUtils
 import spock.genesis.generators.UnmodifiableIterator
 
 import java.lang.reflect.Constructor
 
 @CompileStatic
-class PojoGenerator<E> extends Generator<E> {
+class PojoGenerator<E, T> extends Generator<E> implements Closeable {
     final Class target
-    final Iterable generator
+    final Generator<T> generator
 
-    PojoGenerator(E target, Iterable generator) {
+    PojoGenerator(E target, Iterable<T> generator) {
         this.target = target
-        this.generator = generator
+        this.generator = ExtensionMethods.toGenerator(generator)
     }
 
     UnmodifiableIterator<E> iterator() {
@@ -30,7 +30,7 @@ class PojoGenerator<E> extends Generator<E> {
             @Override
             @CompileDynamic
             E next() {
-                def params = iterator.next()
+                T params = iterator.next()
                 Class clazz = params.getClass()
                 if (hasConstructorFor(clazz)) {
                     target.metaClass.invokeConstructor(params)
@@ -51,6 +51,17 @@ class PojoGenerator<E> extends Generator<E> {
     }
 
     boolean isFinite() {
-        GeneratorUtils.isFinite(generator)
+        generator.finite
+    }
+
+    void close() {
+        generator.close()
+    }
+
+    @Override
+    PojoGenerator<E,T> seed(Long seed) {
+        generator.seed(seed)
+        super.seed(seed)
+        this
     }
 }

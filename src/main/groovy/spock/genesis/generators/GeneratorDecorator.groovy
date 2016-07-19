@@ -46,4 +46,10 @@ class GeneratorDecorator<E> extends Generator<E> implements Closeable {
     void close() {
         generator.close()
     }
+
+    GeneratorDecorator<E> seed(Long seed) {
+        generator.seed(seed)
+        super.seed(seed)
+        this
+    }
 }

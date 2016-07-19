@@ -18,4 +18,14 @@ class DateGeneratorSpec extends Specification {
             low        | high
             new Date() | new Date() + 10
     }
+
+    def 'setting seed produces the same sequences for different generators' () {
+        given:
+            def a = new DateGenerator().seed(seed).take(100).realized
+            def b = new DateGenerator().seed(seed).take(100).realized
+        expect:
+            a == b
+        where:
+            seed << [Long.MIN_VALUE, 100, Long.MAX_VALUE]
+    }
 }

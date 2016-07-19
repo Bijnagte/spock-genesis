@@ -4,7 +4,7 @@ import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 
 /**
- * A generator that wraps an iterator to provide {@link Generator} methods.
+ * A generator that wraps an {@link Iterable} to provide {@link Generator} methods.
  * @param < E >   the generated type
  */
 @CompileStatic
@@ -55,5 +55,14 @@ class IterableGenerator<E> extends Generator<E> implements Closeable {
         if (iterable.respondsTo('close')) {
             iterable.close()
         }
+    }
+
+    @CompileDynamic
+    @Override
+    IterableGenerator<E> seed(Long seed) {
+        if (iterable.respondsTo('seed')) {
+            iterable.seed(seed)
+        }
+        this
     }
 }

@@ -9,7 +9,6 @@ class IntegerGenerator extends InfiniteGenerator<Integer> {
 
     final long min
     final long max
-    final Random random = new Random()
 
     IntegerGenerator(int min = Integer.MIN_VALUE, int max = Integer.MAX_VALUE) {
         assert min < max

@@ -7,7 +7,6 @@ import spock.genesis.generators.InfiniteIterator
 @CompileStatic
 class WholeNumberGenerator extends InfiniteGenerator<Integer> {
 
-    final Random random = new Random()
     final int min
     final int magnitude
 
