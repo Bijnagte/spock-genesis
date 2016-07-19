@@ -21,6 +21,6 @@ test:
 deployment:
   release:
     tag: /v[0-9]+(\.[0-9]+)*/
-    owner: circleci
+    owner: Bijnagte
     commands:
       - ./gradlew bintrayUpload alldocs publishGhPages -PbintrayUser=$BINTRAY_USER -PbintrayApiKey=$BINTRAY_KEY
