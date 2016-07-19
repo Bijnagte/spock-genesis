@@ -425,6 +425,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#_cardinality">Cardinality</a>
 <ul class="sectlevel2">
+<li><a href="#__iterations">@Iterations</a></li>
 <li><a href="#_once">Once</a></li>
 <li><a href="#_using_code_multiply_by_code">Using <code>multiply by</code></a></li>
 <li><a href="#_take">Take</a></li>
@@ -440,6 +441,27 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>Once you chose a generator, you can tell the generator to produce a
 given number of values, lets see how.</p>
+</div>
+<div class="sect2">
+<h3 id="__iterations">@Iterations</h3>
+<div class="paragraph">
+<p>If you want to limit the number of iterations that will be run you can use the
+<code>@Iterations</code> annotation. It is particularly useful when using infinite generators.
+It can be applied to the Specification or to individual features. If no value is
+provided it will default to 100.</p>
+</div>
+<div class="listingblock">
+<div class="title">Class</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">Unresolved directive in cardinality.adoc - include::{testDir}/spock/genesis/transform/IterationsSpec.groovy[tags=class,indent=0]</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Feature</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">Unresolved directive in cardinality.adoc - include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=iterations,indent=0]</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_once">Once</h3>
@@ -480,7 +502,7 @@ using the <code>*</code> operator:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-06-27 05:45:35 -05:00
+Last updated 2016-07-09 08:06:45 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">

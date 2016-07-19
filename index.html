@@ -422,7 +422,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Spock-Genesis</h1>
 <div class="details">
-<span id="revnumber">version 0.4.0</span>
+<span id="revnumber">version 0.5.0</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -440,7 +440,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_date">2.3. Date</a></li>
 <li><a href="#_from_value">2.4. From value</a></li>
 <li><a href="#_from_enum">2.5. From enum</a></li>
-<li><a href="#_using_code_with_code">2.6. Using <code>with</code></a></li>
 </ul>
 </li>
 <li><a href="#_composites">3. Composites</a>
@@ -460,15 +459,23 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_cardinality">5. Cardinality</a>
 <ul class="sectlevel2">
-<li><a href="#_once">5.1. Once</a></li>
-<li><a href="#_using_code_multiply_by_code">5.2. Using <code>multiply by</code></a></li>
-<li><a href="#_take">5.3. Take</a></li>
+<li><a href="#__iterations">5.1. @Iterations</a></li>
+<li><a href="#_once">5.2. Once</a></li>
+<li><a href="#_using_code_multiply_by_code">5.3. Using <code>multiply by</code></a></li>
+<li><a href="#_take">5.4. Take</a></li>
 </ul>
 </li>
-<li><a href="#_development">6. Development</a>
+<li><a href="#_output">6. Output</a>
 <ul class="sectlevel2">
-<li><a href="#_building_code_spock_genesis_code">6.1. Building <code>spock-genesis</code></a></li>
-<li><a href="#_groovydoc">6.2. Groovydoc</a></li>
+<li><a href="#_seeding_random_generation">6.1. Seeding random generation</a></li>
+<li><a href="#_using_code_with_code">6.2. Using <code>with</code></a></li>
+<li><a href="#_transforming_with_code_map_code">6.3. Transforming with <code>map</code></a></li>
+</ul>
+</li>
+<li><a href="#_development">7. Development</a>
+<ul class="sectlevel2">
+<li><a href="#_building_code_spock_genesis_code">7.1. Building <code>spock-genesis</code></a></li>
+<li><a href="#_groovydoc">7.2. Groovydoc</a></li>
 </ul>
 </li>
 </ul>
@@ -493,7 +500,7 @@ inputs allows for more thorough testing without a dramatic increase in
 effort. In Spock
 <a href="http://spockframework.github.io/spock/docs/1.0/data_driven_testing.html">data
 driven tests</a> can have data provided by any
-<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Iterator.html">Iterator</a>. Spock
+<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Iterable.html">Iterable</a>. Spock
 Genesis provides a variety of classes that extend from
 <a href="https://github.com/Bijnagte/spock-genesis/blob/master/src/main/groovy/spock/genesis/generators/Generator.groovy">Generator</a>
 which meet that interface. Where possible the generators are lazy and
@@ -516,7 +523,7 @@ License</a>.</p>
 }
 
 dependencies {
-    testCompile 'com.nagternal:spock-genesis:0.4.0'
+    testCompile 'com.nagternal:spock-genesis:0.5.0'
 }</code></pre>
 </div>
 </div>
@@ -527,8 +534,8 @@ dependencies {
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Change <code>0.4.0</code> with the latest available version (current
-version is 0.4.0)
+Change <code>0.5.0</code> with the latest available version (current
+version is 0.5.0)
 </td>
 </tr>
 </table>
@@ -551,8 +558,7 @@ following import:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">//static import generator factory methods
-import static spock.genesis.Gen.*</code></pre>
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">//static import generator factory methods</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -563,19 +569,19 @@ generators:</p>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'using static factory methods'() {
     expect:
-        string.next() instanceof String
-        bytes.next() instanceof byte[]
-        getDouble().next() instanceof Double
-        integer.next() instanceof Integer
-        getLong().next() instanceof Long
-        character.next() instanceof Character
-        date.next() instanceof Date
+        string.iterator().next() instanceof String
+        bytes.iterator().next() instanceof byte[]
+        getDouble().iterator().next() instanceof Double
+        integer.iterator().next() instanceof Integer
+        getLong().iterator().next() instanceof Long
+        character.iterator().next() instanceof Character
+        date.iterator().next() instanceof Date
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>These examples are creating only the next available generated value
-from the correspondant generator. This way of using simple types
+from the corresponding generator. This way of using simple types
 generators doesn&#8217;t put any constraint to the generated value apart
 from generate a specific type of value. We&#8217;ll see later on how to add
 some boundaries to some of the value generators. For the time being,
@@ -602,13 +608,13 @@ one of the following methods:</p>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'create a string by length'() {
     when: 'establishing max string length'
-        def shortWord = string(5).next() <i class="conum" data-value="1"></i><b>(1)</b>
+        def shortWord = string(5).iterator().next() <i class="conum" data-value="1"></i><b>(1)</b>
 
     then: 'word size should be less equal than max'
         shortWord.size() &lt;= 5
 
     when: 'establishing min and max word size'
-        def largerWord = string(5,10).next() <i class="conum" data-value="2"></i><b>(2)</b>
+        def largerWord = string(5,10).iterator().next() <i class="conum" data-value="2"></i><b>(2)</b>
 
     then: 'word should be larger equal min'
         largerWord.size() &gt;= 5
@@ -637,10 +643,10 @@ one of the following methods:</p>
 <div class="title">From a string pattern</div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate a string using a regular expression'() {
-    setup:
-        String regex = '(https?|ftp|file)://[-A-Z0-9+&amp;@#/%?=~_|!:,.;]*[-A-Z0-9+&amp;@#/%=~_|]\\d'
     expect:
-        string(~regex).next() ==~ regex
+        generatedString ==~ '(https?|ftp|file)://[-A-Z0-9+&amp;@#/%?=~_|!:,.;]*[-A-Z0-9+&amp;@#/%=~_|]\\d'
+    where:
+        generatedString &lt;&lt; string(~'(https?|ftp|file)://[-A-Z0-9+&amp;@#/%?=~_|!:,.;]*[-A-Z0-9+&amp;@#/%=~_|]\\d').take(10)
 }</code></pre>
 </div>
 </div>
@@ -656,10 +662,10 @@ establishing any restriction.</p>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate numbers'() {
     expect:
-        getDouble().next() instanceof Double
-        integer.next() instanceof Integer
-        getLong().next() instanceof Long
-        bytes.next() instanceof byte[]
+        getDouble().iterator().next() instanceof Double
+        integer.iterator().next() instanceof Integer
+        getLong().iterator().next() instanceof Long
+        bytes.iterator().next() instanceof byte[]
 }</code></pre>
 </div>
 </div>
@@ -671,14 +677,14 @@ the generated values directly.</p>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'create an integer with min and max'() {
     when: 'establishing max possible number'
-        def firstNumber = integer(5..10).next() <i class="conum" data-value="1"></i><b>(1)</b>
+        def firstNumber = integer(5..10).iterator().next() <i class="conum" data-value="1"></i><b>(1)</b>
 
     then: 'generated number will be less equals than max'
         firstNumber &gt;= 5
         firstNumber &lt;= 10
 
     when: 'establishing min and max valid numbers'
-        def secondNumber = integer(5,10).next() <i class="conum" data-value="2"></i><b>(2)</b>
+        def secondNumber = integer(5,10).iterator().next() <i class="conum" data-value="2"></i><b>(2)</b>
 
     then: 'generated number must be between both numbers'
         secondNumber &gt;= 5
@@ -715,7 +721,7 @@ check-in right ?</p>
     def tomorrow  = new Date() + 1
 
     when: 'getting a new date'
-    def newDate = date(yesterday, tomorrow).next()
+    def newDate = date(yesterday, tomorrow).iterator().next()
 
     then: 'new date should be between boundaries'
     tomorrow.after(newDate)
@@ -738,7 +744,7 @@ for a given value you can use <code>Gen.value</code></p>
     value(0).take(2).collect() == [0,0]
 
     and: 'to get just one'
-    value(0).next() == 0
+    value(0).iterator().next() == 0
 }</code></pre>
 </div>
 </div>
@@ -778,24 +784,6 @@ check the section <code>combine</code>.
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_using_code_with_code">2.6. Using <code>with</code></h3>
-<div class="paragraph">
-<p>You can use <code>with</code> if you would like to set some property of the
-generated value.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'call methods on generated value using with'() {
-    setup:
-        def gen = date.with { setTime(1400) }
-
-    expect:
-        gen.next().getTime() == 1400
-}</code></pre>
-</div>
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -818,7 +806,7 @@ you only wanted to create a fixed sized lists with fixed types,
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate a tuple'() {
     when: 'generating a tuple of numbers'
-        def tuple = tuple(integer, integer, string).next()
+        def tuple = tuple(integer, integer, string).iterator().next()
 
     then: 'make sure we get a list of the expected size'
         tuple.size() == 3
@@ -850,7 +838,7 @@ without any size boundaries:</p>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate a simple list'() {
     when: 'generating a simple list'
-        def list = list(integer).next() <i class="conum" data-value="1"></i><b>(1)</b>
+        def list = list(integer).iterator().next() <i class="conum" data-value="1"></i><b>(1)</b>
 
     then: 'we only can be sure about the type of the list'
         list instanceof List
@@ -886,7 +874,7 @@ could use <code>list(valueGenerator,min,max)</code> or
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate a list with size boundaries'() {
     when: 'establishing the list definition'
-        def list = list(integer, 1, 5).next() <i class="conum" data-value="1"></i><b>(1)</b>
+        def list = list(integer, 1, 5).iterator().next() <i class="conum" data-value="1"></i><b>(1)</b>
 
     then: 'it should obey the following assertions'
         list instanceof List                  <i class="conum" data-value="2"></i><b>(2)</b>
@@ -933,10 +921,10 @@ type of values should be used per <code>key-value</code> entry.</p>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate a map'() {
     when: 'defining a map with different fields'
-        def myMap = map(                   <i class="conum" data-value="1"></i><b>(1)</b>
-            id: getLong(),                 <i class="conum" data-value="2"></i><b>(2)</b>
-            name: string,                  <i class="conum" data-value="3"></i><b>(3)</b>
-            age: integer(0, 120)).next()   <i class="conum" data-value="4"></i><b>(4)</b>
+        def myMap = map(                            <i class="conum" data-value="1"></i><b>(1)</b>
+            id: getLong(),                          <i class="conum" data-value="2"></i><b>(2)</b>
+            name: string,                           <i class="conum" data-value="3"></i><b>(3)</b>
+            age: integer(0, 120)).iterator().next() <i class="conum" data-value="4"></i><b>(4)</b>
 
     then: 'we should get instances of map'
         myMap instanceof Map
@@ -997,7 +985,7 @@ has defined a different generator for each field:</p>
     setup:
         def gen = type(Data, s: string, i: integer, d: date) <i class="conum" data-value="1"></i><b>(1)</b>
     when:
-        Data result = gen.next() <i class="conum" data-value="2"></i><b>(2)</b>
+        Data result = gen.iterator().next() <i class="conum" data-value="2"></i><b>(2)</b>
     then:
         result.d
         result.i
@@ -1045,15 +1033,14 @@ arguments after declaring the class.</p>
 <div class="title">Generator</div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'generate type with tuple'() {
-    setup:
-        def gen = type(TupleData, string, value(42), date)
-    when:
-        def result = gen.next()
-    then:
+    expect:
         result instanceof TupleData
         result.d
         result.i == 42
         result.s
+
+    where:
+        result &lt;&lt; type(TupleData, string, value(42), date).take(5)
 }</code></pre>
 </div>
 </div>
@@ -1118,7 +1105,7 @@ from the declared source in order until the source is exhausted</p>
         these([1,2,3]).take(2).collect() == [1,2]
 
     and: 'to get values from a given class'
-        these(String).next() == String
+        these(String).iterator().next() == String
 
     and: 'to stop producing numbers if the source is exhausted'
         these(1..3).take(10).collect() == [1,2,3]
@@ -1155,11 +1142,12 @@ generator with the next one.</p>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'create multi source generator with &amp; operator'() {
     setup:
-        def gen = string(100) &amp; integer
+        def gen = string(100) &amp; integer &amp; date
     expect:
         gen instanceof MultiSourceGenerator
         gen.any { it instanceof Integer }
         gen.any { it instanceof String }
+        gen.any { it instanceof Date }
 }</code></pre>
 </div>
 </div>
@@ -1192,7 +1180,49 @@ produces values from a given source but in <strong>random order</strong>.</p>
 given number of values, lets see how.</p>
 </div>
 <div class="sect2">
-<h3 id="_once">5.1. Once</h3>
+<h3 id="__iterations">5.1. @Iterations</h3>
+<div class="paragraph">
+<p>If you want to limit the number of iterations that will be run you can use the
+<code>@Iterations</code> annotation. It is particularly useful when using infinite generators.
+It can be applied to the Specification or to individual features. If no value is
+provided it will default to 100.</p>
+</div>
+<div class="listingblock">
+<div class="title">Class</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">@Iterations(5)
+class IterationsSpec extends Specification {
+
+    static List NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+
+    static List&lt;Integer&gt; VALUES = []
+
+    def 'method iterations is limited by class annotation'() {
+        expect:
+            value &lt; 6
+        where:
+            value &lt;&lt; NUMBERS
+    }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Feature</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">@Iterations(2)
+def 'limiting iterations to 2 makes it so the first 2 iterations are all that run'() {
+    expect:
+    s instanceof String
+    i instanceof Integer
+    i &lt; 3
+    where:
+    s &lt;&lt; string(~/[A-Z][a-z]+( [A-Z][a-z]+)?/)
+    i &lt;&lt; these(1,2,3,4,5,6)
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_once">5.2. Once</h3>
 <div class="paragraph">
 <p>If you only want to produce a given value only once, then use <code>once</code>.</p>
 </div>
@@ -1210,7 +1240,7 @@ given number of values, lets see how.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_using_code_multiply_by_code">5.2. Using <code>multiply by</code></h3>
+<h3 id="_using_code_multiply_by_code">5.3. Using <code>multiply by</code></h3>
 <div class="paragraph">
 <p>You can tell how many items to generate from a given generator by
 using the <code>*</code> operator:</p>
@@ -1229,7 +1259,7 @@ using the <code>*</code> operator:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_take">5.3. Take</h3>
+<h3 id="_take">5.4. Take</h3>
 <div class="paragraph">
 <p>If you know in advanced how many items you will need then use <code>take</code>.</p>
 </div>
@@ -1250,10 +1280,101 @@ using the <code>*</code> operator:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_development">6. Development</h2>
+<h2 id="_output">6. Output</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Some times you need to control the output of a generator.</p>
+</div>
+<div class="sect2">
+<h3 id="_seeding_random_generation">6.1. Seeding random generation</h3>
+<div class="paragraph">
+<p>For random generators it can be useful to control the seed for random generation.
+This will cause a consistent sequence of values to be generated by an equivalent generator.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'setting seed returns the same values with 2 generators configured the same'() {
+    given:
+        def generatedA = string(10).seed(879).take(10).realized
+        def generatedB = string(10).seed(879).take(10).realized
+    expect:
+        generatedA == generatedB
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Setting the seed to different values will vary the output but will always produce the same sequence.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'setting seed to different values produces different sequences'() {
+    given:
+        def generatedA = integer.seed(879).take(4).realized
+        def generatedB = integer.seed(3).take(4).realized
+    expect:
+        generatedA == [-1295148427, 2105117961, -922763979, 1733784787]
+        generatedB == [-1155099828, -1879439976, 304908421, -836442134]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_code_with_code">6.2. Using <code>with</code></h3>
+<div class="paragraph">
+<p>You can use <code>with</code> if you would like to set some property of the
+generated value.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<code>with</code> is different from the default groovy implementation! It always returns a new generator.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'call methods on generated value using with'() {
+    setup:
+        def gen = date.with { setTime(1400) }
+
+    expect:
+        gen.iterator().next().getTime() == 1400
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_transforming_with_code_map_code">6.3. Transforming with <code>map</code></h3>
+<div class="paragraph">
+<p>Sometimes output needs to be converted to another type. the <code>map</code> method works
+like groovy&#8217;s <code>collect</code> but will return a new generator that lazily performs the
+transformation. An example would be calling the <code>toString()</code> method.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">@Iterations(10)
+def 'transform the output of a generator'() {
+    expect:
+        result instanceof String
+        result.isInteger()
+    where:
+        result &lt;&lt; integer.map { val -&gt; val.toString() }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_development">7. Development</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_building_code_spock_genesis_code">6.1. Building <code>spock-genesis</code></h3>
+<h3 id="_building_code_spock_genesis_code">7.1. Building <code>spock-genesis</code></h3>
 <div class="paragraph">
 <p>The only prerequisite is that you have JDK 7 or higher installed.</p>
 </div>
@@ -1264,7 +1385,7 @@ itself, will be downloaded automatically (unless already present).</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_groovydoc">6.2. Groovydoc</h3>
+<h3 id="_groovydoc">7.2. Groovydoc</h3>
 <div class="paragraph">
 <p><code>Groovydoc</code> can be found <a href="groovydoc/index.html">here</a>.</p>
 </div>
@@ -1274,8 +1395,8 @@ itself, will be downloaded automatically (unless already present).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.4.0<br>
-Last updated 2016-06-27 05:45:35 -05:00
+Version 0.5.0<br>
+Last updated 2016-07-18 19:03:58 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
