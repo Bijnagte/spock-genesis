@@ -8,7 +8,7 @@ import spock.genesis.generators.UnmodifiableIterator
 @CompileStatic
 class TupleGenerator<T> extends Generator<List<T>> implements Closeable {
 
-    private final List<Generator<T>> generators
+    protected final List<Generator<T>> generators
 
     TupleGenerator(List<Iterable<T>> iterables) {
         List<Generator<T>> collector = []
