@@ -19,9 +19,11 @@ apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'org.ajoberstar.github-pages'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven'
+apply plugin: 'signing'
 
 group = 'com.nagternal'
 version = '0.5.0'
+description = 'Mostly lazy data generators for property based testing using the Spock test framework'
 
 repositories {
     mavenCentral()
@@ -95,6 +97,58 @@ artifacts {
     archives jar
     archives sourceJar
     archives javadocJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+if (project.hasProperty('ossrhUser')) {
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                // POM signature
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+                // Target repository
+
+                def repoUrl = version.endsWith('SNAPSHOT') ?
+                        'https://oss.sonatype.org/content/repositories/snapshots' :
+                        'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+
+                repository(url: repoUrl) {
+                    authentication(userName: ossrhUser, password: ossrhPassword)
+                }
+                pom.project {
+                    name project.name
+                    description project.description
+                    packaging 'jar'
+                    url 'https://bijnagte.github.io/spock-genesis'
+
+                    scm {
+                        connection 'scm:git:https://github.com/your/project.git'
+                        developerConnection 'scm:git:git@github.com:Bijnagte/spock-genesis.git'
+                        url 'https://github.com/Bijnagte/spock-genesis.git'
+                    }
+
+                    licenses {
+                        license {
+                            name 'The MIT License (MIT)'
+                            url 'http://opensource.org/licenses/MIT'
+                            distribution 'repo'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'dylanbijnagte@gmail.com'
+                            name = 'Dylan Bijnagte'
+                            email = 'dylanbijnagte@gmail.com'
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 bintray {
