@@ -36,6 +36,14 @@ class TupleGenerator<T> extends Generator<List<T>> implements Closeable {
         }
     }
 
+    PermutationGenerator<T> permute() {
+        new PermutationGenerator<T>(generators)
+    }
+
+    PermutationGenerator<T> permute(int maxDepth) {
+        new PermutationGenerator<T>(generators, maxDepth)
+    }
+
     @Override
     boolean isFinite() {
         generators.every { it.finite }

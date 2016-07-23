@@ -16,8 +16,7 @@ class PermutationGenerator<E> extends TupleGenerator<E> {
     }
 
     PermutationGenerator(List<Generator<E>> generators) {
-        super(generators)
-        this.maxDepth = pickMaxDepth(generators)
+        this(generators, pickMaxDepth(generators))
     }
 
     @Override
@@ -35,7 +34,7 @@ class PermutationGenerator<E> extends TupleGenerator<E> {
 
             @Override
             boolean hasNext() {
-                if (emitted == []) {
+                if (!emitted) {
                     //first
                     ITERATORS.every { it.hasNext() }
                 } else if (emittedIterator?.hasNext() || ITERATORS[column].hasNext()) {

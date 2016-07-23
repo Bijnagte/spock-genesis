@@ -58,4 +58,33 @@ class DefinedMapGeneratorSpec extends Specification {
         where:
             seed = 100L
     }
+
+    def 'generates all permutations'() {
+        given:
+            def mapDefinition = [int: [1, 2, 3], string:['a', 'b', 'c']]
+            def generator = new DefinedMapGenerator(mapDefinition).permute()
+        expect:
+            generator.collect() == [
+                    [int: 1, string: 'a'],
+                    [int: 2, string: 'a'],
+                    [int: 3, string: 'a'],
+                    [int: 1, string: 'b'],
+                    [int: 2, string: 'b'],
+                    [int: 3, string: 'b'],
+                    [int: 1, string: 'c'],
+                    [int: 2, string: 'c'],
+                    [int: 3, string: 'c']]
+    }
+
+    def 'generates permutations'() {
+        given:
+            def mapDefinition = [int: [1, 2, 3], string: ['a']]
+            def generator = new DefinedMapGenerator(mapDefinition).permute()
+        expect:
+            generator.collect() == [
+                    [int: 1, string: 'a'],
+                    [int: 2, string: 'a'],
+                    [int: 3, string: 'a'],
+            ]
+    }
 }
