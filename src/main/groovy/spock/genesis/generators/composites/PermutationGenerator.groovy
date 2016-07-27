@@ -2,10 +2,11 @@ package spock.genesis.generators.composites
 
 import groovy.transform.CompileStatic
 import spock.genesis.generators.Generator
+import spock.genesis.generators.Permutable
 import spock.genesis.generators.UnmodifiableIterator
 
 @CompileStatic
-class PermutationGenerator<E> extends TupleGenerator<E> {
+class PermutationGenerator<E> extends TupleGenerator<E> implements Permutable {
 
     static final int MAX_PERMUTATIONS = 10000
     private final int maxDepth

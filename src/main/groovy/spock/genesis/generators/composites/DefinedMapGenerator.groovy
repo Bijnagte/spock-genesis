@@ -2,10 +2,11 @@ package spock.genesis.generators.composites
 
 import groovy.transform.CompileStatic
 import spock.genesis.generators.Generator
+import spock.genesis.generators.Permutable
 import spock.genesis.generators.UnmodifiableIterator
 
 @CompileStatic
-class DefinedMapGenerator<K, V> extends Generator<Map<K, V>> {
+class DefinedMapGenerator<K, V> extends Generator<Map<K, V>> implements Permutable {
 
     private final List<K> keys
     private final TupleGenerator<V> valuesGenerator
@@ -45,7 +46,7 @@ class DefinedMapGenerator<K, V> extends Generator<Map<K, V>> {
             Map<K, V> next() {
                 List values = iterator.next()
                 Map<K,V> result = [:]
-                keys.eachWithIndex{ K key, int i ->
+                keys.eachWithIndex { K key, int i ->
                     result[key] = values[i]
                 }
                 result
