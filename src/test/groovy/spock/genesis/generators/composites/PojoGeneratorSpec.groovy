@@ -1,5 +1,7 @@
 package spock.genesis.generators.composites
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 import spock.genesis.Gen
 import spock.genesis.generators.test.Pojo
 import spock.lang.Specification
@@ -141,6 +143,63 @@ class PojoGeneratorSpec extends Specification {
 
     }
 
+    def 'permute is possible with map generator'() {
+        setup:
+            def generator = new PojoGenerator(MapConstructorObj, Gen.map(string: ['a', 'b'], integer: [1,2,3]))
+        expect:
+            generator.permute().collect() == [
+                    new MapConstructorObj(string: 'a', integer: 1),
+                    new MapConstructorObj(string: 'b', integer: 1),
+                    new MapConstructorObj(string: 'a', integer: 2),
+                    new MapConstructorObj(string: 'b', integer: 2),
+                    new MapConstructorObj(string: 'a', integer: 3),
+                    new MapConstructorObj(string: 'b', integer: 3),
+            ]
+        and: 'only to depth of 2'
+            generator.permute(2).collect() == [
+                    new MapConstructorObj(string: 'a', integer: 1),
+                    new MapConstructorObj(string: 'b', integer: 1),
+                    new MapConstructorObj(string: 'a', integer: 2),
+                    new MapConstructorObj(string: 'b', integer: 2),
+            ]
+    }
+
+    def 'permute is possible with tuple generator'() {
+        setup:
+            def generator = new PojoGenerator(TupleConstructorObj, Gen.tuple(['a', 'b'], [1, 2, 3]))
+        expect:
+            generator.permute().collect() == [
+                    new TupleConstructorObj('a', 1),
+                    new TupleConstructorObj('b', 1),
+                    new TupleConstructorObj('a', 2),
+                    new TupleConstructorObj('b', 2),
+                    new TupleConstructorObj('a', 3),
+                    new TupleConstructorObj('b', 3),
+            ]
+        and: 'only to depth of 2'
+            generator.permute(2).collect() == [
+                    new TupleConstructorObj('a', 1),
+                    new TupleConstructorObj('b', 1),
+                    new TupleConstructorObj('a', 2),
+                    new TupleConstructorObj('b', 2),
+            ]
+    }
+
+    def 'permute does not work on iterable'() {
+        setup:
+            def generator = new PojoGenerator(TupleConstructorObj, [['a', 1], ['b', 2]])
+        when:
+            generator.permute()
+        then:
+            thrown(UnsupportedOperationException)
+        when:
+            generator.permute(1)
+        then:
+            thrown(UnsupportedOperationException)
+    }
+
+    @EqualsAndHashCode
+    @ToString
     static class TupleConstructorObj {
         String string
         Integer integer
@@ -151,6 +210,8 @@ class PojoGeneratorSpec extends Specification {
         }
     }
 
+    @EqualsAndHashCode
+    @ToString
     static class MapConstructorObj {
         String string
         Integer integer

@@ -1,54 +1,74 @@
 package spock.genesis.generators.composites
 
 import groovy.transform.CompileStatic
-import spock.genesis.extension.ExtensionMethods
 import spock.genesis.generators.Generator
+import spock.genesis.generators.Permutable
 import spock.genesis.generators.UnmodifiableIterator
 
 @CompileStatic
-class DefinedMapGenerator<K, V> extends Generator<Map<K, V>> {
+class DefinedMapGenerator<K, V> extends Generator<Map<K, V>> implements Permutable {
 
-    final Map<K, Generator<V>> keysToValueGenerators
+    private final List<K> keys
+    private final TupleGenerator<V> valuesGenerator
 
     DefinedMapGenerator(Map<K, Iterable<V>> keysToValueGenerators) {
-        Map<K, Generator<V>> collector = [:]
-        this.keysToValueGenerators = keysToValueGenerators.collectEntries(collector) { key, generator ->
-            [key, ExtensionMethods.toGenerator(generator)]
-        }.asImmutable()
+        List keys = []
+        List iterables = []
+        keysToValueGenerators.each { key, iterable ->
+            keys << key
+            iterables << iterable
+        }
+        this.keys = keys
+        this.valuesGenerator = new TupleGenerator(iterables)
+    }
+
+    DefinedMapGenerator(List<K> keys,  TupleGenerator<V> valuesGenerator) {
+        int values = valuesGenerator.generators.size()
+        if (keys.size() != values) {
+            throw new IllegalArgumentException("Keys size (${keys.size()}) does not match values size ($values")
+        }
+        this.keys = keys.collect() //defensive copy
+        this.valuesGenerator = valuesGenerator
     }
 
     @Override
     UnmodifiableIterator<Map<K, V>> iterator() {
-        final Map<K, Iterator<V>> COLLECTOR = [:]
 
         new UnmodifiableIterator<Map<K, V>>() {
-            final private Map<K, Iterator<V>> iteratorMap = keysToValueGenerators.collectEntries(COLLECTOR) { k, v ->
-                [k, v.iterator()]
-            }
+            final private Iterator<List<V>> iterator = valuesGenerator.iterator()
 
             @Override
             boolean hasNext() {
-                iteratorMap.every { key, generator ->
-                    generator.hasNext()
-                }
+                iterator.hasNext()
             }
 
             @Override
             Map<K, V> next() {
-                iteratorMap.collectEntries { key, generator ->
-                    [key, generator.next()]
+                List values = iterator.next()
+                Map<K,V> result = [:]
+                keys.eachWithIndex { K key, int i ->
+                    result[key] = values[i]
                 }
+                result
             }
         }
     }
 
+    DefinedMapGenerator<K,V> permute() {
+        new DefinedMapGenerator<K, V>(keys, valuesGenerator.permute())
+    }
+
+    DefinedMapGenerator<K,V> permute(int maxDepth) {
+        new DefinedMapGenerator<K, V>(keys, valuesGenerator.permute(maxDepth))
+    }
+
     boolean isFinite() {
-        keysToValueGenerators.any { k, generator -> generator.finite }
+        valuesGenerator.finite
     }
 
     @Override
     DefinedMapGenerator<K, V> seed(Long seed) {
-        keysToValueGenerators.each { k, generator -> generator.seed(seed) }
+        valuesGenerator.seed(seed)
         super.seed(seed)
         this
     }

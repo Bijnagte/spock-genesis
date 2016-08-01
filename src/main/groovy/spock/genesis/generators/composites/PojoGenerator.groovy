@@ -4,16 +4,18 @@ import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 import spock.genesis.extension.ExtensionMethods
 import spock.genesis.generators.Generator
+import spock.genesis.generators.Permutable
 import spock.genesis.generators.UnmodifiableIterator
 
 import java.lang.reflect.Constructor
 
 @CompileStatic
-class PojoGenerator<E, T> extends Generator<E> implements Closeable {
-    final Class target
+@SuppressWarnings(['Instanceof'])
+class PojoGenerator<E, T> extends Generator<E> implements Closeable, Permutable {
+    final Class<E> target
     final Generator<T> generator
 
-    PojoGenerator(E target, Iterable<T> generator) {
+    PojoGenerator(Class<E> target, Iterable<T> generator) {
         this.target = target
         this.generator = ExtensionMethods.toGenerator(generator)
     }
@@ -63,5 +65,21 @@ class PojoGenerator<E, T> extends Generator<E> implements Closeable {
         generator.seed(seed)
         super.seed(seed)
         this
+    }
+
+    PojoGenerator<E,T> permute() {
+        if (generator instanceof Permutable) {
+            new PojoGenerator<E, T>(target, ((Permutable<T>) generator).permute())
+        } else {
+            throw new UnsupportedOperationException("generator of type ${generator.getClass()} is not permutable")
+        }
+    }
+
+    PojoGenerator<E,T> permute(int maxDepth) {
+        if (generator instanceof Permutable) {
+            new PojoGenerator<E, T>(target, ((Permutable<T>) generator).permute(maxDepth))
+        } else {
+            throw new UnsupportedOperationException("generator of type ${generator.getClass()} is not permutable")
+        }
     }
 }

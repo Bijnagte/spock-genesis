@@ -21,6 +21,7 @@ abstract class Generator<E> implements Iterable<E>, Closeable {
         new FilteredGenerator<E>(this, predicate)
     }
 
+    @SuppressWarnings(['UnnecessaryPublicModifier']) // needed for generic parsing issue
     public <T> TransformingGenerator<E, T> map(Closure<T> transform) {
         new TransformingGenerator<E, T>(this, transform)
     }

@@ -3,12 +3,13 @@ package spock.genesis.generators.composites
 import groovy.transform.CompileStatic
 import spock.genesis.extension.ExtensionMethods
 import spock.genesis.generators.Generator
+import spock.genesis.generators.Permutable
 import spock.genesis.generators.UnmodifiableIterator
 
 @CompileStatic
-class TupleGenerator<T> extends Generator<List<T>> implements Closeable {
+class TupleGenerator<T> extends Generator<List<T>> implements Closeable, Permutable {
 
-    private final List<Generator<T>> generators
+    protected final List<Generator<T>> generators
 
     TupleGenerator(List<Iterable<T>> iterables) {
         List<Generator<T>> collector = []
@@ -34,6 +35,14 @@ class TupleGenerator<T> extends Generator<List<T>> implements Closeable {
                 iterators*.next()
             }
         }
+    }
+
+    PermutationGenerator<T> permute() {
+        new PermutationGenerator<T>(generators)
+    }
+
+    PermutationGenerator<T> permute(int maxDepth) {
+        new PermutationGenerator<T>(generators, maxDepth)
     }
 
     @Override

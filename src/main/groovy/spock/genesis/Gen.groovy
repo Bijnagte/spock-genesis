@@ -236,7 +236,7 @@ class Gen {
      * @param target type of the object we would like to generate
      * @return an instance of {@link PojoGenerator}
      */
-    static <T> PojoGenerator<T,Map> type(Map<String, Object> keysToValueGenerators, T target) {
+    static <T> PojoGenerator<T,Map> type(Map<String, Object> keysToValueGenerators, Class<T> target) {
         new PojoGenerator(target, map(keysToValueGenerators))
     }
 
@@ -248,7 +248,7 @@ class Gen {
      * @param argGenerators generators per each field
      * @return an instance of {@link PojoGenerator}
      */
-    static <T> PojoGenerator<T, List> type(T target, Iterable... argGenerators) {
+    static <T> PojoGenerator<T, List> type(Class<T> target, Iterable... argGenerators) {
         new PojoGenerator(target, tuple(argGenerators))
     }
 
