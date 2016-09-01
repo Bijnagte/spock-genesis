@@ -10,7 +10,7 @@ Where possible the generators are lazy and infinite.
 
 [![build status](https://circleci.com/gh/Bijnagte/spock-genesis.svg?style=shield&circle-token=ccab052d8c597ae916463f8319738d89e3d8a640)]()
 [![codecov](https://codecov.io/gh/Bijnagte/spock-genesis/branch/master/graph/badge.svg)](https://codecov.io/gh/Bijnagte/spock-genesis)
-[![Download](https://api.bintray.com/packages/dylanbijnagte/nagternal/spock-genesis/images/download.svg) ](https://bintray.com/dylanbijnagte/nagternal/spock-genesis/_latestVersion)
+[![JCenter](https://api.bintray.com/packages/dylanbijnagte/nagternal/spock-genesis/images/download.svg) ](https://bintray.com/dylanbijnagte/nagternal/spock-genesis/_latestVersion)
 [![Maven Central](https://img.shields.io/maven-central/v/com.nagternal/spock-genesis.svg?maxAge=2592000)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.nagternal%22%20AND%20a%3A%22spock-genesis%22)
 
 Usage
@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    testCompile 'com.nagternal:spock-genesis:0.5.0'
+    testCompile 'com.nagternal:spock-genesis:0.6.0'
 }
 ```
 
@@ -89,6 +89,9 @@ Change log
 * [@Iterations](./src/main/groovy/spock/genesis/transform/Iterations.groovy) annotation
 * updated dependencies
 * ability to set the seed of random generators
+
+### 0.6.0
+* permute to generate combinations from composite generators
 
 Building Spock Genesis
 --------------
