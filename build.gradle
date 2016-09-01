@@ -22,8 +22,16 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group = 'com.nagternal'
-version = '0.5.0'
+version = '0.6.0'
 description = 'Mostly lazy data generators for property based testing using the Spock test framework'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+if (JavaVersion.current() != JavaVersion.VERSION_1_7) {
+    logger.warn("Current version is not Java 7 it is ${JavaVersion.current().majorVersion}")
+}
+
 
 repositories {
     mavenCentral()
