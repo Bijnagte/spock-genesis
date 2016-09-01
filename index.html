@@ -422,7 +422,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Spock-Genesis</h1>
 <div class="details">
-<span id="revnumber">version 0.5.0</span>
+<span id="revnumber">version 0.6.0</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -448,6 +448,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_list">3.2. List</a></li>
 <li><a href="#_map">3.3. Map</a></li>
 <li><a href="#_type">3.4. Type</a></li>
+<li><a href="#_combinations_with_code_permute_code">3.5. Combinations with <code>permute</code></a></li>
 </ul>
 </li>
 <li><a href="#_combine">4. Combine</a>
@@ -535,7 +536,7 @@ dependencies {
 </td>
 <td class="content">
 Change <code>0.5.0</code> with the latest available version (current
-version is 0.5.0)
+version is 0.6.0)
 </td>
 </tr>
 </table>
@@ -1058,6 +1059,146 @@ over and over again (42)
 </table>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_combinations_with_code_permute_code">3.5. Combinations with <code>permute</code></h3>
+<div class="paragraph">
+<p>Under some conditions you may want to test all combinations of inputs. Tuple, map with fixed keys, and type generators all
+implement the
+<a href="https://github.com/Bijnagte/spock-genesis/blob/master/src/main/groovy/spock/genesis/generators/Permutable.groovy">Permutable</a>
+interface to accomplish that in a lazy fashion.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Iterating through all combinations expands the number of iterations exponentially.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Outputs are produced using a depth first algorithm. Setting the max depth limits the number of values that are produced for
+each input.</p>
+</div>
+<div class="listingblock">
+<div class="title">using a map generated POJO</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">def 'permute is possible with map generator'() {
+    setup:
+        def generator = Gen.type(MapConstructorObj, string: ['a', 'b'], integer: [1,2,3]) <i class="conum" data-value="1"></i><b>(1)</b>
+    when:
+        List&lt;MapConstructorObj&gt; results = generator.permute().collect() <i class="conum" data-value="2"></i><b>(2)</b>
+    then: <i class="conum" data-value="3"></i><b>(3)</b>
+        results == [
+                new MapConstructorObj(string: 'a', integer: 1),
+                new MapConstructorObj(string: 'b', integer: 1),
+                new MapConstructorObj(string: 'a', integer: 2),
+                new MapConstructorObj(string: 'b', integer: 2),
+                new MapConstructorObj(string: 'a', integer: 3),
+                new MapConstructorObj(string: 'b', integer: 3),
+        ]
+    when: 'only to depth of 2'
+        List&lt;MapConstructorObj&gt; results2 = generator.permute(2).collect() <i class="conum" data-value="4"></i><b>(4)</b>
+    then: <i class="conum" data-value="5"></i><b>(5)</b>
+        results2 == [
+                new MapConstructorObj(string: 'a', integer: 1),
+                new MapConstructorObj(string: 'b', integer: 1),
+                new MapConstructorObj(string: 'a', integer: 2),
+                new MapConstructorObj(string: 'b', integer: 2),
+        ]
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Declaring a generator</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Call <code>permute</code> and get all of the values</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The result contains all of the combinations</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Call <code>permute</code> setting a max depth of 2 and get all the values</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>The result only contains the combinations of the first 2 values from each field</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If no max depth is specified then the formula \$ |__root(n)(10000)__| \$ is used to determine the max depth</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. number of iterations</caption>
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 33%;">
+<col style="width: 33%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">input count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">depth</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">iterations</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">100</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">21</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9261</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7776</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4096</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2187</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6561</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Groovy provides a <a href="http://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#combinations(java.lang.Iterable)">combinations</a> method that provides a similar capability but it is not lazy and does not control for the
+exponential issue.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1395,8 +1536,8 @@ itself, will be downloaded automatically (unless already present).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.5.0<br>
-Last updated 2016-07-18 19:03:58 -05:00
+Version 0.6.0<br>
+Last updated 2016-07-18 19:03:58 CDT
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
