@@ -118,3 +118,45 @@ include::{testDir}/spock/genesis/SamplesSpec.groovy[tags=typegenerator2,indent=0
 
 NOTE: Notice here we are generating the same name for the `i` field
 over and over again (42)
+
+
+=== Combinations with `permute`
+Under some conditions you may want to test all combinations of inputs. Tuple, map with fixed keys, and type generators all
+implement the
+https://github.com/Bijnagte/spock-genesis/blob/master/src/main/groovy/spock/genesis/generators/Permutable.groovy[Permutable]
+interface to accomplish that in a lazy fashion.
+
+IMPORTANT: Iterating through all combinations expands the number of iterations exponentially.
+
+Outputs are produced using a depth first algorithm. Setting the max depth limits the number of values that are produced for
+each input.
+
+[source,groovy]
+.using a map generated POJO
+----
+include::{testDir}/spock/genesis/generators/composites/PojoGeneratorSpec.groovy[tags=mapgenerator,indent=0]
+----
+
+<1> Declaring a generator
+<2> Call `permute` and get all of the values
+<3> The result contains all of the combinations
+<4> Call `permute` setting a max depth of 2 and get all the values
+<5> The result only contains the combinations of the first 2 values from each field
+
+If no max depth is specified then the formula stem:[ |__root(n)(10000)__| ] is used to determine the max depth
+
+.number of iterations
+|===
+| input count | depth | iterations
+| 1           | 10000 | 10000
+| 2           | 100   | 10000
+| 3           | 21    | 9261
+| 4           | 10    | 10000
+| 5           | 6     | 7776
+| 6           | 4     | 4096
+| 7           | 3     | 2187
+| 8           | 3     | 6561
+|===
+
+Groovy provides a http://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#combinations(java.lang.Iterable)[combinations] method that provides a similar capability but it is not lazy and does not control for the
+exponential issue.
