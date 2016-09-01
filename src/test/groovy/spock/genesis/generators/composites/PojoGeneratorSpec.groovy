@@ -143,11 +143,14 @@ class PojoGeneratorSpec extends Specification {
 
     }
 
+    // tag::mapgenerator[]
     def 'permute is possible with map generator'() {
         setup:
-            def generator = new PojoGenerator(MapConstructorObj, Gen.map(string: ['a', 'b'], integer: [1,2,3]))
-        expect:
-            generator.permute().collect() == [
+            def generator = Gen.type(MapConstructorObj, string: ['a', 'b'], integer: [1,2,3]) // <1>
+        when:
+            List<MapConstructorObj> results = generator.permute().collect() // <2>
+        then: // <3>
+            results == [
                     new MapConstructorObj(string: 'a', integer: 1),
                     new MapConstructorObj(string: 'b', integer: 1),
                     new MapConstructorObj(string: 'a', integer: 2),
@@ -155,14 +158,17 @@ class PojoGeneratorSpec extends Specification {
                     new MapConstructorObj(string: 'a', integer: 3),
                     new MapConstructorObj(string: 'b', integer: 3),
             ]
-        and: 'only to depth of 2'
-            generator.permute(2).collect() == [
+        when: 'only to depth of 2'
+            List<MapConstructorObj> results2 = generator.permute(2).collect() // <4>
+        then: // <5>
+            results2 == [
                     new MapConstructorObj(string: 'a', integer: 1),
                     new MapConstructorObj(string: 'b', integer: 1),
                     new MapConstructorObj(string: 'a', integer: 2),
                     new MapConstructorObj(string: 'b', integer: 2),
             ]
     }
+    // end::mapgenerator[]
 
     def 'permute is possible with tuple generator'() {
         setup:
