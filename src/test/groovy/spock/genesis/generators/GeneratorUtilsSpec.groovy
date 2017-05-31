@@ -8,10 +8,6 @@ import spock.lang.Unroll
  * Created by dylan on 13/01/16.
  */
 class GeneratorUtilsSpec extends Specification {
-    def "AnyFinite"() {
-
-
-    }
 
     @Unroll
     def 'all iterator is finite or empty'() {
@@ -21,6 +17,19 @@ class GeneratorUtilsSpec extends Specification {
             iterables                                   || expected
             [['a', 'b'], [1, 2], [5, 6, 7]]             || false
             [[]]                                        || true
+            [[], [1, 2, 3, 4, 5]]                       || false
+            [new IterableGenerator([1, 2, 3, 4, 5])]     || true
+            [new IterableGenerator([1, 2, 3, 4, 5]), []] || true
+            [new IntegerGenerator(), []]                || false
+    }
+
+    @Unroll
+    def 'all iterator as varargs is finite or empty'() {
+        expect:
+            GeneratorUtils.allFinite(*iterables) == expected
+        where:
+            iterables                                   || expected
+            [['a', 'b'], [1, 2], [5, 6, 7]]             || false
             [[], [1, 2, 3, 4, 5]]                       || false
             [new IterableGenerator([1, 2, 3, 4, 5])]     || true
             [new IterableGenerator([1, 2, 3, 4, 5]), []] || true
@@ -40,6 +49,20 @@ class GeneratorUtilsSpec extends Specification {
             [new IterableGenerator([1, 2, 3, 4, 5]), []] || true
             [new IntegerGenerator(), []]                || true
     }
+
+    @Unroll
+    def "any iterator as var args is finite or empty"() {
+        expect:
+            GeneratorUtils.anyFinite(*iterators) == expected
+        where:
+            iterators                                   || expected
+            [['a', 'b'], [1, 2], [5, 6, 7]]             || false
+            [[], [1, 2, 3, 4, 5]]                       || true
+            [new IterableGenerator([1, 2, 3, 4, 5])]     || true
+            [new IterableGenerator([1, 2, 3, 4, 5]), []] || true
+            [new IntegerGenerator(), []]                || true
+    }
+
 
     @Unroll
     def 'is finite iterator'() {
