@@ -26,6 +26,11 @@ abstract class Generator<E> implements Iterable<E>, Closeable {
         new TransformingGenerator<E, T>(this, transform)
     }
 
+    @SuppressWarnings(['UnnecessaryPublicModifier']) // needed for generic parsing issue
+    public <T> ChainedGenerator<E, T> flatMap(Closure<Generator<E>> transform) {
+        new ChainedGenerator<E, T>(this, transform)
+    }
+
     TransformingGenerator<E, E> with(Closure<?> transform) {
         Closure withClosure = { generatedValue ->
             generatedValue.with(transform)
