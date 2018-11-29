@@ -9,6 +9,8 @@ import spock.lang.Specification
 import spock.lang.Unroll
 import spock.util.mop.Use
 
+import java.time.LocalDate
+
 import static spock.genesis.Gen.*
 
 
@@ -102,6 +104,21 @@ class SamplesSpec extends Specification {
         newDate.after(yesterday)
     }
     // end::dates[]
+
+    // tag::localDates[]
+    def 'create a new localDate value range'() {
+        given: "yesterday's reference and tomorrow's"
+        def yesterday = LocalDate.now().minusDays(1)
+        def tomorrow  = LocalDate.now().plusDays(1)
+
+        when: 'getting a new date'
+        def newDate = localDate(yesterday, tomorrow).iterator().next()
+
+        then: 'new date should be between boundaries'
+        tomorrow.plusDays(1).isAfter(newDate)
+        newDate.isAfter(yesterday.minusDays(1))
+    }
+    // end::localDates[]
 
     // tag::ampersand[]
     def 'create multi source generator with & operator'() {

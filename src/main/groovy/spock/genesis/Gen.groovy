@@ -16,11 +16,13 @@ import spock.genesis.generators.values.CharacterGenerator
 import spock.genesis.generators.values.DateGenerator
 import spock.genesis.generators.values.DoubleGenerator
 import spock.genesis.generators.values.IntegerGenerator
+import spock.genesis.generators.values.LocalDateGenerator
 import spock.genesis.generators.values.LongGenerator
 import spock.genesis.generators.values.RandomElementGenerator
 import spock.genesis.generators.values.StringGenerator
 import spock.genesis.generators.values.ValueGenerator
 
+import java.time.LocalDate
 import java.util.regex.Pattern
 
 /**
@@ -345,6 +347,29 @@ class Gen {
      */
     static DateGenerator date(Date minDate, Date maxDate) {
         new DateGenerator(minDate, maxDate)
+    }
+
+    /**
+     * Produces a lazy infinite {@link LocalDateGenerator} that generates
+     * random instances of {@link java.time.LocalDate}
+     *
+     * @return an instance of {@link LocalDateGenerator}
+     */
+    static LocalDateGenerator getLocalDate() {
+        new LocalDateGenerator()
+    }
+
+    /**
+     * Produces a lazy infinite {@link LocalDateGenerator}. This generator
+     * will create random instances of {@link java.time.LocalDate} from a minimum
+     * date to a maximum date.
+     *
+     * @param minDate minimum possible date
+     * @param maxDate maximum possible date
+     * @return an instance of {@link LocalDateGenerator}
+     */
+    static LocalDateGenerator localDate(LocalDate minDate, LocalDate maxDate) {
+        new LocalDateGenerator(minDate, maxDate)
     }
 
     /**
